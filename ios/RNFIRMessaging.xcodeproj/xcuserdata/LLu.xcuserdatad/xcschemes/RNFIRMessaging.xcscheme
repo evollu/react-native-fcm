@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-               BuildableName = "libRNFCM.a"
-               BlueprintName = "RNFCM"
-               ReferencedContainer = "container:RNFCM.xcodeproj">
+               BuildableName = "libRNFIRMessaging.a"
+               BlueprintName = "RNFIRMessaging"
+               ReferencedContainer = "container:RNFIRMessaging.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-            BuildableName = "libRNFCM.a"
-            BlueprintName = "RNFCM"
-            ReferencedContainer = "container:RNFCM.xcodeproj">
+            BuildableName = "libRNFIRMessaging.a"
+            BlueprintName = "RNFIRMessaging"
+            ReferencedContainer = "container:RNFIRMessaging.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-            BuildableName = "libRNFCM.a"
-            BlueprintName = "RNFCM"
-            ReferencedContainer = "container:RNFCM.xcodeproj">
+            BuildableName = "libRNFIRMessaging.a"
+            BlueprintName = "RNFIRMessaging"
+            ReferencedContainer = "container:RNFIRMessaging.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -73,9 +73,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-            BuildableName = "libRNFCM.a"
-            BlueprintName = "RNFCM"
-            ReferencedContainer = "container:RNFCM.xcodeproj">
+            BuildableName = "libRNFIRMessaging.a"
+            BlueprintName = "RNFIRMessaging"
+            ReferencedContainer = "container:RNFIRMessaging.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

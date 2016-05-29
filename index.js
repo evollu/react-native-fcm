@@ -1,25 +1,22 @@
 'use strict';
 
 var React = require('react-native');
-var {
-    NativeModules
-} = React;
+var {NativeModules} = React;
 
-var FCMModule = NativeModules.FCMModule;
+var FIRMessaging = NativeModules.RNFIRMessaging;
+
+console.log(NativeModules.RNFIRMessaging);
 
 class FCM {
 
     static getFCMToken() {
-        return FCMModule.getFCMToken();
+        return FIRMessaging.getFCMToken();
     }
 
     static requestPermissions() {
-        return FCMModule.requestPermissions();
+        return FIRMessaging.requestPermissions();
     }
 
-    constructor(data) {
-        this.data = data;
-    }
 }
 
 module.exports = FCM;

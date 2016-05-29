@@ -1,4 +1,4 @@
-#import "FCMModule.h"
+#import "RNFIRMessaging.h"
 
 #import "RCTBridge.h"
 #import "RCTConvert.h"
@@ -18,7 +18,7 @@
 NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
 
 
-@implementation FCMModule
+@implementation RNFIRMessaging
 
 RCT_EXPORT_MODULE()
 

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3AD1DC2B1CFA802F008C092E /* FCMModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD1DC2A1CFA802F008C092E /* FCMModule.m */; };
+		3AD1DC2B1CFA802F008C092E /* RNFIRMesssaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD1DC2A1CFA802F008C092E /* RNFIRMesssaging.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,9 +23,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libRNFCM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNFCM.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		3AD1DC291CFA802F008C092E /* FCMModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCMModule.h; sourceTree = "<group>"; };
-		3AD1DC2A1CFA802F008C092E /* FCMModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCMModule.m; sourceTree = "<group>"; };
+		134814201AA4EA6300B7C361 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNFIRMessaging.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3AD1DC291CFA802F008C092E /* RNFIRMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNFIRMessaging.h; sourceTree = "<group>"; };
+		3AD1DC2A1CFA802F008C092E /* RNFIRMesssaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNFIRMesssaging.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,7 +42,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libRNFCM.a */,
+				134814201AA4EA6300B7C361 /* libRNFIRMessaging.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -50,8 +50,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				3AD1DC291CFA802F008C092E /* FCMModule.h */,
-				3AD1DC2A1CFA802F008C092E /* FCMModule.m */,
+				3AD1DC291CFA802F008C092E /* RNFIRMessaging.h */,
+				3AD1DC2A1CFA802F008C092E /* RNFIRMesssaging.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			indentWidth = 2;
@@ -61,9 +61,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* RNFCM */ = {
+		58B511DA1A9E6C8500147676 /* RNFIRMessaging */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNFCM" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNFIRMessaging" */;
 			buildPhases = (
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
@@ -73,9 +73,9 @@
 			);
 			dependencies = (
 			);
-			name = RNFCM;
+			name = RNFIRMessaging;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libRNFCM.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libRNFIRMessaging.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -92,7 +92,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNFCM" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNFIRMessaging" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -104,7 +104,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* RNFCM */,
+				58B511DA1A9E6C8500147676 /* RNFIRMessaging */,
 			);
 		};
 /* End PBXProject section */
@@ -114,7 +114,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AD1DC2B1CFA802F008C092E /* FCMModule.m in Sources */,
+				3AD1DC2B1CFA802F008C092E /* RNFIRMesssaging.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,7 +216,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RNFCM;
+				PRODUCT_NAME = RNFIRMessaging;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SKIP_INSTALL = YES;
 			};
@@ -232,7 +232,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RNFCM;
+				PRODUCT_NAME = RNFIRMessaging;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -240,7 +240,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNFCM" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNFIRMessaging" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
@@ -249,7 +249,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNFCM" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNFIRMessaging" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,

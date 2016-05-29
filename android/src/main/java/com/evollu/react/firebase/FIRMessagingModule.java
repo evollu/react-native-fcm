@@ -1,4 +1,4 @@
-package com.evollu.react.fcm;
+package com.evollu.react.firebase;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -13,22 +13,19 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.RemoteMessage;
+
 import android.util.Log;
 
 import android.content.Context;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class FCMModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
-    private final static String TAG = FCMModule.class.getCanonicalName();
+public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
+    private final static String TAG = FIRMessagingModule.class.getCanonicalName();
 
-    public FCMModule(ReactApplicationContext reactContext, Intent intent) {
+    public FIRMessagingModule(ReactApplicationContext reactContext) {
         super(reactContext);
 
         getReactApplicationContext().addLifecycleEventListener(this);
@@ -39,7 +36,7 @@ public class FCMModule extends ReactContextBaseJavaModule implements LifecycleEv
 
     @Override
     public String getName() {
-        return "FCMModule";
+        return "RNFIRMessaging";
     }
 
     @ReactMethod
@@ -59,7 +56,7 @@ public class FCMModule extends ReactContextBaseJavaModule implements LifecycleEv
     }
 
     private void registerTokenRefreshHandler() {
-        IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.FCMRefreshToken");
+        IntentFilter intentFilter = new IntentFilter("com.evollu.react.firebase.FCMRefreshToken");
         getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -77,25 +74,24 @@ public class FCMModule extends ReactContextBaseJavaModule implements LifecycleEv
     }
 
     private void registerNotificationHandler() {
-        IntentFilter intentFilter = new IntentFilter("com.evollu.fcm.ReceiveNotification");
+        IntentFilter intentFilter = new IntentFilter("com.evollu.react.firebase.ReceiveNotification");
 
         getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getReactApplicationContext().hasActiveCatalystInstance()) {
+                    RemoteMessage message = intent.getParcelableExtra("data");
                     WritableMap params = Arguments.createMap();
-                    try {
-                        JSONObject data = new JSONObject(intent.getStringExtra("data"));
-                        Iterator<String> keysIterator = data.keys();
-                        while(keysIterator.hasNext()){
-                            String key = keysIterator.next();
+                    if(message.getData() != null){
+                        Map data = message.getData();
+                        Set<String> keysIterator = data.keySet();
+                        for(String key: keysIterator){
                             params.putString(key, (String) data.get(key));
                         }
                         sendEvent("FCMNotificationReceived", params);
-                    } catch (JSONException e){
-
+                        abortBroadcast();
                     }
-                    abortBroadcast();
+
                 }
             }
         }, intentFilter);

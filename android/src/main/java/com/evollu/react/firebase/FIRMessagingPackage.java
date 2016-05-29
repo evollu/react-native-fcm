@@ -1,6 +1,4 @@
-package com.evollu.react.fcm;
-
-import android.content.Intent;
+package com.evollu.react.firebase;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
@@ -12,9 +10,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class FCMPackage implements ReactPackage {
+public class FIRMessagingPackage implements ReactPackage {
 
-    public FCMPackage() {
+    public FIRMessagingPackage() {
     }
 
     @Override
@@ -22,7 +20,7 @@ public class FCMPackage implements ReactPackage {
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new FCMModule(reactContext, null));
+        modules.add(new FIRMessagingModule(reactContext));
         return modules;
     }
 

@@ -8,7 +8,7 @@
 
 extern NSString *const FCMNotificationReceived;
 
-@interface FCMModule : NSObject <RCTBridgeModule>
+@interface RNFIRMessaging : NSObject <RCTBridgeModule>
 
 @property (nonatomic, assign) bool connectedToFCM;
 
