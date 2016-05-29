@@ -1,0 +1,24 @@
+{
+  "name": "react-native-gcm-push-notification",
+  "version": "1.0.3",
+  "description": "React Native component for Google Cloud Messaging for IOS and Android",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evollu/react-native-gcm-push-notification.git"
+  },
+  "keywords": [
+    "React-Native",
+    "ios",
+    "android",
+    "gcm"
+  ],
+  "author": "Libin Lu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/evollu/react-native-gcm-push-notification/issues"
+  },
+  "homepage": "https://github.com/evollu/react-native-gcm-push-notification#readme"
+}
