@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-               BuildableName = "libRNGCM.a"
-               BlueprintName = "RNGCM"
-               ReferencedContainer = "container:FCM.xcodeproj">
+               BuildableName = "libRNFCM.a"
+               BlueprintName = "RNFCM"
+               ReferencedContainer = "container:RNFCM.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,6 +29,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "58B511DA1A9E6C8500147676"
+            BuildableName = "libRNFCM.a"
+            BlueprintName = "RNFCM"
+            ReferencedContainer = "container:RNFCM.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -46,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-            BuildableName = "libRNGCM.a"
-            BlueprintName = "RNGCM"
-            ReferencedContainer = "container:FCM.xcodeproj">
+            BuildableName = "libRNFCM.a"
+            BlueprintName = "RNFCM"
+            ReferencedContainer = "container:RNFCM.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -64,9 +73,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-            BuildableName = "libRNGCM.a"
-            BlueprintName = "RNGCM"
-            ReferencedContainer = "container:FCM.xcodeproj">
+            BuildableName = "libRNFCM.a"
+            BlueprintName = "RNFCM"
+            ReferencedContainer = "container:RNFCM.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
