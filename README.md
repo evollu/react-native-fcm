@@ -16,8 +16,8 @@ https://github.com/oney/TestGcm
 - In `android/build.gradle`
 ```gradle
 dependencies {
-    classpath 'com.android.tools.build:gradle:2.0.0'
-    classpath 'com.google.gms:google-services:3.0.0' // <- Add this line
+classpath 'com.android.tools.build:gradle:2.0.0'
+classpath 'com.google.gms:google-services:3.0.0' // <- Add this line
 ```
 
 - In `android/app/build.gradle`
@@ -31,21 +31,21 @@ apply plugin: 'com.google.gms.google-services' // <- Add this line
 
 ```
 <application
-  android:theme="@style/AppTheme">
+android:theme="@style/AppTheme">
 
-  ...
-  <service android:name="com.evollu.react.fcm.MessagingService">
-    <intent-filter>
-      <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-    </intent-filter>
-  </service>
+...
+<service android:name="com.evollu.react.fcm.MessagingService">
+<intent-filter>
+<action android:name="com.google.firebase.MESSAGING_EVENT"/>
+</intent-filter>
+</service>
 
-  <service android:name="com.evollu.react.fcm.InstanceIdService" android:exported="false">
-    <intent-filter>
-      <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-    </intent-filter>
-  </service>
-  ...
+<service android:name="com.evollu.react.fcm.InstanceIdService" android:exported="false">
+<intent-filter>
+<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+</intent-filter>
+</service>
+...
 ```
 
 ### IOS Configuration
@@ -55,22 +55,28 @@ install pod 'Firebase/Messaging'
 in AppDelegate.m add
 ```
 #import "FCMModule.h"
-```
+...
 
-```
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+....
+[FIRApp configure]; <-- add this line
+}
 
+//add this
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
-  [[NSNotificationCenter defaultCenter] postNotificationName: FCMNotificationReceived
-                                                      object:self
-                                                    userInfo:notification];
+[[NSNotificationCenter defaultCenter] postNotificationName: FCMNotificationReceived
+object:self
+userInfo:notification];
 
 }
 
+//add this
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
-  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived
-                                                      object:self
-                                                    userInfo:notification];
-  handler(UIBackgroundFetchResultNoData);
+[[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived
+object:self
+userInfo:notification];
+handler(UIBackgroundFetchResultNoData);
 }
 ```
 
@@ -85,30 +91,31 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
 var FCM = require('react-native-fcm');
 
 componentWillMount() {
-  FCM.requestPermissions();
-  FCM.getFCMToken().then(token => {
-     //store fcm token in your server
-  });
-  this.fcmNotifLsnr = DeviceEventEmitter.addListener('FCMNotificationReceived', (notif) => {
-    //there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
-  });
-  this.fcmTokenLsnr = DeviceEventEmitter.addListener('FCMTokenRefreshed', (token) => {
-      //fcm token may not be available on first load, catch it here
-  });
+FCM.requestPermissions();
+FCM.getFCMToken().then(token => {
+//store fcm token in your server
+});
+this.fcmNotifLsnr = DeviceEventEmitter.addListener('FCMNotificationReceived', (notif) => {
+//there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
+});
+this.fcmTokenLsnr = DeviceEventEmitter.addListener('FCMTokenRefreshed', (token) => {
+//fcm token may not be available on first load, catch it here
+});
 }
 
 componentWillUnmount() {
-  //prevent leak
-  this.fcmNotifLsnr.remove();
-  this.fcmTokenLsnr.remove();
+//prevent leak
+this.fcmNotifLsnr.remove();
+this.fcmTokenLsnr.remove();
 }
 
 }
 ```
 
 ## Q & A
-### Why my android build is co
-### Why I don't get data notification when app is killed?
+### My android build is failing
+Try update your SDK and google play service
+### I can't get data notification when app is killed?
 If you send notification with payload only, you can only get the data message when app is in foreground or background. Killed app can't show notification
 ### Why I don't get data notification when I'm sending hybrid notification when app is in background?
 I want to figure it out too. Looks like that is how GCM/FCM works. I'm sending 2 notification separately for now. Let me know if you find a better solution
