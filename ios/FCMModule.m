@@ -20,8 +20,6 @@ NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
 
 @implementation FCMModule
 
-NSString* registrationToken;
-
 RCT_EXPORT_MODULE()
 
 @synthesize bridge = _bridge;
@@ -41,8 +39,6 @@ RCT_EXPORT_MODULE()
 - (void)setBridge:(RCTBridge *)bridge
 {
   _bridge = bridge;
-  
-  [FIRApp configure];
 
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(handleRemoteNotificationReceived:)
@@ -100,8 +96,6 @@ RCT_EXPORT_METHOD(requestPermissions)
     return;
   }
   
-  //UIApplication *app = RCTSharedApplication();
-  
   if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
     // iOS 7.1 or earlier
     UIRemoteNotificationType allNotificationTypes =
@@ -125,45 +119,5 @@ RCT_EXPORT_METHOD(requestPermissions)
   [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived
                                               body:notification.userInfo];
 }
-
-//- (void)handleRemoteNotificationsRegistered:(NSNotification *)notification
-//{
-//  if([notification.userInfo objectForKey:@"deviceToken"] != nil){
-//    NSData* deviceToken = [notification.userInfo objectForKey:@"deviceToken"];
-//    __weak typeof(self) weakSelf = self;;
-//    
-//    NSDictionary *registrationOptions = @{kGGLInstanceIDRegisterAPNSOption:deviceToken,
-//                                          kGGLInstanceIDAPNSServerTypeSandboxOption:@YES};
-//    
-//    NSString* gcmSenderID = [[[GGLContext sharedInstance] configuration] gcmSenderID];
-//    
-//    [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:gcmSenderID scope:kGGLInstanceIDScopeGCM options:registrationOptions
-//                                                      handler:^(NSString *token, NSError *error){
-//                                                        if (token != nil) {
-//                                                          NSLog(@"Registration Token: %@", token);
-//                                                          
-//                                                          weakSelf.connectedToGCM = YES;
-//                                                          registrationToken = token;
-//                                                          
-//                                                          NSDictionary *userInfo = @{@"registrationToken":token};
-//                                                          [_bridge.eventDispatcher sendDeviceEventWithName:GCMRemoteNotificationRegistered
-//                                                                                                      body:userInfo];
-//                                                        } else {
-//                                                          NSLog(@"Registration to GCM failed with error: %@", error.localizedDescription);
-//                                                          NSDictionary *userInfo = @{@"error":error.localizedDescription};
-//                                                          [_bridge.eventDispatcher sendDeviceEventWithName:GCMRemoteNotificationRegistered
-//                                                                                                      body:userInfo];
-//                                                        }
-//                                                      }];
-//  } else {
-//    [_bridge.eventDispatcher sendDeviceEventWithName:GCMRemoteNotificationRegistered
-//                                                body:notification.userInfo];
-//  }
-//  
-//}
-
-//-(void)onTokenRefresh {
-//  [self requestPermissions];
-//}
 
 @end
