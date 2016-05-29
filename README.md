@@ -1,11 +1,3 @@
-# react-native-gcm-push-notification
-
-Firebase notification for React Native Android and IOS
-
-## Demo
-
-https://github.com/oney/TestGcm
-
 ## Installation
 
 - Run `npm install react-native-fcm --save`
