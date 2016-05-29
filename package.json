@@ -1,51 +1,12 @@
 {
-  "_args": [
-    [
-      "react-native-fcm@git://github.com/evollu/react-native-fcm.git",
-      "/Users/LLu/Code/Patient/client"
-    ]
-  ],
-  "_from": "git://github.com/evollu/react-native-fcm.git",
-  "_id": "react-native-fcm@1.0.2",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/react-native-fcm",
-  "_phantomChildren": {},
-  "_requested": {
-    "hosted": {
-      "directUrl": "https://raw.githubusercontent.com/evollu/react-native-fcm/master/package.json",
-      "gitUrl": "git://github.com/evollu/react-native-fcm.git",
-      "httpsUrl": "git+https://github.com/evollu/react-native-fcm.git",
-      "shortcut": "github:evollu/react-native-fcm",
-      "ssh": "git@github.com:evollu/react-native-fcm.git",
-      "sshUrl": "git+ssh://git@github.com/evollu/react-native-fcm.git",
-      "type": "github"
-    },
-    "name": "react-native-fcm",
-    "raw": "react-native-fcm@git://github.com/evollu/react-native-fcm.git",
-    "rawSpec": "git://github.com/evollu/react-native-fcm.git",
-    "scope": null,
-    "spec": "git://github.com/evollu/react-native-fcm.git",
-    "type": "hosted"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "git://github.com/evollu/react-native-fcm.git#2ae6dfedcff3fea6afdae2d7f971d0f9e0dd2930",
-  "_shasum": "7669d2f1dfd25247edc26a29d69927faf1c43634",
-  "_shrinkwrap": null,
-  "_spec": "react-native-fcm@git://github.com/evollu/react-native-fcm.git",
-  "_where": "/Users/LLu/Code/Patient/client",
   "author": {
     "name": "Libin Lu"
   },
   "bugs": {
     "url": "https://github.com/evollu/react-native-fcm/issues"
   },
-  "dependencies": {},
-  "description": "React Native component for FCM for IOS and Android",
+  "description": "React Native bridge for firebase cloud messaging (FCM)",
   "devDependencies": {},
-  "gitHead": "2ae6dfedcff3fea6afdae2d7f971d0f9e0dd2930",
   "homepage": "https://github.com/evollu/react-native-fcm",
   "keywords": [
     "React-Native",
@@ -57,12 +18,9 @@
   ],
   "license": "MIT",
   "name": "react-native-fcm",
-  "optionalDependencies": {},
-  "readme": "# react-native-gcm-push-notification\n\nFirebase notification for React Native Android and IOS\n\n## Demo\n\nhttps://github.com/oney/TestGcm\n\n## Installation\n\n- Run `npm install react-native-fcm --save`\n- Run rnpm link\n\n## Android Configuration\n\n- In `android/build.gradle`\n```gradle\ndependencies {\nclasspath 'com.android.tools.build:gradle:2.0.0'\nclasspath 'com.google.gms:google-services:3.0.0' // <- Add this line\n```\n\n- In `android/app/build.gradle`\n```gradle\napply plugin: \"com.android.application\"\napply plugin: 'com.google.gms.google-services' // <- Add this line\n...\n```\n\n- In `android/app/src/main/AndroidManifest.xml`, add these lines, be sure to change `com.xxx.yyy` to your package\n\n```\n<application\nandroid:theme=\"@style/AppTheme\">\n\n...\n<service android:name=\"com.evollu.react.fcm.MessagingService\">\n<intent-filter>\n<action android:name=\"com.google.firebase.MESSAGING_EVENT\"/>\n</intent-filter>\n</service>\n\n<service android:name=\"com.evollu.react.fcm.InstanceIdService\" android:exported=\"false\">\n<intent-filter>\n<action android:name=\"com.google.firebase.INSTANCE_ID_EVENT\"/>\n</intent-filter>\n</service>\n...\n```\n\n### IOS Configuration\n\ninstall pod 'Firebase/Messaging'\n\nin AppDelegate.m add\n```\n#import \"FCMModule.h\"\n...\n\n- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions\n{\n....\n[FIRApp configure]; <-- add this line\n}\n\n//add this\n- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {\n[[NSNotificationCenter defaultCenter] postNotificationName: FCMNotificationReceived\nobject:self\nuserInfo:notification];\n\n}\n\n//add this\n- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {\n[[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived\nobject:self\nuserInfo:notification];\nhandler(UIBackgroundFetchResultNoData);\n}\n```\n\n\n### FCM config file\nIn [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `googleServices-info.plist` file and place it in `/ios` directory\n\n### Usage\n\n```javascript\n\nvar FCM = require('react-native-fcm');\n\ncomponentWillMount() {\nFCM.requestPermissions();\nFCM.getFCMToken().then(token => {\n//store fcm token in your server\n});\nthis.fcmNotifLsnr = DeviceEventEmitter.addListener('FCMNotificationReceived', (notif) => {\n//there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload\n});\nthis.fcmTokenLsnr = DeviceEventEmitter.addListener('FCMTokenRefreshed', (token) => {\n//fcm token may not be available on first load, catch it here\n});\n}\n\ncomponentWillUnmount() {\n//prevent leak\nthis.fcmNotifLsnr.remove();\nthis.fcmTokenLsnr.remove();\n}\n\n}\n```\n\n## Q & A\n### My android build is failing\nTry update your SDK and google play service\n### I can't get data notification when app is killed?\nIf you send notification with payload only, you can only get the data message when app is in foreground or background. Killed app can't show notification\n### Why I don't get data notification when I'm sending hybrid notification when app is in background?\nI want to figure it out too. Looks like that is how GCM/FCM works. I'm sending 2 notification separately for now. Let me know if you find a better solution\n\n",
-  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/evollu/react-native-fcm.git"
   },
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
