@@ -1,3 +1,3 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.evollu.react.firebase">
+          package="com.evollu.react.fcm">
 </manifest>

@@ -1,4 +1,4 @@
-package com.evollu.react.firebase;
+package com.evollu.react.fcm;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -56,7 +56,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     private void registerTokenRefreshHandler() {
-        IntentFilter intentFilter = new IntentFilter("com.evollu.react.firebase.FCMRefreshToken");
+        IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.FCMRefreshToken");
         getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -74,7 +74,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     private void registerNotificationHandler() {
-        IntentFilter intentFilter = new IntentFilter("com.evollu.react.firebase.ReceiveNotification");
+        IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.ReceiveNotification");
 
         getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override

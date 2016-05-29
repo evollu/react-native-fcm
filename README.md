@@ -27,7 +27,7 @@ apply plugin: 'com.google.gms.google-services' // <- Add this line
 ...
 ```
 
-- In `android/app/src/main/AndroidManifest.xml`, add these lines, be sure to change `com.xxx.yyy` to your package
+- In `android/app/src/main/AndroidManifest.xml`
 
 ```
 <application
@@ -54,7 +54,7 @@ install pod 'Firebase/Messaging'
 
 in AppDelegate.m add
 ```
-#import "FCMModule.h"
+#import "RNFIRMessaging.h"
 ...
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -117,6 +117,6 @@ this.fcmTokenLsnr.remove();
 Try update your SDK and google play service
 ### I can't get data notification when app is killed?
 If you send notification with payload only, you can only get the data message when app is in foreground or background. Killed app can't show notification
-### Why I don't get data notification when I'm sending hybrid notification when app is in background?
+### I can't get data notification when app is in background with hybrid notification
 I want to figure it out too. Looks like that is how GCM/FCM works. I'm sending 2 notification separately for now. Let me know if you find a better solution
 

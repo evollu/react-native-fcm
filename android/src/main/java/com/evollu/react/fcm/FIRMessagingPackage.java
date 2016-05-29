@@ -1,4 +1,4 @@
-package com.evollu.react.firebase;
+package com.evollu.react.fcm;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
