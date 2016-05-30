@@ -113,6 +113,8 @@ If you send notification with payload only, you can only get the data message wh
 I want to figure it out too. Looks like that is how GCM/FCM works. I'm sending 2 notification separately for now. Let me know if you find a better solution
 ### I can't get notification payload when my android app is in foreground
 It is better to use data payload if you need to pass data into application. I haven't implemented notification payload bridging in android module and am not planning to (the SDK should handle the payload for you)
+### Notification payload and data payload are mixed in iOS app.
+I'm not doing any filtering. Try to add some `type` attributes to differentiate data payload from APN notification
 ### It is missing some features
 Issues and pull requests are welcomed. Let's make this thing better!
 
