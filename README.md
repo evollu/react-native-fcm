@@ -111,4 +111,8 @@ Try update your SDK and google play service
 If you send notification with payload only, you can only get the data message when app is in foreground or background. Killed app can't show notification
 ### I can't get data notification when app is in background with hybrid notification
 I want to figure it out too. Looks like that is how GCM/FCM works. I'm sending 2 notification separately for now. Let me know if you find a better solution
+### I can't get notification payload when my android app is in foreground
+It is better to use data payload if you need to pass data into application. I haven't implemented notification payload handling in android module and am not planning to (the SDK should handle the payload for you)
+### It is missing some features
+Issues and pull requests are welcomed. Let's make this thing better!
 
