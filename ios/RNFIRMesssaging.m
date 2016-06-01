@@ -92,26 +92,20 @@ RCT_REMAP_METHOD(getFCMToken,
 
 RCT_EXPORT_METHOD(requestPermissions)
 {
-  if (RCTRunningInAppExtension()) {
-    return;
-  }
-  
-  if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
-    // iOS 7.1 or earlier
-    UIRemoteNotificationType allNotificationTypes =
-    (UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge);
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:allNotificationTypes];
-  } else {
-    // iOS 8 or later
-    // [END_EXCLUDE]
-    UIUserNotificationType allNotificationTypes =
-    (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-    UIUserNotificationSettings *settings =
-    [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-  }
-  
+    if (RCTRunningInAppExtension()) {
+        return;
+    }
+    
+    UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+    
+    UIApplication *app = RCTSharedApplication();
+    if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        UIUserNotificationSettings *notificationSettings =
+        [UIUserNotificationSettings settingsForTypes:(NSUInteger)types categories:nil];
+        [app registerUserNotificationSettings:notificationSettings];
+    } else {
+        [app registerForRemoteNotificationTypes:(NSUInteger)types];
+    }
 }
 
 - (void)handleRemoteNotificationReceived:(NSNotification *)notification
