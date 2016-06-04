@@ -152,7 +152,7 @@ These is [an issue opened for that](https://github.com/google/gcm/issues/63). Yo
 It is better to use data payload if you need to pass data into application. I haven't implemented notification payload bridging in android module and am not planning to (the SDK should post notification for you)
 ### Notification payload and data payload are mixed in iOS app.
 I'm not doing any filtering. Try to add some `type` attributes to differentiate data payload from APN notification
-### App reloads when notification is clicked
+### App reloads when notification is clicked [Android]
 Preserve app status with asyncStorage should get around this. Still looking for solution
 ### It is missing some features
 Issues and pull requests are welcomed. Let's make this thing better!
