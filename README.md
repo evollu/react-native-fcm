@@ -104,6 +104,18 @@ this.fcmTokenLsnr.remove();
 }
 ```
 
+### Pass `click_action` and `data` when sending notification
+When app is not running when user clicks notification, notification data will be passed into 
+- `FCM.initialAction`(contains `click_action` in notification payload
+- `FCM.initialData` (contains `data` payload if you send together with notification)
+
+When app is running in background
+- IOS will receive notificaton from `FCMNotificationReceived` event
+- Android will reload the whole react app (I'm looking for suggestions to fix that)
+
+When app is running in foreground
+- Both will receive notificaton from `FCMNotificationReceived` event
+
 ## Q & A
 ### My android build is failing
 Try update your SDK and google play service
