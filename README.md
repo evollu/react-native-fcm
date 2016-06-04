@@ -105,7 +105,7 @@ this.fcmTokenLsnr.remove();
 ```
 
 ### Response to `click_action` in Android
-To allow android to respond to `click_action`, you need to define Activities and filter on specific intent. Since everything is running in MainActivity, you can have MainActivity to handle actions, however, the activity will be reload everytime. Let me know if you have better idea how to do this.
+To allow android to respond to `click_action`, you need to define Activities and filter on specific intent. Since everything is running in MainActivity, you can have MainActivity to handle actions.
 ```xml
 <activity
   android:name=".MainActivity"
@@ -117,7 +117,7 @@ To allow android to respond to `click_action`, you need to define Activities and
       <category android:name="android.intent.category.LAUNCHER" />
   </intent-filter>
     <intent-filter>                                                       <--add this line
-        <action android:name="fcm.ACTION.HELLO" />                        <--add this line, name should matche click_action
+        <action android:name="fcm.ACTION.HELLO" />                        <--add this line, name should match click_action
         <category android:name="android.intent.category.DEFAULT" />       <--add this line
     </intent-filter>                                                      <--add this line
 </activity>
@@ -152,6 +152,8 @@ These is [an issue opened for that](https://github.com/google/gcm/issues/63). Yo
 It is better to use data payload if you need to pass data into application. I haven't implemented notification payload bridging in android module and am not planning to (the SDK should post notification for you)
 ### Notification payload and data payload are mixed in iOS app.
 I'm not doing any filtering. Try to add some `type` attributes to differentiate data payload from APN notification
+### App reloads when notification is clicked
+Preserve app status with asyncStorage should get around this. Still looking for solution
 ### It is missing some features
 Issues and pull requests are welcomed. Let's make this thing better!
 
