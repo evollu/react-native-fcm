@@ -147,7 +147,7 @@ Try update your SDK and google play service
 ### I can't get data notification when app is killed?
 If you send notification with payload only, you can only get the data message when app is in foreground or background. Killed app doesn't receive onMessageReceived
 ### App running in background doesn't get onMessageReceived if app is running in background
-Well these is [an issue opened there](https://github.com/google/gcm/issues/63). You will received data payload if you click on the notification. But if you just open the app, the data is lost.
+Well these is [an issue opened there](https://github.com/google/gcm/issues/63). You will received data payload in FCM.initialData if you click on the notification. But if you just open the app, the data is lost.
 ### I can't get notification payload when my android app is in foreground
 It is better to use data payload if you need to pass data into application. I haven't implemented notification payload bridging in android module and am not planning to (the SDK should handle the payload for you)
 ### Notification payload and data payload are mixed in iOS app.
