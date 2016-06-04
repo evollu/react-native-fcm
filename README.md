@@ -139,7 +139,7 @@ new FIRMessagingPackage(getIntent()),                                     <--add
 - When app is running in foreground
  - Both will receive notificaton from `FCMNotificationReceived` event
 
-NOTE: it is recommend not to reply on extra data for click_action as it can be overwritten. check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)
+NOTE: it is recommend not to rely on `data` payload for click_action as it can be overwritten. check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)
 
 ## Q & A
 #### My android build is failing
