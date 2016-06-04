@@ -3,7 +3,7 @@
 - Run `npm install react-native-fcm --save`
 - Run rnpm link
 
-## Android Configuration
+### Android Configuration
 
 - In `android/build.gradle`
 ```gradle
@@ -76,7 +76,7 @@ handler(UIBackgroundFetchResultNoData);
 ### FCM config file
 In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `googleServices-info.plist` file and place it in `/ios` directory
 
-### Usage
+## Usage
 
 ```javascript
 
@@ -142,17 +142,17 @@ new FIRMessagingPackage(getIntent()),                                     <--add
 NOTE: it is recommend not to reply on extra data for click_action as it can be overwritten. check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)
 
 ## Q & A
-### My android build is failing
+#### My android build is failing
 Try update your SDK and google play service
-### I can't get notification data when app is killed?
+#### I can't get notification data when app is killed?
 If you send notification with `data` only, you can only get the data message when app is in foreground or background. Killed app doesn't trigger FCMNotificationReceived. Seems that is how FCM works today
-### App running in background doesn't trigger `FCMNotificationReceived` when receiving hybrid notification [Android]
+#### App running in background doesn't trigger `FCMNotificationReceived` when receiving hybrid notification [Android]
 These is [an issue opened for that](https://github.com/google/gcm/issues/63). You will received data payload in FCM.initialData if you click on the notification. But if you just open the app, the data is lost.
-### I can't get `notification` payload when my android app is in foreground
+#### I can't get `notification` payload when my android app is in foreground
 It is better to use data payload if you need to pass data into application. I haven't implemented notification payload bridging in android module and am not planning to (the SDK should post notification for you)
-### Notification payload and data payload are mixed in iOS app.
+#### Notification payload and data payload are mixed in iOS app.
 I'm not doing any filtering. Try to add some `type` attributes to differentiate data payload from APN notification
-### App reloads when notification is clicked [Android]
+#### App reloads when notification is clicked [Android]
 Preserve app status with asyncStorage should get around this. Still looking for solution
 ### It is missing some features
 Issues and pull requests are welcomed. Let's make this thing better!
