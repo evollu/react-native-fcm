@@ -104,17 +104,42 @@ this.fcmTokenLsnr.remove();
 }
 ```
 
-### Pass `click_action` and `data` when sending notification
-When app is not running when user clicks notification, notification data will be passed into 
-- `FCM.initialAction`(contains `click_action` in notification payload
-- `FCM.initialData` (contains `data` payload if you send together with notification)
+### Response to `click_action` in Android
+To allow android to respond to `click_action`, you need to define Activities and filter on specific intent. Since everything is running in MainActivity, you can have MainActivity to handle actions, however, the activity will be reload everytime. Let me know if you have better idea how to do this.
+```xml
+<activity
+  android:name=".MainActivity"
+  android:label="@string/app_name"
+  android:windowSoftInputMode="adjustResize"
+  android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+  <intent-filter>
+      <action android:name="android.intent.action.MAIN" />
+      <category android:name="android.intent.category.LAUNCHER" />
+  </intent-filter>
+    <intent-filter>                                                       <--add this line
+        <action android:name="fcm.ACTION.HELLO" />                        <--add this line, name should matche click_action
+        <category android:name="android.intent.category.DEFAULT" />       <--add this line
+    </intent-filter>                                                      <--add this line
+</activity>
+```
+and pass intent into package, change MainActivity.java
+```java
+new FIRMessagingPackage(getIntent()),                                     <--add getIntent()
+```
 
-When app is running in background
-- IOS will receive notificaton from `FCMNotificationReceived` event
-- Android will reload the whole react app (I'm looking for suggestions to fix that)
+### Behaviour when sending `click_action` and `data` in notification
+- When app is not running when user clicks notification, notification data will be passed into 
+ - `FCM.initialAction`(contains `click_action` in notification payload
+ - `FCM.initialData` (contains `data` payload if you send together with notification)
 
-When app is running in foreground
-- Both will receive notificaton from `FCMNotificationReceived` event
+- When app is running in background
+ - IOS will receive notificaton from `FCMNotificationReceived` event
+ - Android will reload the whole react app
+
+- When app is running in foreground
+ - Both will receive notificaton from `FCMNotificationReceived` event
+
+NOTE: it is recommend not to reply on extra data for click_action as it can be overwritten. check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)
 
 ## Q & A
 ### My android build is failing
