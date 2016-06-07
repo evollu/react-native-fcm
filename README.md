@@ -1,7 +1,9 @@
 ## Installation
 
 - Run `npm install react-native-fcm --save`
-- Run rnpm link
+- Run `rnpm link`
+Or you can combine 2 commands
+- Run `rnpm install react-native-fcm --save`
 
 ## Android Configuration
 
@@ -143,7 +145,35 @@ this.fcmTokenLsnr.remove();
  - `FCM.initialData` (contains `data` payload if you send together with notification)
 
 - When app is running in background
- - App will receive notificaton from `FCMNotificationReceived` event when user click on notification
+ - App will receive notificaton from `FCMNotificationReceived` event when user click on notification.
+   e.g. fcm payload looks like
+   ```
+   {
+      "to":"some_device_token",
+      "content_available": true,
+      "notification": {
+          "title": "hello",
+          "body": "yo",
+          "click_action": "fcm.ACTION.HELLO"
+      },
+      "data": {
+          "extra":"juice"
+      }
+    }
+    ```
+    and event callback will receive as
+    ```
+    ///Android
+    {
+      fcm: {"action": "fcm.ACTION.HELLO"},
+      extra: "juice"
+    }
+    ///IOS
+    {
+      apns: {action_category: "fcm.ACTION.HELLO"},
+      extra: "juice"
+    }
+    ```
 
 - When app is running in foreground
  - IOS will receive notification and android **won't** (better not to do anything in foreground for hybrid and send a seprate data message.)
