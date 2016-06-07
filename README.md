@@ -80,6 +80,7 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
 
 ```javascript
 
+import {DeviceEventEmitter} from 'react-native';
 var FCM = require('react-native-fcm');
 
 componentWillMount() {
