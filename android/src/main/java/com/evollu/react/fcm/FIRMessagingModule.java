@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class FIRMessagingModule extends ReactContextBaseJavaModule {
+public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
     Intent mIntent;
 
@@ -33,6 +33,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule {
 
         mIntent = intent;
 
+        getReactApplicationContext().addLifecycleEventListener(this);
         registerTokenRefreshHandler();
         registerMessageHandler();
     }
@@ -81,15 +82,15 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule {
         getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (getReactApplicationContext().hasActiveCatalystInstance()) {
-                    String token = intent.getStringExtra("token");
+            if (getReactApplicationContext().hasActiveCatalystInstance()) {
+                String token = intent.getStringExtra("token");
 
-                    WritableMap params = Arguments.createMap();
-                    params.putString("token", token);
+                WritableMap params = Arguments.createMap();
+                params.putString("token", token);
 
-                    sendEvent("FCMTokenRefreshed", params);
-                    abortBroadcast();
-                }
+                sendEvent("FCMTokenRefreshed", params);
+                abortBroadcast();
+            }
             }
         }, intentFilter);
     }
@@ -100,21 +101,43 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule {
         getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (getReactApplicationContext().hasActiveCatalystInstance()) {
-                    RemoteMessage message = intent.getParcelableExtra("data");
-                    WritableMap params = Arguments.createMap();
-                    if(message.getData() != null){
-                        Map data = message.getData();
-                        Set<String> keysIterator = data.keySet();
-                        for(String key: keysIterator){
-                            params.putString(key, (String) data.get(key));
-                        }
-                        sendEvent("FCMNotificationReceived", params);
-                        abortBroadcast();
+            if (getReactApplicationContext().hasActiveCatalystInstance()) {
+                RemoteMessage message = intent.getParcelableExtra("data");
+                WritableMap params = Arguments.createMap();
+                if(message.getData() != null){
+                    Map data = message.getData();
+                    Set<String> keysIterator = data.keySet();
+                    for(String key: keysIterator){
+                        params.putString(key, (String) data.get(key));
                     }
-
+                    sendEvent("FCMNotificationReceived", params);
+                    abortBroadcast();
                 }
+
+            }
             }
         }, intentFilter);
+    }
+
+    @Override
+    public void onHostResume() {
+        Intent newIntent = getCurrentActivity().getIntent();
+        if(newIntent != mIntent && newIntent != null){
+            WritableMap params = Arguments.fromBundle(newIntent.getExtras());
+            WritableMap fcm = Arguments.createMap();
+            fcm.putString("action", newIntent.getAction());
+            params.putMap("fcm", fcm);
+            sendEvent("FCMNotificationReceived", params);
+        }
+        mIntent = newIntent;
+    }
+
+    @Override
+    public void onHostPause() {
+    }
+
+    @Override
+    public void onHostDestroy() {
+
     }
 }
