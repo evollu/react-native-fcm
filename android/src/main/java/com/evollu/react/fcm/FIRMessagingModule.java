@@ -122,7 +122,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @Override
     public void onHostResume() {
         Intent newIntent = getCurrentActivity().getIntent();
-        if(newIntent != mIntent && newIntent != null && newIntent.getExtras() != null){
+        if(newIntent != mIntent && newIntent != null){
             Bundle extras = newIntent.getExtras();
             if (extras != null) {
                 WritableMap params = Arguments.fromBundle(extras);
