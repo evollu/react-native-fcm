@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
 import android.os.Bundle;
@@ -69,6 +70,16 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     public void getFCMToken(Promise promise) {
         Log.d(TAG, "Firebase token: " + FirebaseInstanceId.getInstance().getToken());
         promise.resolve(FirebaseInstanceId.getInstance().getToken());
+    }
+
+    @ReactMethod
+    public void subscribeToTopic(String topic){
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+    }
+
+    @ReactMethod
+    public void unsubscribeFromTopic(String topic){
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
     }
 
     private void sendEvent(String eventName, Object params) {

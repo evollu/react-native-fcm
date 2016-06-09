@@ -1,36 +1,39 @@
-import {
-  NativeModules,
-  DeviceEventEmitter,
-} from 'react-native';
+import {NativeModules, DeviceEventEmitter} from 'react-native';
 
 const eventsMap = {
-  refersh: 'FCMTokenRefreshed',
-  notification: 'FCMNotificationReceived',
+    refreshToken: 'FCMTokenRefreshed',
+    notification: 'FCMNotificationReceived'
 };
 
 const FIRMessaging = NativeModules.RNFIRMessaging;
 
 const FCM = {};
 
-FCM.getFCMToken = function getFCMToken() {
+FCM.getFCMToken = () => {
     return FIRMessaging.getFCMToken();
 };
 
-FCM.requestPermissions = function requestPermissions() {
-  return FIRMessaging.requestPermissions();
+FCM.requestPermissions = () => {
+    return FIRMessaging.requestPermissions();
 };
 
-FCM.on = function on(event, callback) {
-  const nativeEvent = eventsMap[event];
+FCM.on = (event, callback) => {
+    const nativeEvent = eventsMap[event];
 
-  const listener = DeviceEventEmitter.addListener(nativeEvent, (params) => {
-    callback(params);
-  });
+    const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
 
-  return function remove() {
-    listener.remove();
-  };
+    return function remove() {
+        listener.remove();
+    };
 };
+
+FCM.subscribeToTopic = (topic) => {
+    FIRMessaging.subscribeToTopic(topic);
+}
+
+FCM.unsubscribeFromTopic = (topic) => {
+    FIRMessaging.unsubscribeFromTopic(topic);
+}
 
 FCM.initialData = FIRMessaging.initialData;
 FCM.initialAction = FIRMessaging.initialAction;

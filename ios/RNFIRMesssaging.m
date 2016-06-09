@@ -109,6 +109,16 @@ RCT_EXPORT_METHOD(requestPermissions)
     }
 }
 
+RCT_EXPORT_METHOD(subscribeToTopic: (NSString*) topic)
+{
+  [[FIRMessaging messaging] subscribeToTopic:topic];
+}
+
+RCT_EXPORT_METHOD(unsubscribeFromTopic: (NSString*) topic)
+{
+  [[FIRMessaging messaging] unsubscribeFromTopic:topic];
+}
+
 - (void)handleRemoteNotificationReceived:(NSNotification *)notification
 {
   [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived
