@@ -63,6 +63,8 @@ To allow android to respond to `click_action`, you need to define Activities and
 ```
 and pass intent into package, change MainActivity.java
 ```java
+import android.content.Intent;                                            <--add this line next to the other imports
+
 @Override                                                                 <--add this line
 protected void onNewIntent(Intent intent){                                <--add this line
     setIntent(intent);                                             <--add this line to update intent on notification click
