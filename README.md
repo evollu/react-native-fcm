@@ -90,20 +90,12 @@ in AppDelegate.m add
 [FIRApp configure]; <-- add this line
 }
 
-//add this
+//add this method
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
 [[NSNotificationCenter defaultCenter] postNotificationName: FCMNotificationReceived
 object:self
 userInfo:notification];
 
-}
-
-//add this
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
-[[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived
-object:self
-userInfo:notification];
-handler(UIBackgroundFetchResultNoData);
 }
 ```
 
