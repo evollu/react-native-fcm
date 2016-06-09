@@ -113,32 +113,30 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
 ## Usage
 
 ```javascript
+  import FCM from 'react-native-fcm';
 
-import {DeviceEventEmitter} from 'react-native';
-var FCM = require('react-native-fcm');
+  ...
+  componentWillMount() {
+    FCM.requestPermissions();
+    FCM.getFCMToken().then(token => {
+      console.log(token)
+      // store fcm token in your server
+    });
+    this.notificationUnsubscribe = FCM.on('notification', (notif) => {
+      // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
+    });
+    this.refreshUnsubscribe = FCM.on('refresh', (data) => {
+      console.log(data.token)
+      // fcm token may not be available on first load, catch it here
+    });
+  }
 
-componentWillMount() {
-FCM.requestPermissions();
-FCM.getFCMToken().then(data => {
-  console.log(data.token)
-//store fcm token in your server
-});
-this.fcmNotifLsnr = DeviceEventEmitter.addListener('FCMNotificationReceived', (notif) => {
-//there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
-});
-this.fcmTokenLsnr = DeviceEventEmitter.addListener('FCMTokenRefreshed', (data) => {
-  console.log(data.token)
-//fcm token may not be available on first load, catch it here
-});
-}
-
-componentWillUnmount() {
-//prevent leak
-this.fcmNotifLsnr.remove();
-this.fcmTokenLsnr.remove();
-}
-
-}
+  componentWillUnmount() {
+    // prevent leak
+    this.refreshUnsubscribe();
+    this.notificationUnsubscribe();
+  }
+  ...
 ```
 
 ### Behaviour when sending `notification` and `data` payload through GCM
