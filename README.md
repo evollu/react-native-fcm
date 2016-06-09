@@ -122,6 +122,9 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
       console.log(token)
       // fcm token may not be available on first load, catch it here
     });
+    
+    FCM.subscribeToTopic('/topics/foo-bar');
+    FCM.unsubscribeFromTopic('/topics/foo-bar');
   }
 
   componentWillUnmount() {
