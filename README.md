@@ -119,13 +119,15 @@ var FCM = require('react-native-fcm');
 
 componentWillMount() {
 FCM.requestPermissions();
-FCM.getFCMToken().then(token => {
+FCM.getFCMToken().then(data => {
+  console.log(data.token)
 //store fcm token in your server
 });
 this.fcmNotifLsnr = DeviceEventEmitter.addListener('FCMNotificationReceived', (notif) => {
 //there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
 });
-this.fcmTokenLsnr = DeviceEventEmitter.addListener('FCMTokenRefreshed', (token) => {
+this.fcmTokenLsnr = DeviceEventEmitter.addListener('FCMTokenRefreshed', (data) => {
+  console.log(data.token)
 //fcm token may not be available on first load, catch it here
 });
 }
