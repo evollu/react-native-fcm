@@ -93,15 +93,12 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-            if (getReactApplicationContext().hasActiveCatalystInstance()) {
-                String token = intent.getStringExtra("token");
+                if (getReactApplicationContext().hasActiveCatalystInstance()) {
+                    String token = intent.getStringExtra("token");
 
-                WritableMap params = Arguments.createMap();
-                params.putString("token", token);
-
-                sendEvent("FCMTokenRefreshed", params);
-                abortBroadcast();
-            }
+                    sendEvent("FCMTokenRefreshed", token);
+                    abortBroadcast();
+                }
             }
         }, intentFilter);
     }

@@ -89,15 +89,13 @@ in AppDelegate.m add
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 ....
-[FIRApp configure]; <-- add this line
+  [FIRApp configure]; <-- add this line
 }
 
 //add this method
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
-[[NSNotificationCenter defaultCenter] postNotificationName: FCMNotificationReceived
-object:self
-userInfo:notification];
-
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
+  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
+  handler(UIBackgroundFetchResultNoData);
 }
 ```
 
@@ -120,8 +118,8 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
     this.notificationUnsubscribe = FCM.on('notification', (notif) => {
       // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
     });
-    this.refreshUnsubscribe = FCM.on('refresh', (data) => {
-      console.log(data.token)
+    this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
+      console.log(token)
       // fcm token may not be available on first load, catch it here
     });
   }

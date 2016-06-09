@@ -86,9 +86,7 @@ RCT_REMAP_METHOD(getFCMToken,
 
 - (void) onTokenRefresh
 {
-  NSDictionary *info = @{@"token":[[FIRInstanceID instanceID] token]};
-  [_bridge.eventDispatcher sendDeviceEventWithName:@"FCMTokenRefreshed"
-                                                   body:info];
+  [_bridge.eventDispatcher sendDeviceEventWithName:@"FCMTokenRefreshed" body:[[FIRInstanceID instanceID] token]];
 }
 
 RCT_EXPORT_METHOD(requestPermissions)
