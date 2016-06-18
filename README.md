@@ -4,7 +4,7 @@
 - Run `rnpm link`
 
 Or you can combine 2 commands
-- Run `rnpm install react-native-fcm --save`
+- Run `rnpm install react-native-fcm`
 
 ## Android Configuration
 
