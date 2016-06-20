@@ -80,6 +80,11 @@ protected void onNewIntent(Intent intent){                                <--add
 ## IOS Configuration
 
 install pod 'Firebase/Messaging'
+NOTE: make sure cocoapods version > 1.0
+```
+cd ios && pod init
+pod install Firebase/Messaging
+```
 
 in AppDelegate.m add
 ```
@@ -179,8 +184,6 @@ NOTE: it is recommend not to rely on `data` payload for click_action as it can b
 ## Q & A
 #### My android build is failing
 Try update your SDK and google play service
-#### My ios build cannot find header file
-Try to update cocapods > 1.0, clean project and rebuild
 #### I can't get notification when app is killed
 If you send notification with `data` only, you can only get the data message when app is in foreground or background. Killed app doesn't trigger FCMNotificationReceived. Seems that is how FCM works today
 #### App running in background doesn't trigger `FCMNotificationReceived` when receiving hybrid notification [Android]
