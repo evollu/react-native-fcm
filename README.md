@@ -65,15 +65,19 @@ and pass intent into package, change MainActivity.java
 ```java
 import android.content.Intent;                                            <--add this line next to the other imports
 
-@Override                                                                 <--add this line
-protected void onNewIntent(Intent intent){                                <--add this line
-    setIntent(intent);                                             <--add this line to update intent on notification click
-}                                                                         <--add this line
+// Add this line to update intent on notification click
+@Override
+// in RN <= 0.27 you may need to use `protected void onNewIntent (Intent intent) {`
+public void onNewIntent (Intent intent) {
+  super.onNewIntent(intent);
+    setIntent(intent);
+}       
 
+// Add package
 @Override
     protected List<ReactPackage> getPackages() {
     ...
-      new FIRMessagingPackage(getIntent()),                               <--add getIntent()
+      new FIRMessagingPackage(getIntent()),                               // <-- add getIntent()
     ...
 ```
 
