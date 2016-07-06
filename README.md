@@ -92,7 +92,7 @@ pod install Firebase/Messaging
 
 in AppDelegate.m add
 ```
-#import "RNFIRMessaging.h"
+#import "RNFIRMessaging.h" <--add this line
 ...
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
