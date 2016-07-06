@@ -189,7 +189,7 @@ NOTE: it is recommend not to rely on `data` payload for click_action as it can b
 #### My android build is failing
 Try update your SDK and google play service
 #### I can't get notification when app is killed
-If you send notification with `data` only, you can only get the data message when app is in foreground or background. Killed app doesn't trigger FCMNotificationReceived. Seems that is how FCM works today
+If you send notification with `data` only, you can only get the data message when app is in foreground or background. Killed app doesn't trigger FCMNotificationReceived. Use `notification` in the payload instead
 #### App running in background doesn't trigger `FCMNotificationReceived` when receiving hybrid notification [Android]
 These is [an issue opened for that](https://github.com/google/gcm/issues/63). Behavior is not consistent between 2 platforms
 #### It is missing some features
