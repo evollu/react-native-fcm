@@ -1,7 +1,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <Firebase.h>
+#import "Firebase.h"
 
 #import "RCTBridgeModule.h"
 
