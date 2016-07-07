@@ -194,6 +194,8 @@ Try update your SDK and google play service
 If you send notification with `data` only, you can only get the data message when app is in foreground or background. Killed app doesn't trigger FCMNotificationReceived. Use `notification` in the payload instead
 #### App running in background doesn't trigger `FCMNotificationReceived` when receiving hybrid notification [Android]
 These is [an issue opened for that](https://github.com/google/gcm/issues/63). Behavior is not consistent between 2 platforms
+#### Android notification is showing a white icon
+Since Lolipop, push notification icon is required to be all white, otherwise it will be a white circle.
 #### It is missing some features
 Issues and pull requests are welcomed. Let's make this thing better!
 
