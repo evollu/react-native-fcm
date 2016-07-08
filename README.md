@@ -115,7 +115,7 @@ in AppDelegate.m add
 //add this method
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
-  handler(UIBackgroundFetchResultNoData);
+  handler(UIBackgroundFetchResultNewData);
 }
 ```
 
@@ -160,8 +160,15 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
  - `FCM.initialAction`(contains `click_action` in notification payload
  - `FCM.initialData` (contains `data` payload if you send together with notification)
 
-- When app is running in background
- - App will receive notificaton from `FCMNotificationReceived` event when user click on notification.
+- When app is running in background (the tricky one, I strongly suggest you try it out yourself)
+ - IOS will receive notificaton from `FCMNotificationReceived` event
+    * if you pass `content_available` flag true, you will receive one when app is in background and another one when user resume the app. [more info](http://www.rahuljiresal.com/2015/03/retract-push-notifications-on-ios/)
+    * if you just pass `notification`, you will only receive one when user resume the app.
+    * you will not see banner if `notification->body` is not defined.
+ - Android will receive notificaton from `FCMNotificationReceived` event 
+    * if you pass `notification` payload. it will receive data when user click on notification 
+    * if you pass `data` payload only, it will receive data when in background 
+   
    e.g. fcm payload looks like
    ```
    {
