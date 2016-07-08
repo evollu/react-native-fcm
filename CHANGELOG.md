@@ -1,3 +1,9 @@
+### 1.0.11
+- change android library version to use 9.+ instead of 9.0.1 so it lives well with other libraries
+
+### 1.0.10
+- added support for projects not using cocoapods
+
 ### 1.0.9
 - added FCM.on support
 - returns string token instead of object for FCM.on('refreshToken') event 
