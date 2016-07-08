@@ -85,6 +85,8 @@ public void onNewIntent (Intent intent) {
 
 ## IOS Configuration
 
+### Pod approach:
+
 install pod 'Firebase/Messaging'
 NOTE: make sure cocoapods version > 1.0
 ```
@@ -92,8 +94,15 @@ cd ios && pod init
 pod install Firebase/Messaging
 ```
 
+### Non Cocoapod approach
+1. download framework from https://firebase.google.com/docs/ios/setup last section Integrate without CocoaPods
+2. Follow the readme to link frameworks (Analytics+Messaging)
+3. current zip file is missing `FirebaseAnalytics.framework` file. I put one in the root of this repository
+
+### Shared steps
 in AppDelegate.m add
 ```
+#import "Firebase.h" <--add if you are using Non Cocoapod approach
 #import "RNFIRMessaging.h" <--add this line
 ...
 
