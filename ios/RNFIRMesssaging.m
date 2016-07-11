@@ -27,9 +27,7 @@ RCT_EXPORT_MODULE()
 - (NSDictionary<NSString *, id> *)constantsToExport
 {
   NSDictionary<NSString *, id> *initialNotification = [_bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy];
-  
-  NSString *initialAction = [[initialNotification objectForKey:@"aps"] objectForKey:@"category"];
-  return @{@"initialData": RCTNullIfNil(initialNotification), @"initialAction": RCTNullIfNil(initialAction)};
+  return @{@"initialData": RCTNullIfNil(initialNotification)};
 }
 
 - (void)dealloc

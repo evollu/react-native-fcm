@@ -29,13 +29,17 @@ FCM.on = (event, callback) => {
 
 FCM.subscribeToTopic = (topic) => {
     FIRMessaging.subscribeToTopic(topic);
-}
+};
 
 FCM.unsubscribeFromTopic = (topic) => {
     FIRMessaging.unsubscribeFromTopic(topic);
-}
+};
+
+//once doesn't seem to work
+DeviceEventEmitter.addListener('FCMInitData', (data)=>{
+  FCM.initialData = data;
+});
 
 FCM.initialData = FIRMessaging.initialData;
-FCM.initialAction = FIRMessaging.initialAction;
 
 module.exports = FCM;

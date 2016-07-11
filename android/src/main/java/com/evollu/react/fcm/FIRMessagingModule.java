@@ -27,13 +27,10 @@ import java.util.Set;
 
 public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
-    Intent mIntent;
+    Intent currentIntent;
 
     public FIRMessagingModule(ReactApplicationContext reactContext) {
         super(reactContext);
-
-        mIntent = getCurrentActivity().getIntent();
-
         getReactApplicationContext().addLifecycleEventListener(this);
         registerTokenRefreshHandler();
         registerMessageHandler();
@@ -42,18 +39,6 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @Override
     public Map<String, Object> getConstants() {
         Map<String, Object> constants = new HashMap<>();
-        if (mIntent != null) {
-            if(mIntent.getExtras() != null) {
-                Map<String, Object> extra = new HashMap<>();
-                Bundle data = mIntent.getExtras();
-                Set<String> keysIterator = data.keySet();
-                for(String key: keysIterator){
-                    extra.put(key, data.get(key));
-                }
-                constants.put("initialData", extra);
-            }
-            constants.put("initialAction", mIntent.getAction());
-        }
         return constants;
     }
 
@@ -130,17 +115,26 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @Override
     public void onHostResume() {
         Intent newIntent = getCurrentActivity().getIntent();
-        if(newIntent != mIntent && newIntent != null){
-            Bundle extras = newIntent.getExtras();
-            if (extras != null) {
-                WritableMap params = Arguments.fromBundle(extras);
-                WritableMap fcm = Arguments.createMap();
-                fcm.putString("action", newIntent.getAction());
-                params.putMap("fcm", fcm);
-                sendEvent("FCMNotificationReceived", params);
-            }
+        if(newIntent == currentIntent){
+            return;
         }
-        mIntent = newIntent;
+        WritableMap params;
+        Bundle extras = newIntent.getExtras();
+        if (extras != null) {
+            params = Arguments.fromBundle(extras);
+        } else {
+            params = Arguments.createMap();
+        }
+        WritableMap fcm = Arguments.createMap();
+        fcm.putString("action", newIntent.getAction());
+        params.putMap("fcm", fcm);
+        if (currentIntent == null){
+            //the first intent is initial intent that opens the app
+            sendEvent("FCMInitData", params);
+        } else {
+            sendEvent("FCMNotificationReceived", params);
+        }
+        currentIntent = newIntent;
     }
 
     @Override

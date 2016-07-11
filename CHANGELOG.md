@@ -1,5 +1,6 @@
-### 1.0.12
+### 1.0.12 BREAKING CHANGES
 - get initial intent inside module, support rn 0.29.0 (for people upgrading from older version, change `new FIRMessagingPackage(getIntent())` back to `new FIRMessagingPackage()`)
+- remove initAction as it is just duplication of initData
 
 ### 1.0.11
 - change android library version to use 9.+ instead of 9.0.1 so it lives well with other libraries
