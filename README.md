@@ -149,9 +149,7 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
 ```
 
 ### Behaviour when sending `notification` and `data` payload through GCM
-- When app is not running when user clicks notification, notification data will be passed into 
- - `FCM.initialAction`(contains `click_action` in notification payload
- - `FCM.initialData` (contains `data` payload if you send together with notification)
+- When app is not running when user clicks notification, notification data will be passed into `FCM.initialData`
 
 - When app is running in background (the tricky one, I strongly suggest you try it out yourself)
  - IOS will receive notificaton from `FCMNotificationReceived` event
