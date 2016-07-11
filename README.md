@@ -20,8 +20,8 @@ classpath 'com.google.gms:google-services:3.0.0' // <- Add this line
 - In `android/app/build.gradle`
 ```gradle
 apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services' // <- Add this line
 ...
+apply plugin: 'com.google.gms.google-services' // <- Add this line to bottom of the file
 ```
 
 - In `android/app/src/main/AndroidManifest.xml`
