@@ -18,15 +18,11 @@ public class FIRMessagingPackage implements ReactPackage {
     public FIRMessagingPackage(){
     }
 
-    public FIRMessagingPackage(Intent intent){
-        mIntent = intent;
-    }
-
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new FIRMessagingModule(reactContext, mIntent));
+        modules.add(new FIRMessagingModule(reactContext));
         return modules;
     }
 

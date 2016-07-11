@@ -29,10 +29,10 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
     Intent mIntent;
 
-    public FIRMessagingModule(ReactApplicationContext reactContext, Intent intent) {
+    public FIRMessagingModule(ReactApplicationContext reactContext) {
         super(reactContext);
 
-        mIntent = intent;
+        mIntent = getCurrentActivity().getIntent();
 
         getReactApplicationContext().addLifecycleEventListener(this);
         registerTokenRefreshHandler();
