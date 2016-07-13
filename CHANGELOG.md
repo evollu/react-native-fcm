@@ -1,3 +1,5 @@
+RELEASE NOTE MOVED TO [Release Section](https://github.com/evollu/react-native-fcm/releases)
+
 ### 1.0.13 BREAKING CHANGES
 - get initial intent inside module, support rn 0.29.0 (for people upgrading from older version, change `new FIRMessagingPackage(getIntent())` back to `new FIRMessagingPackage()`)
 - remove initAction as it is just duplication of initData
