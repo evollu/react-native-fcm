@@ -121,7 +121,12 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         WritableMap params;
         Bundle extras = newIntent.getExtras();
         if (extras != null) {
-            params = Arguments.fromBundle(extras);
+            try {
+                params = Arguments.fromBundle(extras);
+            } catch (Exception e){
+                Log.e(TAG, e.getMessage());
+                params = Arguments.createMap();
+            }
         } else {
             params = Arguments.createMap();
         }
