@@ -245,6 +245,9 @@ These is [an issue opened for that](https://github.com/google/gcm/issues/63). Be
 #### Android notification is showing a white icon
 Since Lollipop, the push notification icon is required to be all white, otherwise it will be a white circle.
 
+#### iOS not receiving notification when the app running in the background
+- Try adding Background Modes permission in Xcode->Click on project file->Capabilities tab->Background Modes->Remote Notifications
+
 #### I am using Proguard
 You need to add this to your `android/app/proguard-rules.pro`:
 ```
