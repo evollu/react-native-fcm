@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
@@ -25,13 +26,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
+public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
-    Intent currentIntent;
+    Intent initIntent;
 
     public FIRMessagingModule(ReactApplicationContext reactContext) {
         super(reactContext);
         getReactApplicationContext().addLifecycleEventListener(this);
+        getReactApplicationContext().addActivityEventListener(this);
         registerTokenRefreshHandler();
         registerMessageHandler();
     }
@@ -112,14 +114,9 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         }, intentFilter);
     }
 
-    @Override
-    public void onHostResume() {
-        Intent newIntent = getCurrentActivity().getIntent();
-        if(newIntent == currentIntent){
-            return;
-        }
+    private WritableMap parseIntent(Intent intent){
         WritableMap params;
-        Bundle extras = newIntent.getExtras();
+        Bundle extras = intent.getExtras();
         if (extras != null) {
             try {
                 params = Arguments.fromBundle(extras);
@@ -131,15 +128,19 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             params = Arguments.createMap();
         }
         WritableMap fcm = Arguments.createMap();
-        fcm.putString("action", newIntent.getAction());
+        fcm.putString("action", intent.getAction());
         params.putMap("fcm", fcm);
-        if (currentIntent == null){
+        return params;
+    }
+
+    @Override
+    public void onHostResume() {
+        if (initIntent == null){
             //the first intent is initial intent that opens the app
-            sendEvent("FCMInitData", params);
-        } else {
-            sendEvent("FCMNotificationReceived", params);
+            Intent newIntent = getCurrentActivity().getIntent();
+            sendEvent("FCMInitData", parseIntent(newIntent));
+            initIntent = newIntent;
         }
-        currentIntent = newIntent;
     }
 
     @Override
@@ -149,5 +150,14 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @Override
     public void onHostDestroy() {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    }
+
+    @Override
+    public void onNewIntent(Intent intent){
+        sendEvent("FCMNotificationReceived", parseIntent(intent));
     }
 }

@@ -71,7 +71,7 @@ Notes:
 - replace `"fcm.ACTION.HELLO"` by the `click_action` you want to match
 
 
-And pass intent into package, edit `MainActivity.java`:
+If you are using RN<0.30.0 and react-native-fcm < 1.0.15, pass intent into package, edit `MainActivity.java`:
 
 - RN 0.28+:
 
