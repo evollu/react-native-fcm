@@ -1,11 +1,11 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## NOTE: If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
+
 ## Installation
 
 - Run `npm install react-native-fcm --save`
 - Run `react-native link react-native-fcm` (RN 0.29.1+, otherwise `rnpm link react-native-fcm`)
-
-- NOTE: If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
 
 ## Android Configuration
 
@@ -75,7 +75,7 @@ Notes:
 
 If you are using RN<0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
 
-- RN 0.28+:
+- RN 0.28:
 
 ```diff
   import com.facebook.react.ReactActivity;
