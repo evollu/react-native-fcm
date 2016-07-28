@@ -258,5 +258,8 @@ You need to add this to your `android/app/proguard-rules.pro`:
 -dontwarn com.google.android.gms.**
 ```
 
+#### Android notification doesn't vibrate/show head-up display etc
+All avaibale features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and create notification locally is the only way
+
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
