@@ -58,7 +58,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
       Intent newIntent = getCurrentActivity().getIntent();
       Bundle extras = newIntent.getExtras();
       if (extras == null) {
-        promise.resolve(false);
+        promise.resolve(null);
       }
       else {
         promise.resolve(parseIntent(newIntent));
