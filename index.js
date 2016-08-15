@@ -13,6 +13,10 @@ FCM.getFCMToken = () => {
     return FIRMessaging.getFCMToken();
 };
 
+FCM.getInitFCMData = () => {
+   return FIRMessaging.getInitFCMData();
+};
+
 FCM.requestPermissions = () => {
     return FIRMessaging.requestPermissions();
 };
