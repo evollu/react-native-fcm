@@ -1,9 +1,15 @@
-import {NativeModules, DeviceEventEmitter} from 'react-native';
+import {NativeModules, DeviceEventEmitter, AppState} from 'react-native';
 
 const eventsMap = {
     refreshToken: 'FCMTokenRefreshed',
     notification: 'FCMNotificationReceived'
 };
+
+let currentAppState = 'active';
+
+AppState.addEventListener('change', (appState)=>{
+  currentAppState = appState;
+});
 
 const FIRMessaging = NativeModules.RNFIRMessaging;
 
@@ -14,7 +20,7 @@ FCM.getFCMToken = () => {
 };
 
 FCM.getInitFCMData = () => {
-   return FIRMessaging.getInitFCMData();
+    return FIRMessaging.getInitFCMData();
 };
 
 FCM.requestPermissions = () => {
@@ -23,9 +29,11 @@ FCM.requestPermissions = () => {
 
 FCM.on = (event, callback) => {
     const nativeEvent = eventsMap[event];
-
-    const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
-
+    const listener = DeviceEventEmitter.addListener(nativeEvent, (notif)=>{
+      // useful for iOS to detect if app was in foreground when notification received
+      notif['foreground'] = currentAppState === 'active';
+      callback(notif);
+    });
     return function remove() {
         listener.remove();
     };
