@@ -73,7 +73,7 @@ Notes:
 - replace `"fcm.ACTION.HELLO"` by the `click_action` you want to match
 
 
-If you are using RN<0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
+If you are using RN < 0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
 
 - RN 0.28:
 
@@ -182,7 +182,7 @@ class App extends Component {
 ```
 
 ### Behaviour when sending `notification` and `data` payload through GCM
-- When app is not running when user clicks notification, notification data will be passed into `FCM.initialData`
+- When app is not running and user clicks notification, notification data will be passed into `FCM.initialData`
 
 - When app is running in background (the tricky one, I strongly suggest you try it out yourself)
  - IOS will receive notificaton from `FCMNotificationReceived` event
@@ -259,7 +259,7 @@ You need to add this to your `android/app/proguard-rules.pro`:
 ```
 
 #### Android notification doesn't vibrate/show head-up display etc
-All avaibale features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and create notification locally is the only way
+All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
