@@ -17,8 +17,23 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
+import android.support.v4.app.NotificationCompat;
+import android.app.*;
+
 import android.os.Bundle;
 import android.util.Log;
+
+import android.content.pm.ApplicationInfo;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import com.facebook.react.bridge.ReadableMap;
 
 import android.content.Context;
 
@@ -28,6 +43,8 @@ import java.util.Set;
 
 public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
+    private static final long DEFAULT_VIBRATION = 300L;
+
     Intent initIntent;
 
     public FIRMessagingModule(ReactApplicationContext reactContext) {
@@ -68,12 +85,194 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         }
       }
     }
-
     @ReactMethod
     public void getFCMToken(Promise promise) {
         Log.d(TAG, "Firebase token: " + FirebaseInstanceId.getInstance().getToken());
         promise.resolve(FirebaseInstanceId.getInstance().getToken());
     }
+
+    @ReactMethod
+    public void presentLocalNotification(ReadableMap details) {
+        Bundle bundle = Arguments.toBundle(details);
+        sendNotification(bundle);
+    }
+
+    public Class getMainActivityClass() {
+        Context mContext = getReactApplicationContext();
+        String packageName = mContext.getPackageName();
+        Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
+        String className = launchIntent.getComponent().getClassName();
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void sendNotification(Bundle bundle) {
+        try {
+            Class intentClass = getMainActivityClass();
+            if (intentClass == null) {
+                return;
+            }
+
+            if (bundle.getString("message") == null) {
+                return;
+            }
+            Context mContext = getReactApplicationContext();
+            Resources res = mContext.getResources();
+            String packageName = mContext.getPackageName();
+
+            String title = bundle.getString("title");
+            if (title == null) {
+                ApplicationInfo appInfo = mContext.getApplicationInfo();
+                title = mContext.getPackageManager().getApplicationLabel(appInfo).toString();
+            }
+
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
+                    .setContentTitle(title)
+                    .setTicker(bundle.getString("ticker"))
+                    .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setAutoCancel(bundle.getBoolean("autoCancel", true));
+
+            String group = bundle.getString("group");
+            if (group != null) {
+                notification.setGroup(group);
+            }
+
+            notification.setContentText(bundle.getString("message"));
+
+            String largeIcon = bundle.getString("largeIcon");
+
+            String subText = bundle.getString("subText");
+
+            if (subText != null) {
+                notification.setSubText(subText);
+            }
+
+            if (bundle.containsKey("number")) {
+                try {
+                    int number = (int) bundle.getDouble("number");
+                    notification.setNumber(number);
+                } catch (Exception e) {
+                    String numberAsString = bundle.getString("number");
+                    if(numberAsString != null) {
+                        int number = Integer.parseInt(numberAsString);
+                        notification.setNumber(number);
+                        Log.w(TAG, "'number' field set as a string instead of an int");
+                    }
+                }
+            }
+
+            int smallIconResId;
+            int largeIconResId;
+
+            String smallIcon = bundle.getString("smallIcon");
+
+            if (smallIcon != null) {
+                smallIconResId = res.getIdentifier(smallIcon, "mipmap", packageName);
+            } else {
+                smallIconResId = res.getIdentifier("ic_notification", "mipmap", packageName);
+            }
+
+            if (smallIconResId == 0) {
+                smallIconResId = res.getIdentifier("ic_launcher", "mipmap", packageName);
+
+                if (smallIconResId == 0) {
+                    smallIconResId = android.R.drawable.ic_dialog_info;
+                }
+            }
+
+            if (largeIcon != null) {
+                largeIconResId = res.getIdentifier(largeIcon, "mipmap", packageName);
+            } else {
+                largeIconResId = res.getIdentifier("ic_launcher", "mipmap", packageName);
+            }
+
+            Bitmap largeIconBitmap = BitmapFactory.decodeResource(res, largeIconResId);
+
+            if (largeIconResId != 0 && (largeIcon != null || android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)) {
+                notification.setLargeIcon(largeIconBitmap);
+            }
+
+            notification.setSmallIcon(smallIconResId);
+            String bigText = bundle.getString("bigText");
+
+            if (bigText == null) {
+                bigText = bundle.getString("message");
+            }
+
+            notification.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
+
+            Intent intent = new Intent(mContext, intentClass);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            bundle.putBoolean("userInteraction", true);
+            intent.putExtra("notification", bundle);
+
+            if (!bundle.containsKey("playSound") || bundle.getBoolean("playSound")) {
+                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                notification.setSound(defaultSoundUri);
+            }
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                notification.setCategory(NotificationCompat.CATEGORY_CALL);
+
+                String color = bundle.getString("color");
+                if (color != null) {
+                    notification.setColor(Color.parseColor(color));
+                }
+            }
+
+            int notificationID = (int) System.currentTimeMillis();
+            if (bundle.containsKey("id")) {
+                try {
+                    notificationID = (int) bundle.getDouble("id");
+                } catch (Exception e) {
+                    String notificationIDString = bundle.getString("id");
+
+                    if (notificationIDString != null) {
+                        Log.w(TAG, "'id' field set as a string instead of an int");
+
+                        try {
+                            notificationID = Integer.parseInt(notificationIDString);
+                        } catch (NumberFormatException nfe) {
+                            Log.w(TAG, "'id' field could not be converted to an int, ignoring it", nfe);
+                        }
+                    }
+                }
+            }
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationManager notificationManager =
+                    (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notification.setContentIntent(pendingIntent);
+
+            if (!bundle.containsKey("vibrate") || bundle.getBoolean("vibrate")) {
+                long vibration = bundle.containsKey("vibration") ? (long) bundle.getDouble("vibration") : DEFAULT_VIBRATION;
+                if (vibration == 0)
+                    vibration = DEFAULT_VIBRATION;
+                notification.setVibrate(new long[]{0, vibration});
+            }
+
+            Notification info = notification.build();
+            info.defaults |= Notification.DEFAULT_LIGHTS;
+
+            if (bundle.containsKey("tag")) {
+                String tag = bundle.getString("tag");
+                notificationManager.notify(tag, notificationID, info);
+            } else {
+                notificationManager.notify(notificationID, info);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "failed to send push notification", e);
+        }
+    }
+
 
     @ReactMethod
     public void subscribeToTopic(String topic){
@@ -151,6 +350,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onHostResume() {
+        //DEPRECATED 
         if (initIntent == null){
             //the first intent is initial intent that opens the app
             Intent newIntent = getCurrentActivity().getIntent();

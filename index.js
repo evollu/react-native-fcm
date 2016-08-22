@@ -1,4 +1,4 @@
-import {NativeModules, DeviceEventEmitter, AppState} from 'react-native';
+import {NativeModules, DeviceEventEmitter, AppState, Platform, PushNotificationIOS} from 'react-native';
 
 const eventsMap = {
     refreshToken: 'FCMTokenRefreshed',
@@ -25,6 +25,23 @@ FCM.getInitFCMData = () => {
 
 FCM.requestPermissions = () => {
     return FIRMessaging.requestPermissions();
+};
+
+FCM.presentLocalNotification = (details) =>{
+  if (Platform.os ==='android'){
+      FIRMessaging.presentLocalNotification(details);
+  }
+  else {
+    PushNotificationIOS.presentLocalNotification({
+			alertBody: details.message,
+			alertAction: details.alertAction,
+			category: details.category,
+			soundName: soundName,
+			applicationIconBadgeNumber: details.number,
+			userInfo: details.userInfo
+	   });
+  }
+
 };
 
 FCM.on = (event, callback) => {
