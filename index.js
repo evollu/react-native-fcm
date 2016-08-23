@@ -28,10 +28,11 @@ FCM.requestPermissions = () => {
 };
 
 FCM.presentLocalNotification = (details) =>{
-  if (Platform.os ==='android'){
+  if (Platform.OS ==='android'){
       FIRMessaging.presentLocalNotification(details);
   }
   else {
+    const soundName = !details.hasOwnProperty("playSound") || details.playSound === true ? 'default' : '';// empty string results in no sound
     PushNotificationIOS.presentLocalNotification({
 			alertBody: details.message,
 			alertAction: details.alertAction,
