@@ -20,7 +20,17 @@ FCM.getFCMToken = () => {
 };
 
 FCM.getInitFCMData = () => {
-    return FIRMessaging.getInitFCMData();
+    return FIRMessaging.getInitFCMData().then((notification)=>{
+      if (notification === null){
+        return null;
+      }
+      else {
+        notification['opened_from_tray'] = true;
+        return notification;
+      }
+    }).catch((err)=>{
+      alert("ERROR "+JSON.stringify(err));
+    });
 };
 
 FCM.requestPermissions = () => {
@@ -42,14 +52,23 @@ FCM.presentLocalNotification = (details) =>{
 			userInfo: details.userInfo
 	   });
   }
-
 };
+
+FCM.cancelAll = () => {
+  if (Platform.OS ==='android'){
+    FIRMessaging.cancelAll();
+  }
+  else if (Platform.OS ==='ios') {
+    PushNotificationIOS.cancelLocalNotifications()
+  }
+};
+
 
 FCM.on = (event, callback) => {
     const nativeEvent = eventsMap[event];
     const listener = DeviceEventEmitter.addListener(nativeEvent, (notif)=>{
-      // useful for iOS to detect if app was in foreground when notification received
-      notif['foreground'] = currentAppState === 'active';
+      // Useful to determine if remote notification was received while app is running or opened from system tray
+      notif['opened_from_tray'] = currentAppState !== 'active';
       callback(notif);
     });
     return function remove() {
