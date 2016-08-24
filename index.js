@@ -10,10 +10,12 @@ const FIRMessaging = NativeModules.RNFIRMessaging;
 const FCM = {};
 
 FCM.getFCMToken = () => {
+    if (!FIRMessaging) return;
     return FIRMessaging.getFCMToken();
 };
 
 FCM.requestPermissions = () => {
+    if (!FIRMessaging) return;
     return FIRMessaging.requestPermissions();
 };
 
@@ -28,10 +30,12 @@ FCM.on = (event, callback) => {
 };
 
 FCM.subscribeToTopic = (topic) => {
+    if (!FIRMessaging) return;
     FIRMessaging.subscribeToTopic(topic);
 };
 
 FCM.unsubscribeFromTopic = (topic) => {
+    if (!FIRMessaging) return;
     FIRMessaging.unsubscribeFromTopic(topic);
 };
 
@@ -40,6 +44,9 @@ DeviceEventEmitter.addListener('FCMInitData', (data)=>{
   FCM.initialData = data;
 });
 
-FCM.initialData = FIRMessaging.initialData;
+if (FIRMessaging){
+    FCM.initialData = FIRMessaging.initialData;
+}
+
 
 module.exports = FCM;
