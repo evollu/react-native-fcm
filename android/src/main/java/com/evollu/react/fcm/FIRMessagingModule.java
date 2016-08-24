@@ -90,21 +90,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     public void cancelAll() {
       mFIRLocalMessagingHelper.cancelAll();
     }
-
-
-    public Class getMainActivityClass() {
-        Context mContext = getReactApplicationContext();
-        String packageName = mContext.getPackageName();
-        Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
-        String className = launchIntent.getComponent().getClassName();
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
+    
     @ReactMethod
     public void subscribeToTopic(String topic){
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
