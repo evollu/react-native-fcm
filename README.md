@@ -215,14 +215,17 @@ const pushNotification = {
       vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
       tag: 'some_tag', // (optional) add tag to message
       group: "group", // (optional) add group to message
-      type:'my_custom_field_value', //custom field 
+      type:'my_custom_field_value', //custom field
       /* iOS and Android properties */
       message: "My Notification Message", // (required)
       playSound: false, // (optional) default: true
       number: 10 // (optional) default: none (Cannot be zero)
   };
 FCM.presentLocalNotification(pushNotification)
-  
+
+// And to clear notifications use :
+FCM.cancelAll()
+
 ```
 Behind the scenes it will use PushNotificationIOS if used on iOS or custom implementation if android.
 
@@ -256,7 +259,7 @@ Behind the scenes it will use PushNotificationIOS if used on iOS or custom imple
     ```
 
     and event callback will receive as:
-    
+
     - Android
       ```json
       {
@@ -264,7 +267,7 @@ Behind the scenes it will use PushNotificationIOS if used on iOS or custom imple
         "extra": "juice"
       }
       ```
-    
+
     - iOS
       ```json
       {
