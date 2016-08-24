@@ -28,8 +28,6 @@ FCM.getInitFCMData = () => {
         notification['opened_from_tray'] = true;
         return notification;
       }
-    }).catch((err)=>{
-      alert("ERROR "+JSON.stringify(err));
     });
 };
 
@@ -41,7 +39,7 @@ FCM.presentLocalNotification = (details) =>{
   if (Platform.OS ==='android'){
       FIRMessaging.presentLocalNotification(details);
   }
-  else {
+  else if (Platform.OS ==='ios') {
     const soundName = !details.hasOwnProperty("playSound") || details.playSound === true ? 'default' : '';// empty string results in no sound
     PushNotificationIOS.presentLocalNotification({
 			alertBody: details.message,
@@ -59,20 +57,34 @@ FCM.cancelAll = () => {
     FIRMessaging.cancelAll();
   }
   else if (Platform.OS ==='ios') {
-    PushNotificationIOS.cancelLocalNotifications()
+    PushNotificationIOS.cancelLocalNotifications();
+    PushNotificationIOS.setApplicationIconBadgeNumber(0);
   }
 };
 
 
 FCM.on = (event, callback) => {
-    const nativeEvent = eventsMap[event];
-    const listener = DeviceEventEmitter.addListener(nativeEvent, (notif)=>{
-      // Useful to determine if remote notification was received while app is running or opened from system tray
+    const nativeEvent = eventsMap[event]
+
+    const onNotificationReceived = (notif)=>{
+      if (notif === null){
+        callback(notif);
+        return;
+      }
       notif['opened_from_tray'] = currentAppState !== 'active';
       callback(notif);
-    });
+    }
+
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.addEventListener('localNotification', onNotificationReceived);
+    }
+
+    const listener = DeviceEventEmitter.addListener(nativeEvent, onNotificationReceived);
     return function remove() {
         listener.remove();
+        if (Platform.OS ==='ios') {
+          PushNotificationIOS.removeEventListener('localNotification', onNotificationReceived);
+        }
     };
 };
 
