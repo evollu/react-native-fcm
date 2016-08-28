@@ -1,4 +1,4 @@
-import {NativeModules, DeviceEventEmitter} from 'react-native';
+import {NativeModules, DeviceEventEmitter, AppState, Platform, PushNotificationIOS} from 'react-native';
 
 const eventsMap = {
     refreshToken: 'FCMTokenRefreshed',
@@ -15,6 +15,34 @@ FCM.getFCMToken = () => {
 
 FCM.requestPermissions = () => {
     return FIRMessaging.requestPermissions();
+};
+
+FCM.presentLocalNotification = (details) =>{
+  if (Platform.OS ==='android'){
+      FIRMessaging.presentLocalNotification(details);
+  }
+
+  else if (Platform.OS ==='ios') {
+    const soundName = !details.hasOwnProperty("playSound") || details.playSound === true ? 'default' : '';// empty string results in no sound
+    PushNotificationIOS.presentLocalNotification({
+			alertBody: details.message,
+			alertAction: details.alertAction,
+			category: details.category,
+			soundName: soundName,
+			applicationIconBadgeNumber: details.number,
+			userInfo: details.userInfo
+	   });
+  }
+};
+
+FCM.cancelAll = () => {
+  if (Platform.OS ==='android'){
+    FIRMessaging.cancelAll();
+  }
+  else if (Platform.OS ==='ios') {
+    PushNotificationIOS.cancelLocalNotifications();
+    PushNotificationIOS.setApplicationIconBadgeNumber(0);
+  }
 };
 
 FCM.on = (event, callback) => {

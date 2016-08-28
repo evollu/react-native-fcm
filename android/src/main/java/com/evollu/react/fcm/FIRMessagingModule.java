@@ -11,12 +11,14 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -28,6 +30,7 @@ import java.util.Set;
 
 public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
+    private FIRLocalMessagingHelper mFIRLocalMessagingHelper;
     Intent initIntent;
 
     public FIRMessagingModule(ReactApplicationContext reactContext) {
@@ -58,6 +61,17 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         Log.d(TAG, "Firebase token: " + FirebaseInstanceId.getInstance().getToken());
         promise.resolve(FirebaseInstanceId.getInstance().getToken());
     }
+
+    @ReactMethod
++    public void presentLocalNotification(ReadableMap details) {
++        Bundle bundle = Arguments.toBundle(details);
++        mFIRLocalMessagingHelper.sendNotification(bundle);
++    }
++
++    @ReactMethod
++    public void cancelAll() {
++      mFIRLocalMessagingHelper.cancelAll();
++    }
 
     @ReactMethod
     public void subscribeToTopic(String topic){
