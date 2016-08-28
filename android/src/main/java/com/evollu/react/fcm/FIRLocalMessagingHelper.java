@@ -202,6 +202,29 @@ public class FIRLocalMessagingHelper {
         }
     }
 
+    public void sendNotificationScheduled(Bundle bundle) {
+        Class intentClass = getMainActivityClass();
+        if (intentClass == null) {
+            return;
+        }
+
+        Double fireDateDouble = bundle.getDouble("fireDate", 0);
+        if (fireDateDouble == 0) {
+            return;
+        }
+
+        long fireDate = Math.round(fireDateDouble);
+        long currentTime = System.currentTimeMillis();
+
+        Log.i("ReactSystemNotification", "fireDate: " + fireDate + ", Now Time: " + currentTime);
+        PendingIntent pendingIntent = getScheduleNotificationIntent(bundle);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getAlarmManager().setExact(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+        } else {
+            getAlarmManager().set(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+        }
+    }
+
     public void cancelAll() {
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -35,6 +35,25 @@ FCM.presentLocalNotification = (details) =>{
   }
 };
 
+/**
+ * Local Notifications Schedule
+ * @param {Object}		details (same as localNotification)
+ * @param {Date}		details.date - The date and time when the system should deliver the notification
+ */
+FCM.localNotificationSchedule = function(details: Object) {
+	if ( Platform.OS === 'ios' ) {
+		PushNotificationIOS.scheduleLocalNotification({
+			fireDate: details.date,
+			alertBody: details.message,
+			userInfo: details.userInfo
+		});
+	} else {
+		details.fireDate = details.date.getTime();
+		delete details.date;
+		FIRMessaging.scheduleLocalNotification(details);
+	}
+};
+
 FCM.cancelAll = () => {
   if (Platform.OS ==='android'){
     FIRMessaging.cancelAll();
