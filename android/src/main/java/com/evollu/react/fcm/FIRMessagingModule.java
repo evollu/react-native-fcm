@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
-    private FIRLocalMessagingHelper mFIRLocalMessagingHelper;
+    private FIRLocalMessagingHelper FIRLocalMessagingHelper;
     Intent initIntent;
 
     public FIRMessagingModule(ReactApplicationContext reactContext) {
