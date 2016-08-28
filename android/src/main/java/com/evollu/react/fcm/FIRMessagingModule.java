@@ -63,15 +63,15 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-+    public void presentLocalNotification(ReadableMap details) {
-+        Bundle bundle = Arguments.toBundle(details);
-+        mFIRLocalMessagingHelper.sendNotification(bundle);
-+    }
-+
-+    @ReactMethod
-+    public void cancelAll() {
-+      mFIRLocalMessagingHelper.cancelAll();
-+    }
+    public void presentLocalNotification(ReadableMap details) {
+        Bundle bundle = Arguments.toBundle(details);
+        FIRLocalMessagingHelper.sendNotification(bundle);
+    }
+
+    @ReactMethod
+    public void cancelAll() {
+      FIRLocalMessagingHelper.cancelAll();
+    }
 
     @ReactMethod
     public void subscribeToTopic(String topic){
