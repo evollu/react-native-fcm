@@ -32,7 +32,6 @@ FCM.presentLocalNotification = (details) =>{
   }
 
   else if (Platform.OS ==='ios') {
-    console.log('PushNotificationIOS',Object.keys(PushNotificationIOS));
     const soundName = !details.hasOwnProperty("playSound") || details.playSound === true ? 'default' : '';// empty string results in no sound
     PushNotificationIOS.presentLocalNotification({
 			alertBody: details.message,
@@ -45,10 +44,10 @@ FCM.presentLocalNotification = (details) =>{
   }
 };
 
-FCM.localNotificationSchedule = function(details: Object) {
+FCM.localNotificationSchedule = function(details) {
 	if ( Platform.OS === 'ios' ) {
     var notification = {
-			fireDate: details.date,
+			fireDate: details.date.getTime(),
 			alertBody: details.message,
 			userInfo: details.userInfo,
       repeatInterval: REPEAT_INTERVAL_IOS[details.repeatEvery] || 0
