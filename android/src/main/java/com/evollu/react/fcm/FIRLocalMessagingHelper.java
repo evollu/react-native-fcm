@@ -241,7 +241,7 @@ public class FIRLocalMessagingHelper {
         Log.i("ReactSystemNotification", "repeat set: ", repeatEvery);
         Log.i("ReactSystemNotification", "fireDate: " + fireDate + ", Now Time: " + currentTime);
         PendingIntent pendingIntent = getScheduleNotificationIntent(bundle);
-        long interval = null;
+        Long interval = null;
         switch (repeatEvery) {
           case "minute":
               interval = 60000;
