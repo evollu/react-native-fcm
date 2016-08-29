@@ -39,6 +39,28 @@ public class FIRLocalMessagingHelper {
         }
     }
 
+
+    private AlarmManager getAlarmManager() {
+        return (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+    }
+
+    private PendingIntent getScheduleNotificationIntent(Bundle bundle) {
+        int notificationID;
+        String notificationIDString = bundle.getString("id");
+
+        if (notificationIDString != null) {
+            notificationID = Integer.parseInt(notificationIDString);
+        } else {
+            notificationID = (int) System.currentTimeMillis();
+        }
+
+        Intent notificationIntent = new Intent(mContext, RNPushNotificationPublisher.class);
+        notificationIntent.putExtra(RNPushNotificationPublisher.NOTIFICATION_ID, notificationID);
+        notificationIntent.putExtras(bundle);
+
+        return PendingIntent.getBroadcast(mContext, notificationID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     public void sendNotification(Bundle bundle) {
         try {
             Class intentClass = getMainActivityClass();
