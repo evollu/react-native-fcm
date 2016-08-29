@@ -32,6 +32,7 @@ FCM.presentLocalNotification = (details) =>{
   }
 
   else if (Platform.OS ==='ios') {
+    console.log('PushNotificationIOS',Object.keys(PushNotificationIOS));
     const soundName = !details.hasOwnProperty("playSound") || details.playSound === true ? 'default' : '';// empty string results in no sound
     PushNotificationIOS.presentLocalNotification({
 			alertBody: details.message,
@@ -73,10 +74,16 @@ FCM.cancelAll = () => {
 FCM.on = (event, callback) => {
     const nativeEvent = eventsMap[event];
 
+    if(Platform.OS === 'ios'){
+        PushNotificationIOS.addEventListener('localNotification', callback);
+    }
     const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
 
     return function remove() {
         listener.remove();
+        if(Platform.OS === 'ios'){
+            PushNotificationIOS.removeEventListener('localNotification', callback);
+        }
     };
 };
 
