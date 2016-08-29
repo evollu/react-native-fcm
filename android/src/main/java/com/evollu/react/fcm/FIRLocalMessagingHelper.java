@@ -64,7 +64,7 @@ public class FIRLocalMessagingHelper {
         notificationIntent.putExtras(bundle);
 
         if(storeIntent){
-            Editor editor = sharedPreferences.edit();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(Integer.toString(notificationID), notificationIntent.getExtras().toString());
             editor.commit();
         }
@@ -298,7 +298,7 @@ public class FIRLocalMessagingHelper {
 
     public void cancelAlarms() {
       Map<String, ?> keyMap = sharedPreferences.getAll();
-      Editor editor = sharedPreferences.edit();
+      SharedPreferences.Editor editor = sharedPreferences.edit();
       for(Map.Entry<String, ?> entry:keyMap.entrySet()){
           Bundle b = new Bundle();
           b.putString("id", entry.getKey());
