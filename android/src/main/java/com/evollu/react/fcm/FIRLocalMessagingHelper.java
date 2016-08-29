@@ -242,7 +242,7 @@ public class FIRLocalMessagingHelper {
         Log.i("ReactSystemNotification", "fireDate: " + fireDate + ", Now Time: " + currentTime);
         PendingIntent pendingIntent = getScheduleNotificationIntent(bundle);
 
-        switch (attributes.repeatType) {
+        switch (repeatEvery) {
           case "minute":
               getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, 60000, pendingIntent);
               Log.i("ReactSystemNotification", "Set Minute Alarm ");
@@ -260,11 +260,11 @@ public class FIRLocalMessagingHelper {
 
           case "day":
               getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, AlarmManager.INTERVAL_DAY, pendingIntent);
-              Log.i("ReactSystemNotification", "Set Day Alarm , Type: " + attributes.repeatType);
+              Log.i("ReactSystemNotification", "Set Day Alarm , Type: " + repeatEvery);
               break;
           case "week":
               getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-              Log.i("ReactSystemNotification", "Set Day Alarm , Type: " + attributes.repeatType);
+              Log.i("ReactSystemNotification", "Set Day Alarm , Type: " + repeatEvery);
               break;
           default:
               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
