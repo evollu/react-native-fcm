@@ -115,7 +115,7 @@ public class FIRLocalMessagingHelper {
 
             if (bundle.containsKey("number")) {
                 try {
-                    int number = bundle.getInt("number");
+                    int number = (int) bundle.getDouble("number");
                     notification.setNumber(number);
                 } catch (Exception e) {
                     String numberAsString = bundle.getString("number");
@@ -189,7 +189,7 @@ public class FIRLocalMessagingHelper {
             int notificationID = (int) System.currentTimeMillis();
             if (bundle.containsKey("id")) {
                 try {
-                    notificationID = (int) bundle.getString("id");
+                    notificationID = bundle.getInt("id");
                 } catch (Exception e) {
                     String notificationIDString = bundle.getString("id");
 
