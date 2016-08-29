@@ -297,9 +297,9 @@ public class FIRLocalMessagingHelper {
     }
 
     public void cancelAlarms() {
-      Map<String, ?> keyMap = sharedPreferences.getAll();
+      java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
       SharedPreferences.Editor editor = sharedPreferences.edit();
-      for(Map.Entry<String, ?> entry:keyMap.entrySet()){
+      for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
           Bundle b = new Bundle();
           b.putString("id", entry.getKey());
           getAlarmManager().cancel(getScheduleNotificationIntent( b, false));
