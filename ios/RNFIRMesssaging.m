@@ -17,6 +17,29 @@
 
 NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
 
+@implementation RCTConvert (UILocalNotification)
+
++ (UILocalNotification *)UILocalNotification:(id)json
+{
+  NSDictionary<NSString *, id> *details = [self NSDictionary:json];
+  UILocalNotification *notification = [UILocalNotification new];
+  notification.fireDate = [RCTConvert NSDate:details[@"fireDate"]] ?: [NSDate date];
+  notification.alertBody = [RCTConvert NSString:details[@"alertBody"]];
+  notification.alertAction = [RCTConvert NSString:details[@"alertAction"]];
+   notification.soundName = [RCTConvert NSString:details[@"soundName"]] ?: UILocalNotificationDefaultSoundName;
+   notification.userInfo = [RCTConvert NSDictionary:details[@"userInfo"]];
+   notification.category = [RCTConvert NSString:details[@"category"]];
+
+  NSNumber *repeatInterval = details[@"repeatInterval"];
+
+  if (repeatInterval) {
+    notification.repeatInterval = [RCTConvert NSInteger:repeatInterval];
+  }
+
+   return notification;
+ }
+
+@end
 
 @implementation RNFIRMessaging
 
@@ -43,7 +66,7 @@ RCT_EXPORT_MODULE()
                                            selector:@selector(handleRemoteNotificationReceived:)
                                                name:FCMNotificationReceived
                                              object:nil];
-  
+
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(disconnectFCM)
                                                name:UIApplicationDidEnterBackgroundNotification
@@ -92,9 +115,9 @@ RCT_EXPORT_METHOD(requestPermissions)
     if (RCTRunningInAppExtension()) {
         return;
     }
-    
+
     UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
-    
+
     UIApplication *app = RCTSharedApplication();
     if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         UIUserNotificationSettings *notificationSettings =
@@ -104,6 +127,11 @@ RCT_EXPORT_METHOD(requestPermissions)
     } else {
         [app registerForRemoteNotificationTypes:(NSUInteger)types];
     }
+}
+
+RCT_EXPORT_METHOD(scheduleLocalNotification:(UILocalNotification *)notification)
+{
+  [RCTSharedApplication() scheduleLocalNotification:notification];
 }
 
 RCT_EXPORT_METHOD(subscribeToTopic: (NSString*) topic)

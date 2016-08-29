@@ -5,6 +5,15 @@ const eventsMap = {
     notification: 'FCMNotificationReceived'
 };
 
+const REPEAT_INTERVAL_IOS = {
+     year: 4,
+     month: 8,
+     week: 8192,
+     day: 16,
+     hour: 32,
+     minute: 64
+};
+
 const FIRMessaging = NativeModules.RNFIRMessaging;
 
 const FCM = {};
@@ -35,18 +44,15 @@ FCM.presentLocalNotification = (details) =>{
   }
 };
 
-/**
- * Local Notifications Schedule
- * @param {Object}		details (same as localNotification)
- * @param {Date}		details.date - The date and time when the system should deliver the notification
- */
 FCM.localNotificationSchedule = function(details: Object) {
 	if ( Platform.OS === 'ios' ) {
-		PushNotificationIOS.scheduleLocalNotification({
+    var notification = {
 			fireDate: details.date,
 			alertBody: details.message,
-			userInfo: details.userInfo
-		});
+			userInfo: details.userInfo,
+      repeatInterval: REPEAT_INTERVAL_IOS[details.repeatEvery] || 0
+		};
+		FIRMessaging.scheduleLocalNotification(notification);
 	} else {
 		details.fireDate = details.date.getTime();
 		delete details.date;
