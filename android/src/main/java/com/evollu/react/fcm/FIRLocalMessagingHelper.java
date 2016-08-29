@@ -16,15 +16,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.content.SharedPreferences;
+
 
 public class FIRLocalMessagingHelper {
     private static final long DEFAULT_VIBRATION = 300L;
     private static final String TAG = FIRLocalMessagingHelper.class.getSimpleName();
+    private final static String PREFERENCES_KEY = "ReactNativeSystemNotification";
 
     private Context mContext;
+    private SharedPreferences sharedPreferences = null;
 
     public FIRLocalMessagingHelper(Application context) {
         mContext = context;
+        sharedPreferences = (SharedPreferences) mContext.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
     }
 
     public Class getMainActivityClass() {
@@ -44,7 +49,7 @@ public class FIRLocalMessagingHelper {
         return (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
     }
 
-    private PendingIntent getScheduleNotificationIntent(Bundle bundle) {
+    private PendingIntent getScheduleNotificationIntent(Bundle bundle, Boolean storeIntent) {
         int notificationID;
         String notificationIDString = bundle.getString("id");
 
@@ -58,6 +63,11 @@ public class FIRLocalMessagingHelper {
         notificationIntent.putExtra(FIRLocalMessagingPublisher.NOTIFICATION_ID, notificationID);
         notificationIntent.putExtras(bundle);
 
+        if(storeIntent){
+            Editor editor = sharedPreferences.edit();
+            editor.putString(Integer.toString(notificationID), notificationIntent.getExtras().toString());
+            editor.commit();
+        }
         return PendingIntent.getBroadcast(mContext, notificationID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
@@ -179,7 +189,7 @@ public class FIRLocalMessagingHelper {
             int notificationID = (int) System.currentTimeMillis();
             if (bundle.containsKey("id")) {
                 try {
-                    notificationID = (int) bundle.getDouble("id");
+                    notificationID = (int) bundle.getString("id");
                 } catch (Exception e) {
                     String notificationIDString = bundle.getString("id");
 
@@ -240,7 +250,8 @@ public class FIRLocalMessagingHelper {
         String repeatEvery = bundle.getString("repeatEvery");
         Log.i("ReactSystemNotification", "repeat set: " + repeatEvery);
         Log.i("ReactSystemNotification", "fireDate: " + fireDate + ", Now Time: " + currentTime);
-        PendingIntent pendingIntent = getScheduleNotificationIntent(bundle);
+        PendingIntent pendingIntent = getScheduleNotificationIntent(bundle, true);
+
         Long interval = null;
         switch (repeatEvery) {
           case "minute":
@@ -282,8 +293,18 @@ public class FIRLocalMessagingHelper {
 
         notificationManager.cancelAll();
 
-        Bundle b = new Bundle();
-        b.putString("id", "0");
-        getAlarmManager().cancel(getScheduleNotificationIntent(b));
+        cancelAlarms();
+    }
+
+    public void cancelAlarms() {
+      Map<String, ?> keyMap = sharedPreferences.getAll();
+      Editor editor = sharedPreferences.edit();
+      for(Map.Entry<String, ?> entry:keyMap.entrySet()){
+          Bundle b = new Bundle();
+          b.putString("id", entry.getKey());
+          getAlarmManager().cancel(getScheduleNotificationIntent( b, false));
+      }
+      editor.clear();
+      editor.commit();
     }
 }
