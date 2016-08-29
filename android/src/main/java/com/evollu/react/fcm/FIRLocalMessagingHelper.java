@@ -238,13 +238,13 @@ public class FIRLocalMessagingHelper {
         long fireDate = Math.round(fireDateDouble);
         long currentTime = System.currentTimeMillis();
         String repeatEvery = bundle.getString("repeatEvery");
-        Log.i("ReactSystemNotification", "repeat set: ", repeatEvery);
+        Log.i("ReactSystemNotification", "repeat set: " + repeatEvery);
         Log.i("ReactSystemNotification", "fireDate: " + fireDate + ", Now Time: " + currentTime);
         PendingIntent pendingIntent = getScheduleNotificationIntent(bundle);
         Long interval = null;
         switch (repeatEvery) {
           case "minute":
-              interval = 60000;
+              interval = new Long(60000);
               break;
 
           case "hour":
@@ -263,7 +263,7 @@ public class FIRLocalMessagingHelper {
               break;
         }
 
-        if(interval){
+        if(interval != null){
             getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, interval, pendingIntent);
             Log.i("ReactSystemNotification", "Set Repeat Alarm , Type: " + repeatEvery);
         } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
