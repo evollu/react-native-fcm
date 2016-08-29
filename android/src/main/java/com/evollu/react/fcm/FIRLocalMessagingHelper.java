@@ -237,14 +237,45 @@ public class FIRLocalMessagingHelper {
 
         long fireDate = Math.round(fireDateDouble);
         long currentTime = System.currentTimeMillis();
+        String repeatEvery = bundle.getString("repeatEvery");
 
         Log.i("ReactSystemNotification", "fireDate: " + fireDate + ", Now Time: " + currentTime);
         PendingIntent pendingIntent = getScheduleNotificationIntent(bundle);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getAlarmManager().setExact(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
-        } else {
-            getAlarmManager().set(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+
+        switch (attributes.repeatType) {
+          case "minute":
+              getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, 60000, pendingIntent);
+              Log.i("ReactSystemNotification", "Set Minute Alarm ");
+              break;
+
+          case "hour":
+              getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, AlarmManager.INTERVAL_HOUR, pendingIntent);
+              Log.i("ReactSystemNotification", "Set Hour Alarm ");
+              break;
+
+          case "halfDay":
+              getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
+              Log.i("ReactSystemNotification", "Set Half-Day Alarm ");
+              break;
+
+          case "day":
+              getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, AlarmManager.INTERVAL_DAY, pendingIntent);
+              Log.i("ReactSystemNotification", "Set Day Alarm , Type: " + attributes.repeatType);
+              break;
+          case "week":
+              getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+              Log.i("ReactSystemNotification", "Set Day Alarm , Type: " + attributes.repeatType);
+              break;
+          default:
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                  getAlarmManager().setExact(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+              } else {
+                  getAlarmManager().set(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+              }
+              Log.i("ReactSystemNotification", "Set One-Time Alarm: ");
+              break;
         }
+
     }
 
     public void cancelAll() {
