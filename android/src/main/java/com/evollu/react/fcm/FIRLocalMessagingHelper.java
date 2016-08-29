@@ -281,5 +281,9 @@ public class FIRLocalMessagingHelper {
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.cancelAll();
+
+        Bundle b = new Bundle();
+        b.putString("id", "0");
+        getAlarmManager().cancel(getScheduleNotificationIntent(b));
     }
 }
