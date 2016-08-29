@@ -266,9 +266,12 @@ public class FIRLocalMessagingHelper {
         if(interval){
             getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, interval, pendingIntent);
             Log.i("ReactSystemNotification", "Set Repeat Alarm , Type: " + repeatEvery);
-        } else{
-            getAlarmManager()[(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)? "setExact": "set"](AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            getAlarmManager().setExact(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
             Log.i("ReactSystemNotification", "Set One-Time Alarm");
+        }else {
+            getAlarmManager().set(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+            Log.i("ReactSystemNotification", "Set One-Time Alarm: ");
         }
 
     }
