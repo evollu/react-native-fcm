@@ -54,8 +54,8 @@ public class FIRLocalMessagingHelper {
             notificationID = (int) System.currentTimeMillis();
         }
 
-        Intent notificationIntent = new Intent(mContext, RNPushNotificationPublisher.class);
-        notificationIntent.putExtra(RNPushNotificationPublisher.NOTIFICATION_ID, notificationID);
+        Intent notificationIntent = new Intent(mContext, FIRLocalMessagingPublisher.class);
+        notificationIntent.putExtra(FIRLocalMessagingPublisher.NOTIFICATION_ID, notificationID);
         notificationIntent.putExtras(bundle);
 
         return PendingIntent.getBroadcast(mContext, notificationID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
