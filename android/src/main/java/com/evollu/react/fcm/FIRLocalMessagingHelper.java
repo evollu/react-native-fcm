@@ -205,7 +205,7 @@ public class FIRLocalMessagingHelper {
             int notificationID = (int) System.currentTimeMillis();
             if (bundle.containsKey("id")) {
                 try {
-                    notificationID = bundle.getInt("id");
+                    notificationID = (int) bundle.getDouble("id");
                 } catch (Exception e) {
                     String notificationIDString = bundle.getString("id");
 
