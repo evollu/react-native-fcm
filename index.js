@@ -34,40 +34,42 @@ FCM.presentLocalNotification = (details) =>{
   else if (Platform.OS ==='ios') {
     const soundName = !details.hasOwnProperty("playSound") || details.playSound === true ? 'default' : '';// empty string results in no sound
     PushNotificationIOS.presentLocalNotification({
-			alertBody: details.message,
-			alertAction: details.alertAction,
-			category: details.category,
-			soundName: soundName,
-			applicationIconBadgeNumber: details.number,
-			userInfo: details.userInfo
+  			alertBody: details.message,
+  			alertAction: details.alertAction,
+  			category: details.category,
+  			soundName: soundName,
+  			applicationIconBadgeNumber: details.number,
+  			userInfo: details.userInfo
 	   });
   }
 };
 
-FCM.localNotificationSchedule = function(details) {
-	if ( Platform.OS === 'ios' ) {
-    var notification = {
-			fireDate: details.date.getTime(),
-			alertBody: details.message,
-			userInfo: details.userInfo,
-      repeatInterval: REPEAT_INTERVAL_IOS[details.repeatEvery] || 0
-		};
-		FIRMessaging.scheduleLocalNotification(notification);
-	} else {
-		details.fireDate = details.date.getTime();
-		delete details.date;
-		FIRMessaging.scheduleLocalNotification(details);
-	}
+FCM.scheduleLocalNotification = function(details) {
+    var iosNotification = {
+        fireDate: details.date.getTime(),
+        alertBody: details.message,
+        userInfo: details.userInfo,
+        repeatInterval: REPEAT_INTERVAL_IOS[details.repeatEvery] || 0
+    };
+    details.fireDate = details.date.getTime();
+    delete details.date;
+    FIRMessaging.scheduleLocalNotification((Platform.OS === 'ios')? iosNotification : details);
+};
+
+FCM.cancel = (notificationID) => {
+    if(Platform.OS === 'android'){
+        FIRMessaging.cancel(notificationID);
+    }
 };
 
 FCM.cancelAll = () => {
-  if (Platform.OS ==='android'){
-    FIRMessaging.cancelAll();
-  }
-  else if (Platform.OS ==='ios') {
-    PushNotificationIOS.cancelLocalNotifications();
-    PushNotificationIOS.setApplicationIconBadgeNumber(0);
-  }
+    if (Platform.OS ==='android'){
+        FIRMessaging.cancelAll();
+    }
+    else if (Platform.OS ==='ios') {
+        PushNotificationIOS.cancelLocalNotifications();
+        PushNotificationIOS.setApplicationIconBadgeNumber(0);
+    }
 };
 
 FCM.on = (event, callback) => {

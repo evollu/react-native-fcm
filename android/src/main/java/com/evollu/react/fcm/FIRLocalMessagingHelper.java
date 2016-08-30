@@ -103,9 +103,6 @@ public class FIRLocalMessagingHelper {
                 case "min":
                     notification.setPriority(NotificationCompat.PRIORITY_MIN);
                 break;
-                case "low":
-                    notification.setPriority(NotificationCompat.PRIORITY_LOW);
-                break;
                 case "high":
                     notification.setPriority(NotificationCompat.PRIORITY_HIGH);
                 break;
@@ -113,7 +110,7 @@ public class FIRLocalMessagingHelper {
                     notification.setPriority(NotificationCompat.PRIORITY_MAX);
                 break;
                 default:
-                    notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                    notification.setPriority(NotificationCompat.PRIORITY_LOW);
                 break;
             }
 
@@ -306,6 +303,22 @@ public class FIRLocalMessagingHelper {
 
     }
 
+    public void cancel(notificationID) {
+        NotificationManager notificationManager =
+                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.cancel(notificationID);
+
+        cancelAlarm(notificationID);
+        deleteFromPreferences(notificationID);
+    }
+
+    public void deleteFromPreferences(id) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(Integer.toString(id));
+        editor.commit();
+    }
+
     public void cancelAll() {
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -315,13 +328,17 @@ public class FIRLocalMessagingHelper {
         cancelAlarms();
     }
 
+    public void cancelAlarm(notificationID) {
+          Bundle b = new Bundle();
+          b.putString("id", notificationID);
+          getAlarmManager().cancel(getScheduleNotificationIntent( b, false));
+    }
+
     public void cancelAlarms() {
       java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
       SharedPreferences.Editor editor = sharedPreferences.edit();
       for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
-          Bundle b = new Bundle();
-          b.putString("id", entry.getKey());
-          getAlarmManager().cancel(getScheduleNotificationIntent( b, false));
+          cancelAlarm(entry.getKey());
       }
       editor.clear();
       editor.commit();
