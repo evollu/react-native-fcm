@@ -303,19 +303,19 @@ public class FIRLocalMessagingHelper {
 
     }
 
-    public void cancel(notificationID) {
+    public void cancel(Integer notificationID) {
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.cancel(notificationID);
 
-        cancelAlarm(notificationID);
-        deleteFromPreferences(notificationID);
+        cancelAlarm(Integer.toString(notificationID));
+        deleteFromPreferences(Integer.toString(notificationID));
     }
 
-    public void deleteFromPreferences(id) {
+    public void deleteFromPreferences(String id) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(Integer.toString(id));
+        editor.remove(id);
         editor.commit();
     }
 
@@ -328,7 +328,7 @@ public class FIRLocalMessagingHelper {
         cancelAlarms();
     }
 
-    public void cancelAlarm(notificationID) {
+    public void cancelAlarm(String notificationID) {
           Bundle b = new Bundle();
           b.putString("id", notificationID);
           getAlarmManager().cancel(getScheduleNotificationIntent( b, false));
