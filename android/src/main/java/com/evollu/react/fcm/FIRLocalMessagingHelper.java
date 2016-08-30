@@ -50,13 +50,24 @@ public class FIRLocalMessagingHelper {
     }
 
     private PendingIntent getScheduleNotificationIntent(Bundle bundle, Boolean storeIntent) {
-        int notificationID;
-        String notificationIDString = bundle.getString("id");
 
-        if (notificationIDString != null) {
-            notificationID = Integer.parseInt(notificationIDString);
-        } else {
-            notificationID = (int) System.currentTimeMillis();
+        int notificationID = (int) System.currentTimeMillis();
+        if (bundle.containsKey("id")) {
+            try {
+                notificationID = (int) bundle.getDouble("id");
+            } catch (Exception e) {
+                String notificationIDString = bundle.getString("id");
+
+                if (notificationIDString != null) {
+                    Log.w(TAG, "'id' field set as a string instead of an int");
+
+                    try {
+                        notificationID = Integer.parseInt(notificationIDString);
+                    } catch (NumberFormatException nfe) {
+                        Log.w(TAG, "'id' field could not be converted to an int, ignoring it", nfe);
+                    }
+                }
+            }
         }
 
         Intent notificationIntent = new Intent(mContext, FIRLocalMessagingPublisher.class);
