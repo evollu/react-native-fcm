@@ -1,4 +1,4 @@
-import {NativeModules, DeviceEventEmitter, AppState, Platform, PushNotificationIOS} from 'react-native';
+import {NativeModules, DeviceEventEmitter, Platform, PushNotificationIOS} from 'react-native';
 
 const eventsMap = {
     refreshToken: 'FCMTokenRefreshed',
