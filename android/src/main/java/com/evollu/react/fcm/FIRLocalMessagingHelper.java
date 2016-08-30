@@ -95,8 +95,27 @@ public class FIRLocalMessagingHelper {
                     .setContentTitle(title)
                     .setTicker(bundle.getString("ticker"))
                     .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setAutoCancel(bundle.getBoolean("autoCancel", true));
+
+
+            String priority = bundle.getString("priority");
+            switch(priority) {
+                case "min":
+                    notification.setPriority(NotificationCompat.PRIORITY_MIN);
+                break;
+                case "low":
+                    notification.setPriority(NotificationCompat.PRIORITY_LOW);
+                break;
+                case "high":
+                    notification.setPriority(NotificationCompat.PRIORITY_HIGH);
+                break;
+                case "max":
+                    notification.setPriority(NotificationCompat.PRIORITY_MAX);
+                break;
+                default:
+                    notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                break;
+            }
 
             String group = bundle.getString("group");
             if (group != null) {
