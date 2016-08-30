@@ -40,7 +40,7 @@
 +       <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
 +     </intent-filter>
 +   </service>
-
++   <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher" />
     ...
 ```
 
@@ -131,6 +131,7 @@ Edit `AppDelegate.m`:
 ```diff
 + #import "Firebase.h" // if you are using Non Cocoapod approach
 + #import "RNFIRMessaging.h"
++ #import "RCTPushNotificationManager.h"
   //...
 
   - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -143,6 +144,18 @@ Edit `AppDelegate.m`:
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
 +   handler(UIBackgroundFetchResultNewData);
 + }
+
++// Required to register for notifications
++- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
++{
++  [RCTPushNotificationManager didRegisterUserNotificationSettings:notificationSettings];
++}
+
++// Required for the localNotification event.
++- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
++{
++  [RCTPushNotificationManager didReceiveLocalNotification:notification];
++}
 ```
 
 ### FCM config file
