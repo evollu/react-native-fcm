@@ -76,8 +76,8 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void cancel(notificationID) {
-      mFIRLocalMessagingHelper.cancel(notificationID);
+    public void cancel(Integer notificationID) {
+      mFIRLocalMessagingHelper.cancel(Integer notificationID);
     }
     @ReactMethod
     public void cancelAll() {
