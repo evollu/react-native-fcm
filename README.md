@@ -216,6 +216,7 @@ class App extends Component {
       ```json
       {
         "fcm": {"action": "fcm.ACTION.HELLO"},
+        "opened_from_tray": 1,
         "extra": "juice"
       }
       ```
@@ -224,6 +225,7 @@ class App extends Component {
       ```json
       {
         "apns": {"action_category": "fcm.ACTION.HELLO"},
+        "opened_from_tray": 1,
         "extra": "juice"
       }
       ```
@@ -252,6 +254,10 @@ Since Lollipop, the push notification icon is required to be all white, otherwis
 
 #### I am using Proguard
 You need to add this to your `android/app/proguard-rules.pro`:
+
+#### How do I tell if user clicks the notification banner?
+- Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS base on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
+ 
 ```
 # Google Play Services
 -keep class com.google.android.gms.** { *; }
