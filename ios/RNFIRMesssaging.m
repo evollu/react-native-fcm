@@ -82,6 +82,14 @@ RCT_REMAP_METHOD(getFCMToken,
   resolve([[FIRInstanceID instanceID] token]);
 }
 
+RCT_EXPORT_METHOD(getInitFCMData:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSDictionary<NSString *, id> *initialNotification = [_bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy];
+  resolve(RCTNullIfNil(initialNotification));
+}
+
+
+
 - (void) onTokenRefresh
 {
   [_bridge.eventDispatcher sendDeviceEventWithName:@"FCMTokenRefreshed" body:[[FIRInstanceID instanceID] token]];
