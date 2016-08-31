@@ -118,8 +118,10 @@ RCT_EXPORT_METHOD(unsubscribeFromTopic: (NSString*) topic)
 
 - (void)handleRemoteNotificationReceived:(NSNotification *)notification
 {
+  NSMutableDictionary *data = [[NSMutableDictionary alloc]initWithDictionary: notification.userInfo];
+  [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
   [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived
-                                              body:notification.userInfo];
+                                              body:data];
 }
 
 @end

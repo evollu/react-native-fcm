@@ -129,6 +129,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         }
         WritableMap fcm = Arguments.createMap();
         fcm.putString("action", intent.getAction());
+        fcm.putInt("opened_from_tray", 1);
         params.putMap("fcm", fcm);
         return params;
     }
