@@ -1,11 +1,11 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## NOTE: If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
+
 ## Installation
 
 - Run `npm install react-native-fcm --save`
 - Run `react-native link react-native-fcm` (RN 0.29.1+, otherwise `rnpm link react-native-fcm`)
-
-- NOTE: If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
 
 ## Android Configuration
 
@@ -73,9 +73,9 @@ Notes:
 - replace `"fcm.ACTION.HELLO"` by the `click_action` you want to match
 
 
-If you are using RN<0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
+If you are using RN < 0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
 
-- RN 0.28+:
+- RN 0.28:
 
 ```diff
   import com.facebook.react.ReactActivity;
@@ -182,7 +182,7 @@ class App extends Component {
 ```
 
 ### Behaviour when sending `notification` and `data` payload through GCM
-- When app is not running when user clicks notification, notification data will be passed into `FCM.initialData`
+- When app is not running and user clicks notification, notification data will be passed into `FCM.initialData`
 
 - When app is running in background (the tricky one, I strongly suggest you try it out yourself)
  - IOS will receive notificaton from `FCMNotificationReceived` event
@@ -263,6 +263,9 @@ You need to add this to your `android/app/proguard-rules.pro`:
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**
 ```
+
+#### Android notification doesn't vibrate/show head-up display etc
+All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
