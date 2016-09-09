@@ -1,6 +1,7 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## NOTE: If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
+        If you are running RN < 0.33.0, you need to user react-native-fcm@1.1.0
 
 ## Installation
 
