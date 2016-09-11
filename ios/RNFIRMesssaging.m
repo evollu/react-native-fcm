@@ -16,7 +16,28 @@
 #endif
 
 NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
+NSString *const LocalNotificationReceived = @"LocalNotificationReceived";
 
+@implementation RCTConvert (UILocalNotification)
+
++ (UILocalNotification *)UILocalNotification:(id)json
+{
+  NSDictionary<NSString *, id> *details = [self NSDictionary:json];
+  UILocalNotification *notification = [UILocalNotification new];
+  notification.fireDate = [RCTConvert NSDate:details[@"fireDate"]] ?: [NSDate date];
+  notification.alertBody = [RCTConvert NSString:details[@"alertBody"]];
+  notification.alertAction = [RCTConvert NSString:details[@"alertAction"]];
+   notification.soundName = [RCTConvert NSString:details[@"soundName"]] ?: UILocalNotificationDefaultSoundName;
+   notification.userInfo = [RCTConvert NSDictionary:details[@"userInfo"]];
+   notification.category = [RCTConvert NSString:details[@"category"]];
+   if (details[@"repeatInterval"]) {
+     notification.repeatInterval = [RCTConvert NSInteger:details[@"repeatInterval"]];
+   }
+
+   return notification;
+ }
+
+@end
 
 @implementation RNFIRMessaging
 
@@ -43,7 +64,7 @@ RCT_EXPORT_MODULE()
                                            selector:@selector(handleRemoteNotificationReceived:)
                                                name:FCMNotificationReceived
                                              object:nil];
-  
+
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(disconnectFCM)
                                                name:UIApplicationDidEnterBackgroundNotification
@@ -51,6 +72,11 @@ RCT_EXPORT_MODULE()
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(connectToFCM)
                                                name:UIApplicationDidBecomeActiveNotification
+                                             object:nil];
+
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(handleLocalNotificationReceived:)
+                                               name:LocalNotificationReceived
                                              object:nil];
   [[NSNotificationCenter defaultCenter]
    addObserver:self selector:@selector(onTokenRefresh)
@@ -92,9 +118,9 @@ RCT_EXPORT_METHOD(requestPermissions)
     if (RCTRunningInAppExtension()) {
         return;
     }
-    
+
     UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
-    
+
     UIApplication *app = RCTSharedApplication();
     if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         UIUserNotificationSettings *notificationSettings =
@@ -114,6 +140,38 @@ RCT_EXPORT_METHOD(subscribeToTopic: (NSString*) topic)
 RCT_EXPORT_METHOD(unsubscribeFromTopic: (NSString*) topic)
 {
   [[FIRMessaging messaging] unsubscribeFromTopic:topic];
+}
+
+RCT_EXPORT_METHOD(presentLocalNotification:(UILocalNotification *)notification)
+{
+  [RCTSharedApplication() presentLocalNotificationNow:notification];
+}
+
+RCT_EXPORT_METHOD(scheduleLocalNotification:(UILocalNotification *)notification)
+{
+  [RCTSharedApplication() scheduleLocalNotification:notification];
+}
+
+RCT_EXPORT_METHOD(cancelLocalNotifications)
+{
+  [RCTSharedApplication() cancelAllLocalNotifications];
+}
+
+RCT_EXPORT_METHOD(cancelLocalNotification:(NSInteger*) notificationId)
+{
+  for (UILocalNotification *notification in [UIApplication sharedApplication].scheduledLocalNotifications) {
+    NSDictionary<NSString *, id> *notificationInfo = notification.userInfo;
+    int getId=[[notificationInfo valueForKey:@"id"] intValue];
+    if(getId == notificationId){
+        [[UIApplication sharedApplication] cancelLocalNotification:notification];
+    }
+  }
+}
+
+- (void)handleLocalNotificationReceived:(NSNotification *)notification
+{
+  [_bridge.eventDispatcher sendDeviceEventWithName:LocalNotificationReceived
+                                              body:notification.userInfo];
 }
 
 - (void)handleRemoteNotificationReceived:(NSNotification *)notification

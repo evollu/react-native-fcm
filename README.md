@@ -42,7 +42,7 @@
 +       <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
 +     </intent-filter>
 +   </service>
-
++   <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher" />
     ...
 ```
 
@@ -133,6 +133,7 @@ Edit `AppDelegate.m`:
 ```diff
 + #import "Firebase.h" // if you are using Non Cocoapod approach
 + #import "RNFIRMessaging.h"
++ #import "RCTPushNotificationManager.h"
   //...
 
   - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -145,6 +146,12 @@ Edit `AppDelegate.m`:
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
 +   handler(UIBackgroundFetchResultNewData);
 + }
+
++// Required for the localNotification event.
++- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
++{
++  [RCTPushNotificationManager didReceiveLocalNotification:notification];
++}
 ```
 
 ### FCM config file
@@ -166,6 +173,9 @@ class App extends Component {
     this.notificationUnsubscribe = FCM.on('notification', (notif) => {
       // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
     });
+    this.localNotificationUnsubscribe = FCM.on('localNotification', (notif) => {
+      // notif.notification contains the data
+    });
     this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
       console.log(token)
       // fcm token may not be available on first load, catch it here
@@ -179,6 +189,7 @@ class App extends Component {
     // prevent leaking
     this.refreshUnsubscribe();
     this.notificationUnsubscribe();
+    this.localNotificationUnsubscribe();
   }
 }
 ```
@@ -213,7 +224,7 @@ class App extends Component {
     ```
 
     and event callback will receive as:
-    
+
     - Android
       ```json
       {
@@ -222,7 +233,7 @@ class App extends Component {
         "extra": "juice"
       }
       ```
-    
+
     - iOS
       ```json
       {
@@ -236,6 +247,52 @@ class App extends Component {
  - IOS will receive notification and android **won't** (better not to do anything in foreground for hybrid and send a seprate data message.)
 
 NOTE: it is recommend not to rely on `data` payload for click_action as it can be overwritten (check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)).
+
+
+### Local Notifications (still in progress)
+Based on react-native-push-notification by zo0r and Neson
+
+ ```javascript
+
+ //support for priority on android
+ const pushNotification = {
+       /* Android Only Properties */
+       priority: "high", //(optional) default: low, other options: 'min', 'max', 'high'
+       title: "My Notification Title", // (optional)
+       ticker: "My Notification Ticker", // (optional)
+       autoCancel: true, // (optional) default: true
+       largeIcon: "ic_launcher", // (optional) default: "ic_launcher"
+       smallIcon: "ic_notification", // (optional) default: "ic_notification" with fallback for "ic_launcher"
+       bigText: "My big text that will be shown when notification is expanded", // (optional) default: "message" prop
+       subText: "This is a subText", // (optional) default: none
+       color: "red", // (optional) default: system default
+       vibrate: true, // (optional) default: true
+       vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+       tag: 'some_tag', // (optional) add tag to message
+       group: "group", // (optional) add group to message
+       type:'my_custom_field_value', //custom field
+       /* iOS and Android properties */
+       id: 1234, // (optional)
+       message: "My Notification Message", // (required)
+       playSound: false, // (optional) default: true
+       number: 10 // (optional) default: none (Cannot be zero)
+   };
+
+ FCM.presentLocalNotification(pushNotification)
+
+ const pushNotification = {
+   //...
+   repeatEvery: "week"// other options: minute, hour, day, week
+   //...
+ }
+ FCM.scheduleLocalNotification(pushNotification)
+
+//Cancel all notifications(IOS and ANDROID)
+ FCM.cancelLocalNotifications()
+
+//Cancel notification by id(IOS and ANDROID)
+FCM.cancelLocalNotification(notificationID)
+ ```
 
 ## Q & A
 
