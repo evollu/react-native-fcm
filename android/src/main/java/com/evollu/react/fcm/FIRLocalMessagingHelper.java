@@ -52,12 +52,13 @@ public class FIRLocalMessagingHelper {
     private PendingIntent getScheduleNotificationIntent(Bundle bundle, Boolean storeIntent) {
 
         int notificationID = (int) System.currentTimeMillis();
-        if (bundle.containsKey("id")) {
-            try {
-                notificationID = (int) bundle.getDouble("id");
-            } catch (Exception e) {
-                String notificationIDString = bundle.getString("id");
 
+        if (bundle.containsKey("id")) {
+            notificationID = (int) bundle.getDouble("id");
+            Log.w(TAG, String.valueOf(notificationID));
+
+            if(notificationID == 0){
+                String notificationIDString = bundle.getString("id");
                 if (notificationIDString != null) {
                     Log.w(TAG, "'id' field set as a string instead of an int");
 
@@ -110,7 +111,7 @@ public class FIRLocalMessagingHelper {
 
 
             String priority = bundle.getString("priority");
-            switch(priority) {
+            switch(priority==null?"":priority) {
                 case "min":
                     notification.setPriority(NotificationCompat.PRIORITY_MIN);
                 break;
@@ -214,12 +215,12 @@ public class FIRLocalMessagingHelper {
             }
 
             int notificationID = (int) System.currentTimeMillis();
-            if (bundle.containsKey("id")) {
-                try {
-                    notificationID = (int) bundle.getDouble("id");
-                } catch (Exception e) {
-                    String notificationIDString = bundle.getString("id");
 
+            if (bundle.containsKey("id")) {
+                notificationID = (int) bundle.getDouble("id");
+
+                if(notificationID == 0){
+                    String notificationIDString = bundle.getString("id");
                     if (notificationIDString != null) {
                         Log.w(TAG, "'id' field set as a string instead of an int");
 
@@ -232,6 +233,7 @@ public class FIRLocalMessagingHelper {
                 }
             }
 
+            intent.putExtra("localNotification", true);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -314,14 +316,14 @@ public class FIRLocalMessagingHelper {
 
     }
 
-    public void cancel(Integer notificationID) {
+    public void cancelLocalNotification(double notificationID) {
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.cancel(notificationID);
+        notificationManager.cancel((int) notificationID);
 
-        cancelAlarm(Integer.toString(notificationID));
-        deleteFromPreferences(Integer.toString(notificationID));
+        cancelAlarm(notificationID);
+        deleteFromPreferences(Double.toString(notificationID));
     }
 
     public void deleteFromPreferences(String id) {
@@ -330,7 +332,7 @@ public class FIRLocalMessagingHelper {
         editor.commit();
     }
 
-    public void cancelAll() {
+    public void cancelLocalNotifications() {
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -339,9 +341,9 @@ public class FIRLocalMessagingHelper {
         cancelAlarms();
     }
 
-    public void cancelAlarm(String notificationID) {
+    public void cancelAlarm(double notificationID) {
           Bundle b = new Bundle();
-          b.putString("id", notificationID);
+          b.putDouble("id", notificationID);
           getAlarmManager().cancel(getScheduleNotificationIntent( b, false));
     }
 
@@ -349,7 +351,7 @@ public class FIRLocalMessagingHelper {
       java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
       SharedPreferences.Editor editor = sharedPreferences.edit();
       for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
-          cancelAlarm(entry.getKey());
+          cancelAlarm(Double.parseDouble(entry.getKey()));
       }
       editor.clear();
       editor.commit();

@@ -16,6 +16,7 @@
 #endif
 
 NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
+NSString *const LocalNotificationReceived = @"LocalNotificationReceived";
 
 @implementation RCTConvert (UILocalNotification)
 
@@ -29,12 +30,9 @@ NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
    notification.soundName = [RCTConvert NSString:details[@"soundName"]] ?: UILocalNotificationDefaultSoundName;
    notification.userInfo = [RCTConvert NSDictionary:details[@"userInfo"]];
    notification.category = [RCTConvert NSString:details[@"category"]];
-
-  NSNumber *repeatInterval = details[@"repeatInterval"];
-
-  if (repeatInterval) {
-    notification.repeatInterval = [RCTConvert NSInteger:repeatInterval];
-  }
+   if (details[@"repeatInterval"]) {
+     notification.repeatInterval = [RCTConvert NSInteger:details[@"repeatInterval"]];
+   }
 
    return notification;
  }
@@ -74,6 +72,11 @@ RCT_EXPORT_MODULE()
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(connectToFCM)
                                                name:UIApplicationDidBecomeActiveNotification
+                                             object:nil];
+
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(handleLocalNotificationReceived:)
+                                               name:LocalNotificationReceived
                                              object:nil];
   [[NSNotificationCenter defaultCenter]
    addObserver:self selector:@selector(onTokenRefresh)
@@ -129,11 +132,6 @@ RCT_EXPORT_METHOD(requestPermissions)
     }
 }
 
-RCT_EXPORT_METHOD(scheduleLocalNotification:(UILocalNotification *)notification)
-{
-  [RCTSharedApplication() scheduleLocalNotification:notification];
-}
-
 RCT_EXPORT_METHOD(subscribeToTopic: (NSString*) topic)
 {
   [[FIRMessaging messaging] subscribeToTopic:topic];
@@ -142,6 +140,38 @@ RCT_EXPORT_METHOD(subscribeToTopic: (NSString*) topic)
 RCT_EXPORT_METHOD(unsubscribeFromTopic: (NSString*) topic)
 {
   [[FIRMessaging messaging] unsubscribeFromTopic:topic];
+}
+
+RCT_EXPORT_METHOD(presentLocalNotification:(UILocalNotification *)notification)
+{
+  [RCTSharedApplication() presentLocalNotificationNow:notification];
+}
+
+RCT_EXPORT_METHOD(scheduleLocalNotification:(UILocalNotification *)notification)
+{
+  [RCTSharedApplication() scheduleLocalNotification:notification];
+}
+
+RCT_EXPORT_METHOD(cancelLocalNotifications)
+{
+  [RCTSharedApplication() cancelAllLocalNotifications];
+}
+
+RCT_EXPORT_METHOD(cancelLocalNotification:(NSInteger*) notificationId)
+{
+  for (UILocalNotification *notification in [UIApplication sharedApplication].scheduledLocalNotifications) {
+    NSDictionary<NSString *, id> *notificationInfo = notification.userInfo;
+    int getId=[[notificationInfo valueForKey:@"id"] intValue];
+    if(getId == notificationId){
+        [[UIApplication sharedApplication] cancelLocalNotification:notification];
+    }
+  }
+}
+
+- (void)handleLocalNotificationReceived:(NSNotification *)notification
+{
+  [_bridge.eventDispatcher sendDeviceEventWithName:LocalNotificationReceived
+                                              body:notification.userInfo];
 }
 
 - (void)handleRemoteNotificationReceived:(NSNotification *)notification

@@ -76,12 +76,12 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void cancel(Integer notificationID) {
-      mFIRLocalMessagingHelper.cancel(notificationID);
+    public void cancelLocalNotification(int notificationID) {
+      mFIRLocalMessagingHelper.cancelLocalNotification(notificationID);
     }
     @ReactMethod
-    public void cancelAll() {
-      mFIRLocalMessagingHelper.cancelAll();
+    public void cancelLocalNotifications() {
+      mFIRLocalMessagingHelper.cancelLocalNotifications();
     }
 
     @ReactMethod
@@ -183,6 +183,8 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onNewIntent(Intent intent){
-        sendEvent("FCMNotificationReceived", parseIntent(intent));
+        Bundle bundle = intent.getExtras();
+        Boolean isLocalNotification = bundle.getBoolean("localNotification", false);
+        sendEvent(isLocalNotification ? "LocalNotificationReceived" : "FCMNotificationReceived", parseIntent(intent));
     }
 }
