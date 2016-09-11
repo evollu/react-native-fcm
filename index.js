@@ -1,8 +1,9 @@
-import {NativeModules, DeviceEventEmitter, Platform, PushNotificationIOS} from 'react-native';
+import {NativeModules, DeviceEventEmitter, Platform} from 'react-native';
 
 const eventsMap = {
     refreshToken: 'FCMTokenRefreshed',
-    notification: 'FCMNotificationReceived'
+    notification: 'FCMNotificationReceived',
+    localNotification: 'LocalNotificationReceived'
 };
 
 const REPEAT_INTERVAL_IOS = {
@@ -33,7 +34,7 @@ FCM.presentLocalNotification = (details) =>{
 
   else if (Platform.OS ==='ios') {
     const soundName = !details.hasOwnProperty("playSound") || details.playSound === true ? 'default' : '';// empty string results in no sound
-    PushNotificationIOS.presentLocalNotification({
+    FIRMessaging.presentLocalNotification({
   			alertBody: details.message,
   			alertAction: details.alertAction,
   			category: details.category,
@@ -48,43 +49,32 @@ FCM.scheduleLocalNotification = function(details) {
     var iosNotification = {
         fireDate: details.date.getTime(),
         alertBody: details.message,
-        userInfo: details.userInfo,
+        userInfo: details.userInfo || {},
         repeatInterval: REPEAT_INTERVAL_IOS[details.repeatEvery] || 0
     };
+    if(details.id) {
+      iosNotification.userInfo.id = details.id;
+    }
     details.fireDate = details.date.getTime();
     delete details.date;
+
     FIRMessaging.scheduleLocalNotification((Platform.OS === 'ios')? iosNotification : details);
 };
 
-FCM.cancel = (notificationID) => {
-    if(Platform.OS === 'android'){
-        FIRMessaging.cancel(notificationID);
-    }
+FCM.cancelLocalNotification = (notificationID) => {
+        FIRMessaging.cancelLocalNotification(notificationID);
 };
 
-FCM.cancelAll = () => {
-    if (Platform.OS ==='android'){
-        FIRMessaging.cancelAll();
-    }
-    else if (Platform.OS ==='ios') {
-        PushNotificationIOS.cancelLocalNotifications();
-        PushNotificationIOS.setApplicationIconBadgeNumber(0);
-    }
+FCM.cancelLocalNotifications = () => {
+    FIRMessaging.cancelLocalNotifications();
 };
 
 FCM.on = (event, callback) => {
     const nativeEvent = eventsMap[event];
-
-    if(Platform.OS === 'ios'){
-        PushNotificationIOS.addEventListener('localNotification', callback);
-    }
     const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
 
     return function remove() {
         listener.remove();
-        if(Platform.OS === 'ios'){
-            PushNotificationIOS.removeEventListener('localNotification', callback);
-        }
     };
 };
 
