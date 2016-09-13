@@ -226,8 +226,9 @@ class App extends Component {
             body: "My Notification Message",                    // as FCM payload (required)
             sound: "default",                                   // as FCM payload
             priority: "high",                                   // as FCM payload
-            badge: 10                                           // as FCM payload IOS only, set 0 to clear badges
-            number: 10                                          // Android only
+            click_action: "ACTION",                             // as FCM payload
+            badge: 10,                                          // as FCM payload IOS only, set 0 to clear badges
+            number: 10,                                         // Android only
             ticker: "My Notification Ticker",                   // Android only
             auto_cancel: true,                                  // Android only (default true)
             largeIcon: "ic_launcher",                           // Android only
