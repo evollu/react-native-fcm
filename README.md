@@ -337,10 +337,11 @@ You need to add this to your `android/app/proguard-rules.pro`:
 ```
 
 #### How do I tell if user clicks the notification banner?
-- Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS base on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
+Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS base on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
 
 #### Android notification doesn't vibrate/show head-up display etc
-All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way
+All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way.
+Or you can send `data` using FCM and build a local notification
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
