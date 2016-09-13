@@ -151,9 +151,9 @@ Edit `AppDelegate.m`:
 
 In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
  
-### Setup Local Notifications
+## Setup Local Notifications
 
-#### IOS
+### IOS
 
 Edit Appdelegate.m
 ```diff
@@ -163,7 +163,7 @@ Edit Appdelegate.m
 + }
 ```
  
-#### Android
+### Android
 Edit AndroidManifest.xml
 ```diff
   <uses-permission android:name="android.permission.INTERNET" />
