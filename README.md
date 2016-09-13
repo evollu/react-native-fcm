@@ -150,6 +150,40 @@ Edit `AppDelegate.m`:
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
+ 
+### Setup Local Notifications
+
+#### IOS
+
+Edit Appdelegate.m
+```diff
++ -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification 
++ {
++   [[NSNotificationCenter defaultCenter] postNotificationName:FCMLocalNotificationReceived object:self userInfo:notification.userInfo];
++ }
+```
+ 
+#### Android
+Edit AndroidManifest.xml
+```diff
+  <uses-permission android:name="android.permission.INTERNET" />
++ <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
++ <uses-permission android:name="android.permission.VIBRATE" />
+ 
+    <application
+ +      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
+ +      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
+ +          <intent-filter>
+ +              <action android:name="android.intent.action.BOOT_COMPLETED"/>
+ +              <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+ +              <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+ +              <category android:name="android.intent.category.DEFAULT" />
+ +          </intent-filter>
+ +      </receiver>
+    </application>
+``` 
+NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenting local notifications. `com.evollu.react.fcm.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
+
 
 ## Usage
 
@@ -157,29 +191,68 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
 import FCM from 'react-native-fcm';
 
 class App extends Component {
-  componentDidMount() {
-    FCM.requestPermissions(); // for iOS
-    FCM.getFCMToken().then(token => {
-      console.log(token)
-      // store fcm token in your server
-    });
-    this.notificationUnsubscribe = FCM.on('notification', (notif) => {
-      // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
-    });
-    this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
-      console.log(token)
-      // fcm token may not be available on first load, catch it here
-    });
+    componentDidMount() {
+        FCM.requestPermissions(); // for iOS
+        FCM.getFCMToken().then(token => {
+            console.log(token)
+            // store fcm token in your server
+        });
+        this.notificationUnsubscribe = FCM.on('notification', (notif) => {
+            // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
+        });
+        this.localNotificationUnsubscribe = FCM.on('localNotification', (notif) => {
+            // notif.notification contains the data
+        });
+        this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
+            console.log(token)
+            // fcm token may not be available on first load, catch it here
+        });
+    }
 
-    FCM.subscribeToTopic('/topics/foo-bar');
-    FCM.unsubscribeFromTopic('/topics/foo-bar');
-  }
-
-  componentWillUnmount() {
-    // prevent leaking
-    this.refreshUnsubscribe();
-    this.notificationUnsubscribe();
-  }
+    componentWillUnmount() {
+        // prevent leaking
+        this.refreshUnsubscribe();
+        this.notificationUnsubscribe();
+        this.localNotificationUnsubscribe();
+    }
+ 
+    otherMethods(){
+        FCM.subscribeToTopic('/topics/foo-bar');
+        FCM.unsubscribeFromTopic('/topics/foo-bar');
+        FCM.getInitialNotification().then(...);
+        FCM.presentLocalNotification({
+            id: "UNIQ_ID_STRING",                               // (optional for instant notification)
+            title: "My Notification Title",                     // as FCM payload
+            body: "My Notification Message",                    // as FCM payload (required)
+            sound: "default",                                   // as FCM payload
+            priority: "high",                                   // as FCM payload
+            badge: 10                                           // as FCM payload IOS only, set 0 to clear badges
+            number: 10                                          // Android only
+            ticker: "My Notification Ticker",                   // Android only
+            auto_cancel: true,                                  // Android only (default true)
+            largeIcon: "ic_launcher",                           // Android only
+            icon: "ic_notification",                            // as FCM payload
+            big_text: "Show when notification is expanded",     // Android only
+            sub_text: "This is a subText",                      // Android only
+            color: "red",                                       // Android only
+            vibrate: 300,                                       // Android only default: 300, no vibration is you pass null
+            tag: 'some_tag',                                    // Android only
+            group: "group",                                     // Android only
+            my_custom_data:'my_custom_field_value',             // extra data you want to throw
+        });
+ 
+        FCM.scheduleLocalNotification({
+            fire_date: new Date(),
+            id: "UNIQ_ID_STRING"    //REQUIRED! this is what you use to lookup and delete notification
+            body: "from future past"
+        })
+ 
+        FCM.getScheduledLocalNotifications().then(...);
+        FCM.cancelLocalNotification("UNIQ_ID_STRING");
+        FCM.cancelAllLocalNotifications();
+        FCM.setBadgeNumber();
+        FCM.getBadgeNumber();
+    }
 }
 ```
 
@@ -271,3 +344,6 @@ All available features are [here](https://firebase.google.com/docs/cloud-messagi
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
+ 
+#### Thanks
+Local notification implementation is inspired by react-native-push-notification by zo0r and Neson
