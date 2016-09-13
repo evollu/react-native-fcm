@@ -154,6 +154,7 @@ public class FIRLocalMessagingHelper {
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("notification", bundle);
             intent.putExtra("localNotification", true);
+            intent.setAction(bundle.getString("click_action"));
 
             int notificationID = bundle.containsKey("id") ? bundle.getString("id", "").hashCode() : (int) System.currentTimeMillis();
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
