@@ -170,17 +170,17 @@ Edit AndroidManifest.xml
 + <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 + <uses-permission android:name="android.permission.VIBRATE" />
  
-    <application
- +      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
- +      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
- +          <intent-filter>
- +              <action android:name="android.intent.action.BOOT_COMPLETED"/>
- +              <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
- +              <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
- +              <category android:name="android.intent.category.DEFAULT" />
- +          </intent-filter>
- +      </receiver>
-    </application>
+  <application
++      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
++      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
++          <intent-filter>
++              <action android:name="android.intent.action.BOOT_COMPLETED"/>
++              <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
++              <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
++              <category android:name="android.intent.category.DEFAULT" />
++          </intent-filter>
++      </receiver>
+  </application>
 ``` 
 NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenting local notifications. `com.evollu.react.fcm.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
 
