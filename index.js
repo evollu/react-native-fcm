@@ -6,48 +6,48 @@ const eventsMap = {
     localNotification: 'FCMLocalNotificationReceived'
 };
 
-const FIRMessaging = NativeModules.RNFIRMessaging;
+const RNFIRMessaging = NativeModules.RNFIRMessaging;
 
 const FCM = {};
 
 FCM.getInitialNotification = () => {
-    return FIRMessaging.getInitialNotification();
+    return RNFIRMessaging.getInitialNotification();
 }
 
 FCM.getFCMToken = () => {
-    return FIRMessaging.getFCMToken();
+    return RNFIRMessaging.getFCMToken();
 };
 
 FCM.requestPermissions = () => {
-    return FIRMessaging.requestPermissions();
+    return RNFIRMessaging.requestPermissions();
 };
 
 FCM.presentLocalNotification = (details) => {
-    FIRMessaging.presentLocalNotification(details);
+    RNFIRMessaging.presentLocalNotification(details);
 };
 
 FCM.scheduleLocalNotification = function(details) {
-    FIRMessaging.scheduleLocalNotification(details);
+    RNFIRMessaging.scheduleLocalNotification(details);
 };
 
 FCM.getScheduledLocalNotifications = function() {
-    return FIRMessaging.getScheduledLocalNotifications();
+    return RNFIRMessaging.getScheduledLocalNotifications();
 };
 
 FCM.cancelLocalNotification = (notificationID) => {
-    FIRMessaging.cancelLocalNotification(notificationID);
+    RNFIRMessaging.cancelLocalNotification(notificationID);
 };
 
 FCM.cancelAllLocalNotifications = () => {
-    FIRMessaging.cancelAllLocalNotifications();
+    RNFIRMessaging.cancelAllLocalNotifications();
 };
 
 FCM.setBadgeNumber = () => {
-    FIRMessaging.setBadgeNumber();
+    RNFIRMessaging.setBadgeNumber();
 }
 
 FCM.getBadgeNumber = () => {
-    return FIRMessaging.getBadgeNumber();
+    return RNFIRMessaging.getBadgeNumber();
 }
 
 FCM.on = (event, callback) => {
@@ -60,18 +60,11 @@ FCM.on = (event, callback) => {
 };
 
 FCM.subscribeToTopic = (topic) => {
-    FIRMessaging.subscribeToTopic(topic);
+    RNFIRMessaging.subscribeToTopic(topic);
 };
 
 FCM.unsubscribeFromTopic = (topic) => {
-    FIRMessaging.unsubscribeFromTopic(topic);
+    RNFIRMessaging.unsubscribeFromTopic(topic);
 };
-
-//once doesn't seem to work
-DeviceEventEmitter.addListener('FCMInitData', (data) => {
-    FCM.initialData = data;
-});
-
-FCM.initialData = FIRMessaging.initialData;
 
 module.exports = FCM;

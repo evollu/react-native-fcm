@@ -72,12 +72,6 @@ RCT_EXPORT_MODULE()
 
 @synthesize bridge = _bridge;
 
-- (NSDictionary<NSString *, id> *)constantsToExport
-{
-  NSDictionary<NSString *, id> *initialNotification = [_bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy];
-  return @{@"initialData": RCTNullIfNil(initialNotification)};
-}
-
 - (void)dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];

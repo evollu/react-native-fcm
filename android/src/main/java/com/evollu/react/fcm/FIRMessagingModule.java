@@ -27,15 +27,13 @@ import android.util.Log;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
     private FIRLocalMessagingHelper mFIRLocalMessagingHelper;
-    Intent initIntent;
-
+    
     public FIRMessagingModule(ReactApplicationContext reactContext) {
         super(reactContext);
         mFIRLocalMessagingHelper = new FIRLocalMessagingHelper((Application) reactContext.getApplicationContext());
@@ -43,12 +41,6 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         getReactApplicationContext().addActivityEventListener(this);
         registerTokenRefreshHandler();
         registerMessageHandler();
-    }
-
-    @Override
-    public Map<String, Object> getConstants() {
-        Map<String, Object> constants = new HashMap<>();
-        return constants;
     }
 
     @Override
@@ -180,12 +172,6 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onHostResume() {
-        if (initIntent == null){
-            //the first intent is initial intent that opens the app
-            Intent newIntent = getCurrentActivity().getIntent();
-            sendEvent("FCMInitData", parseIntent(newIntent));
-            initIntent = newIntent;
-        }
     }
 
     @Override
