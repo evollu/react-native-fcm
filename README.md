@@ -244,8 +244,9 @@ class App extends Component {
  
         FCM.scheduleLocalNotification({
             fire_date: new Date(),
-            id: "UNIQ_ID_STRING"    //REQUIRED! this is what you use to lookup and delete notification
-            body: "from future past"
+            id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification
+            body: "from future past",
+            repeat_interval: "week" //day, hour
         })
  
         FCM.getScheduledLocalNotifications().then(...);
