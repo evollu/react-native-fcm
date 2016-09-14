@@ -254,7 +254,7 @@ class App extends Component {
         FCM.cancelLocalNotification("UNIQ_ID_STRING");
         FCM.cancelAllLocalNotifications();
         FCM.setBadgeNumber();
-        FCM.getBadgeNumber();
+        FCM.getBadgeNumber().then(...);
     }
 }
 ```
