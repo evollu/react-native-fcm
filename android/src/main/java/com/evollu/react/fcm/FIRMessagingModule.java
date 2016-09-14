@@ -50,7 +50,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 
     @ReactMethod
     public void getInitialNotification(Promise promise){
-        promise.resolve(getCurrentActivity().getIntent());
+        promise.resolve(parseIntent(getCurrentActivity().getIntent()));
     }
 
     @ReactMethod
