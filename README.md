@@ -320,7 +320,6 @@ Yes there are `react-native-push-notification` and `react-native-system-notifica
 - We want a unified local notification library but people are reporting using react-native-push-notification with this repo has compatibility issue as `react-native-push-notification` also sets up GCM.
 - We want to have local notification to have similar syntax as remote notification payload.
 - The PushNotificationIOS by react native team is still missing features that recurring, so we are adding it here
-- I'm still thinking about separating this functionality out into its own repo so people who want to use local notification won't have to deal with FCM overhead. Let me know your thoughts
 
 #### My Android build is failing
 Try update your SDK and google play service
