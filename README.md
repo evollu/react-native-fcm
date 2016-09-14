@@ -232,12 +232,12 @@ class App extends Component {
             number: 10,                                         // Android only
             ticker: "My Notification Ticker",                   // Android only
             auto_cancel: true,                                  // Android only (default true)
-            largeIcon: "ic_launcher",                           // Android only
+            large_icon: "ic_launcher",                           // Android only
             icon: "ic_notification",                            // as FCM payload
             big_text: "Show when notification is expanded",     // Android only
             sub_text: "This is a subText",                      // Android only
             color: "red",                                       // Android only
-            vibrate: 300,                                       // Android only default: 300, no vibration is you pass null
+            vibrate: 300,                                       // Android only default: 300, no vibration if you pass null
             tag: 'some_tag',                                    // Android only
             group: "group",                                     // Android only
             my_custom_data:'my_custom_field_value',             // extra data you want to throw
@@ -245,7 +245,7 @@ class App extends Component {
  
         FCM.scheduleLocalNotification({
             fire_date: new Date(),
-            id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification
+            id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification. In android notification with same ID will override each other
             body: "from future past",
             repeat_interval: "week" //day, hour
         })
