@@ -42,8 +42,8 @@ FCM.cancelAllLocalNotifications = () => {
     RNFIRMessaging.cancelAllLocalNotifications();
 };
 
-FCM.setBadgeNumber = () => {
-    RNFIRMessaging.setBadgeNumber();
+FCM.setBadgeNumber = (number) => {
+    RNFIRMessaging.setBadgeNumber(number);
 }
 
 FCM.getBadgeNumber = () => {
