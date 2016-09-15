@@ -1,6 +1,8 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## NOTE: If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
+## NOTE: 
+- If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
+- If you are running RN < 0.33.0, you need to user react-native-fcm@1.1.0
 
 ## Installation
 
@@ -73,7 +75,7 @@ Notes:
 - replace `"fcm.ACTION.HELLO"` by the `click_action` you want to match
 
 
-If you are using RN<0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
+If you are using RN < 0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
 
 - RN 0.28:
 
@@ -148,6 +150,41 @@ Edit `AppDelegate.m`:
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
+ 
+## Setup Local Notifications
+NOTE: local notification does NOT have any dependency on FCM library but you still need to include Firebase to compile. If there are enough demand to use this functionality alone, I will separate it out into another repo
+
+### IOS
+
+Edit Appdelegate.m
+```diff
++ -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification 
++ {
++   [[NSNotificationCenter defaultCenter] postNotificationName:FCMLocalNotificationReceived object:self userInfo:notification.userInfo];
++ }
+```
+ 
+### Android
+Edit AndroidManifest.xml
+```diff
+  <uses-permission android:name="android.permission.INTERNET" />
++ <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
++ <uses-permission android:name="android.permission.VIBRATE" />
+ 
+  <application
++      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
++      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
++          <intent-filter>
++              <action android:name="android.intent.action.BOOT_COMPLETED"/>
++              <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
++              <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
++              <category android:name="android.intent.category.DEFAULT" />
++          </intent-filter>
++      </receiver>
+  </application>
+``` 
+NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenting local notifications. `com.evollu.react.fcm.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
+
 
 ## Usage
 
@@ -155,34 +192,75 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
 import FCM from 'react-native-fcm';
 
 class App extends Component {
-  componentDidMount() {
-    FCM.requestPermissions(); // for iOS
-    FCM.getFCMToken().then(token => {
-      console.log(token)
-      // store fcm token in your server
-    });
-    this.notificationUnsubscribe = FCM.on('notification', (notif) => {
-      // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
-    });
-    this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
-      console.log(token)
-      // fcm token may not be available on first load, catch it here
-    });
+    componentDidMount() {
+        FCM.requestPermissions(); // for iOS
+        FCM.getFCMToken().then(token => {
+            console.log(token)
+            // store fcm token in your server
+        });
+        this.notificationUnsubscribe = FCM.on('notification', (notif) => {
+            // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
+        });
+        this.localNotificationUnsubscribe = FCM.on('localNotification', (notif) => {
+            // notif.notification contains the data
+        });
+        this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
+            console.log(token)
+            // fcm token may not be available on first load, catch it here
+        });
+    }
 
-    FCM.subscribeToTopic('/topics/foo-bar');
-    FCM.unsubscribeFromTopic('/topics/foo-bar');
-  }
-
-  componentWillUnmount() {
-    // prevent leaking
-    this.refreshUnsubscribe();
-    this.notificationUnsubscribe();
-  }
+    componentWillUnmount() {
+        // prevent leaking
+        this.refreshUnsubscribe();
+        this.notificationUnsubscribe();
+        this.localNotificationUnsubscribe();
+    }
+ 
+    otherMethods(){
+        FCM.subscribeToTopic('/topics/foo-bar');
+        FCM.unsubscribeFromTopic('/topics/foo-bar');
+        FCM.getInitialNotification().then(...);
+        FCM.presentLocalNotification({
+            id: "UNIQ_ID_STRING",                               // (optional for instant notification)
+            title: "My Notification Title",                     // as FCM payload
+            body: "My Notification Message",                    // as FCM payload (required)
+            sound: "default",                                   // as FCM payload
+            priority: "high",                                   // as FCM payload
+            click_action: "ACTION",                             // as FCM payload
+            badge: 10,                                          // as FCM payload IOS only, set 0 to clear badges
+            number: 10,                                         // Android only
+            ticker: "My Notification Ticker",                   // Android only
+            auto_cancel: true,                                  // Android only (default true)
+            large_icon: "ic_launcher",                           // Android only
+            icon: "ic_notification",                            // as FCM payload
+            big_text: "Show when notification is expanded",     // Android only
+            sub_text: "This is a subText",                      // Android only
+            color: "red",                                       // Android only
+            vibrate: 300,                                       // Android only default: 300, no vibration if you pass null
+            tag: 'some_tag',                                    // Android only
+            group: "group",                                     // Android only
+            my_custom_data:'my_custom_field_value',             // extra data you want to throw
+        });
+ 
+        FCM.scheduleLocalNotification({
+            fire_date: new Date().getTime(),      //react convert is used, accept epoch time or ISO string
+            id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification. In android notification with same ID will override each other
+            body: "from future past",
+            repeat_interval: "week" //day, hour
+        })
+ 
+        FCM.getScheduledLocalNotifications().then(...);
+        FCM.cancelLocalNotification("UNIQ_ID_STRING");
+        FCM.cancelAllLocalNotifications();
+        FCM.setBadgeNumber();
+        FCM.getBadgeNumber().then(...);
+    }
 }
 ```
 
 ### Behaviour when sending `notification` and `data` payload through GCM
-- When app is not running when user clicks notification, notification data will be passed into `FCM.initialData`
+- When app is not running and user clicks notification, notification data will be passed into `FCM.initialData`
 
 - When app is running in background (the tricky one, I strongly suggest you try it out yourself)
  - IOS will receive notificaton from `FCMNotificationReceived` event
@@ -216,6 +294,7 @@ class App extends Component {
       ```json
       {
         "fcm": {"action": "fcm.ACTION.HELLO"},
+        "opened_from_tray": 1,
         "extra": "juice"
       }
       ```
@@ -224,6 +303,7 @@ class App extends Component {
       ```json
       {
         "apns": {"action_category": "fcm.ACTION.HELLO"},
+        "opened_from_tray": 1,
         "extra": "juice"
       }
       ```
@@ -234,6 +314,12 @@ class App extends Component {
 NOTE: it is recommend not to rely on `data` payload for click_action as it can be overwritten (check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)).
 
 ## Q & A
+
+#### Why do you build another local notification
+Yes there are `react-native-push-notification` and `react-native-system-notification` which are great libraries. However
+- We want a unified local notification library but people are reporting using react-native-push-notification with this repo has compatibility issue as `react-native-push-notification` also sets up GCM.
+- We want to have local notification to have similar syntax as remote notification payload.
+- The PushNotificationIOS by react native team is still missing features that recurring, so we are adding it here
 
 #### My Android build is failing
 Try update your SDK and google play service
@@ -258,8 +344,15 @@ You need to add this to your `android/app/proguard-rules.pro`:
 -dontwarn com.google.android.gms.**
 ```
 
+#### How do I tell if user clicks the notification banner?
+Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS base on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
+
 #### Android notification doesn't vibrate/show head-up display etc
-All avaibale features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and create notification locally is the only way
+All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way.
+Or you can send `data` using FCM and build a local notification
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
+ 
+#### Thanks
+Local notification implementation is inspired by react-native-push-notification by zo0r

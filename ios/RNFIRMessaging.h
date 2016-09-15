@@ -8,6 +8,7 @@
 
 
 extern NSString *const FCMNotificationReceived;
+extern NSString *const FCMLocalNotificationReceived;
 
 @interface RNFIRMessaging : NSObject <RCTBridgeModule>
 

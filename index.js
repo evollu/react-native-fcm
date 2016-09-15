@@ -1,25 +1,57 @@
-import {NativeModules, DeviceEventEmitter} from 'react-native';
+import {NativeModules, DeviceEventEmitter, Platform} from 'react-native';
 
 const eventsMap = {
     refreshToken: 'FCMTokenRefreshed',
-    notification: 'FCMNotificationReceived'
+    notification: 'FCMNotificationReceived',
+    localNotification: 'FCMLocalNotificationReceived'
 };
 
-const FIRMessaging = NativeModules.RNFIRMessaging;
+const RNFIRMessaging = NativeModules.RNFIRMessaging;
 
 const FCM = {};
 
+FCM.getInitialNotification = () => {
+    return RNFIRMessaging.getInitialNotification();
+}
+
 FCM.getFCMToken = () => {
-    return FIRMessaging.getFCMToken();
+    return RNFIRMessaging.getFCMToken();
 };
 
 FCM.requestPermissions = () => {
-    return FIRMessaging.requestPermissions();
+    return RNFIRMessaging.requestPermissions();
 };
+
+FCM.presentLocalNotification = (details) => {
+    RNFIRMessaging.presentLocalNotification(details);
+};
+
+FCM.scheduleLocalNotification = function(details) {
+    RNFIRMessaging.scheduleLocalNotification(details);
+};
+
+FCM.getScheduledLocalNotifications = function() {
+    return RNFIRMessaging.getScheduledLocalNotifications();
+};
+
+FCM.cancelLocalNotification = (notificationID) => {
+    RNFIRMessaging.cancelLocalNotification(notificationID);
+};
+
+FCM.cancelAllLocalNotifications = () => {
+    RNFIRMessaging.cancelAllLocalNotifications();
+};
+
+FCM.setBadgeNumber = (number) => {
+    RNFIRMessaging.setBadgeNumber(number);
+}
+
+FCM.getBadgeNumber = () => {
+    return RNFIRMessaging.getBadgeNumber();
+}
 
 FCM.on = (event, callback) => {
     const nativeEvent = eventsMap[event];
-
     const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
 
     return function remove() {
@@ -28,18 +60,11 @@ FCM.on = (event, callback) => {
 };
 
 FCM.subscribeToTopic = (topic) => {
-    FIRMessaging.subscribeToTopic(topic);
+    RNFIRMessaging.subscribeToTopic(topic);
 };
 
 FCM.unsubscribeFromTopic = (topic) => {
-    FIRMessaging.unsubscribeFromTopic(topic);
+    RNFIRMessaging.unsubscribeFromTopic(topic);
 };
-
-//once doesn't seem to work
-DeviceEventEmitter.addListener('FCMInitData', (data)=>{
-  FCM.initialData = data;
-});
-
-FCM.initialData = FIRMessaging.initialData;
 
 module.exports = FCM;
