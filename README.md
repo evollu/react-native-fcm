@@ -351,6 +351,9 @@ Check open from tray flag in notification. It will be either 0 or 1 for iOS and 
 All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way.
 Or you can send `data` using FCM and build a local notification
 
+#### How do I do xxx with FCM?
+check out [official docs and see if they support](https://firebase.google.com/docs/cloud-messaging/concept-options)
+
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
  
