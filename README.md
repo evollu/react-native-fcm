@@ -356,10 +356,8 @@ check out [official docs and see if they support](https://firebase.google.com/do
 
 #### I want to add advanced feature that FCM doesn't support for remote notification
 You can either wait for FCM to develop it or you have to write native code to create notifications.
-
-for iOS, you can do it in `didReceiveRemoteNotification` in `appDelegate.m`
-
-for android, you can do it by implementing a service similar to "com.evollu.react.fcm.MessagingService"
+- for iOS, you can do it in `didReceiveRemoteNotification` in `appDelegate.m`
+- for android, you can do it by implementing a service similar to "com.evollu.react.fcm.MessagingService"
 
 Or if you have a good way to wake up react native javascript thread please let me know, although I'm worring waking up the whole application is too expensive.
 
