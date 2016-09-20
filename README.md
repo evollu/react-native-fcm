@@ -244,7 +244,7 @@ class App extends Component {
         });
  
         FCM.scheduleLocalNotification({
-            fire_date: new Date(),
+            fire_date: new Date().getTime(),      //react convert is used, accept epoch time or ISO string
             id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification. In android notification with same ID will override each other
             body: "from future past",
             repeat_interval: "week" //day, hour
@@ -254,7 +254,7 @@ class App extends Component {
         FCM.cancelLocalNotification("UNIQ_ID_STRING");
         FCM.cancelAllLocalNotifications();
         FCM.setBadgeNumber();
-        FCM.getBadgeNumber();
+        FCM.getBadgeNumber().then(...);
     }
 }
 ```
@@ -350,6 +350,16 @@ Check open from tray flag in notification. It will be either 0 or 1 for iOS and 
 #### Android notification doesn't vibrate/show head-up display etc
 All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way.
 Or you can send `data` using FCM and build a local notification
+
+#### How do I do xxx with FCM?
+check out [official docs and see if they support](https://firebase.google.com/docs/cloud-messaging/concept-options)
+
+#### I want to add advanced feature that FCM doesn't support for remote notification
+You can either wait for FCM to develop it or you have to write native code to create notifications.
+- for iOS, you can do it in `didReceiveRemoteNotification` in `appDelegate.m`
+- for android, you can do it by implementing a service similar to "com.evollu.react.fcm.MessagingService"
+
+Or if you have a good way to wake up react native javascript thread please let me know, although I'm worring waking up the whole application is too expensive.
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
