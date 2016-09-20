@@ -1,7 +1,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "Firebase.h"
+@import Firebase;
+@import FirebaseMessaging;
 
 #import "RCTBridgeModule.h"
 
