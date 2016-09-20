@@ -27,6 +27,9 @@ FCM.presentLocalNotification = (details) => {
 };
 
 FCM.scheduleLocalNotification = function(details) {
+    if (!details.id) {
+        throw new Error("id is required for scheduled notification");
+    }
     RNFIRMessaging.scheduleLocalNotification(details);
 };
 

@@ -27,6 +27,7 @@ public class FIRLocalMessagingHelper {
     private static final long DEFAULT_VIBRATION = 300L;
     private static final String TAG = FIRLocalMessagingHelper.class.getSimpleName();
     private final static String PREFERENCES_KEY = "ReactNativeSystemNotification";
+    private static boolean mIsForeground = false; //this is a hack
 
     private Context mContext;
     private SharedPreferences sharedPreferences = null;
@@ -149,31 +150,36 @@ public class FIRLocalMessagingHelper {
                 }
             }
 
+            if(mIsForeground){
+                Log.d(TAG, "App is in foreground, broadcast intent instead");
+                Intent i = new Intent("com.evollu.react.fcm.ReceiveLocalNotification");
+                i.putExtras(bundle);
+                mContext.sendOrderedBroadcast(i, null);
+            }else{
+                Intent intent = new Intent(mContext, intentClass);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtras(bundle);
+                intent.putExtra("localNotification", true);
+                intent.setAction(bundle.getString("click_action"));
 
-            Intent intent = new Intent(mContext, intentClass);
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("notification", bundle);
-            intent.putExtra("localNotification", true);
-            intent.setAction(bundle.getString("click_action"));
+                int notificationID = bundle.containsKey("id") ? bundle.getString("id", "").hashCode() : (int) System.currentTimeMillis();
+                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
 
-            int notificationID = bundle.containsKey("id") ? bundle.getString("id", "").hashCode() : (int) System.currentTimeMillis();
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+                NotificationManager notificationManager =
+                        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            NotificationManager notificationManager =
-                    (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                notification.setContentIntent(pendingIntent);
 
-            notification.setContentIntent(pendingIntent);
+                Notification info = notification.build();
 
-            Notification info = notification.build();
-
-            if (bundle.containsKey("tag")) {
-                String tag = bundle.getString("tag");
-                notificationManager.notify(tag, notificationID, info);
-            } else {
-                notificationManager.notify(notificationID, info);
+                if (bundle.containsKey("tag")) {
+                    String tag = bundle.getString("tag");
+                    notificationManager.notify(tag, notificationID, info);
+                } else {
+                    notificationManager.notify(notificationID, info);
+                }
             }
-
             //clear out one time scheduled notification once fired
             if(!bundle.containsKey("repeat_interval") && bundle.containsKey("fire_date")) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -290,5 +296,9 @@ public class FIRLocalMessagingHelper {
             }
         }
         return array;
+    }
+
+    public void setApplicationForeground(boolean foreground){
+        mIsForeground = foreground;
     }
 }

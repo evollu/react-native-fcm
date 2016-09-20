@@ -41,6 +41,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         getReactApplicationContext().addActivityEventListener(this);
         registerTokenRefreshHandler();
         registerMessageHandler();
+        registerLocalMessageHandler();
     }
 
     @Override
@@ -149,6 +150,20 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         }, intentFilter);
     }
 
+    private void registerLocalMessageHandler() {
+        IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.ReceiveLocalNotification");
+
+        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (getReactApplicationContext().hasActiveCatalystInstance()) {
+                    sendEvent("FCMLocalNotificationReceived", Arguments.fromBundle(intent.getExtras()));
+                    abortBroadcast();
+                }
+            }
+        }, intentFilter);
+    }
+
     private WritableMap parseIntent(Intent intent){
         WritableMap params;
         Bundle extras = intent.getExtras();
@@ -172,10 +187,12 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onHostResume() {
+        mFIRLocalMessagingHelper.setApplicationForeground(true);
     }
 
     @Override
     public void onHostPause() {
+        mFIRLocalMessagingHelper.setApplicationForeground(false);
     }
 
     @Override
