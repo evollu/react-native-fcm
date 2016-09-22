@@ -159,7 +159,6 @@ public class FIRLocalMessagingHelper {
                 Intent intent = new Intent(mContext, intentClass);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtras(bundle);
-                intent.putExtra("localNotification", true);
                 intent.setAction(bundle.getString("click_action"));
 
                 int notificationID = bundle.containsKey("id") ? bundle.getString("id", "").hashCode() : (int) System.currentTimeMillis();

@@ -2,8 +2,7 @@ import {NativeModules, DeviceEventEmitter, Platform} from 'react-native';
 
 const eventsMap = {
     refreshToken: 'FCMTokenRefreshed',
-    notification: 'FCMNotificationReceived',
-    localNotification: 'FCMLocalNotificationReceived'
+    notification: 'FCMNotificationReceived'
 };
 
 const RNFIRMessaging = NativeModules.RNFIRMessaging;
@@ -57,6 +56,9 @@ FCM.getBadgeNumber = () => {
 
 FCM.on = (event, callback) => {
     const nativeEvent = eventsMap[event];
+    if (!nativeEvent) {
+        throw new Error('FCM invalid event');
+    }
     const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
 
     return function remove() {

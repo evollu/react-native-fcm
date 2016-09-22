@@ -157,7 +157,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getReactApplicationContext().hasActiveCatalystInstance()) {
-                    sendEvent("FCMLocalNotificationReceived", Arguments.fromBundle(intent.getExtras()));
+                    sendEvent("FCMNotificationReceived", Arguments.fromBundle(intent.getExtras()));
                     abortBroadcast();
                 }
             }
@@ -206,8 +206,6 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onNewIntent(Intent intent){
-        Bundle bundle = intent.getExtras();
-        Boolean isLocalNotification = bundle != null && bundle.getBoolean("localNotification", false);
-        sendEvent(isLocalNotification ? "FCMLocalNotificationReceived" : "FCMNotificationReceived", parseIntent(intent));
+        sendEvent("FCMNotificationReceived", parseIntent(intent));
     }
 }
