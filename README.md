@@ -137,7 +137,6 @@ Edit `AppDelegate.h`:
 
 Edit `AppDelegate.m`:
 ```diff
-+ @import FirebaseAnalytics;
 + #import "RNFIRMessaging.h"
   //...
 
