@@ -18,7 +18,6 @@
 #endif
 
 NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
-NSString *const FCMLocalNotificationReceived = @"FCMLocalNotificationReceived";
 
 @implementation RCTConvert (NSCalendarUnit)
 
@@ -84,7 +83,7 @@ RCT_EXPORT_MODULE()
   _bridge = bridge;
   
   [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(handleRemoteNotificationReceived:)
+                                           selector:@selector(handleNotificationReceived:)
                                                name:FCMNotificationReceived
                                              object:nil];
   
@@ -97,10 +96,6 @@ RCT_EXPORT_MODULE()
                                                name:UIApplicationDidBecomeActiveNotification
                                              object:nil];
   
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(handleFCMLocalNotificationReceived:)
-                                               name:FCMLocalNotificationReceived
-                                             object:nil];
   [[NSNotificationCenter defaultCenter]
    addObserver:self selector:@selector(onTokenRefresh)
    name:kFIRInstanceIDTokenRefreshNotification object:nil];
@@ -279,14 +274,7 @@ RCT_EXPORT_METHOD(getBadgeNumber: (RCTPromiseResolveBlock)resolve rejecter:(RCTP
   resolve(@([RCTSharedApplication() applicationIconBadgeNumber]));
 }
 
-- (void)handleFCMLocalNotificationReceived:(UILocalNotification *)notification
-{
-  NSMutableDictionary *data = [[NSMutableDictionary alloc]initWithDictionary: notification.userInfo];
-  [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
-  [_bridge.eventDispatcher sendDeviceEventWithName:FCMLocalNotificationReceived body:data];
-}
-
-- (void)handleRemoteNotificationReceived:(NSNotification *)notification
+- (void)handleNotificationReceived:(NSNotification *)notification
 {
   NSMutableDictionary *data = [[NSMutableDictionary alloc]initWithDictionary: notification.userInfo];
   [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
