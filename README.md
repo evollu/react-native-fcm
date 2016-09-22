@@ -131,6 +131,8 @@ pod install Firebase/Messaging
 ### Shared steps
 Edit `AppDelegate.h`:
 ```diff
++ @import UserNotifications;
++
 + @interface AppDelegate : UIResponder <UIApplicationDelegate,UNUserNotificationCenterDelegate>
 - @interface AppDelegate : UIResponder <UIApplicationDelegate>
 ```
