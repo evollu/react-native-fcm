@@ -5,6 +5,8 @@
 #import "RCTEventDispatcher.h"
 #import "RCTUtils.h"
 
+@import UserNotifications;
+
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 
 #define UIUserNotificationTypeAlert UIRemoteNotificationTypeAlert
@@ -187,19 +189,56 @@ RCT_EXPORT_METHOD(requestPermissions)
   if (RCTRunningInAppExtension()) {
     return;
   }
-  
-  UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
-  
-  UIApplication *app = RCTSharedApplication();
-  if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-    UIUserNotificationSettings *notificationSettings =
-    [UIUserNotificationSettings settingsForTypes:(NSUInteger)types categories:nil];
-    [app registerUserNotificationSettings:notificationSettings];
-    [app registerForRemoteNotifications];
+  if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
+    UIUserNotificationType allNotificationTypes =
+    (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+    UIApplication *app = RCTSharedApplication();
+    if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+      //iOS 8 or later
+      UIUserNotificationSettings *notificationSettings =
+      [UIUserNotificationSettings settingsForTypes:(NSUInteger)allNotificationTypes categories:nil];
+      [app registerUserNotificationSettings:notificationSettings];
+    } else {
+      //iOS 7 or below
+      [app registerForRemoteNotificationTypes:(NSUInteger)allNotificationTypes];
+    }
   } else {
-    [app registerForRemoteNotificationTypes:(NSUInteger)types];
+    // iOS 10 or later
+#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+    UNAuthorizationOptions authOptions =
+    UNAuthorizationOptionAlert
+    | UNAuthorizationOptionSound
+    | UNAuthorizationOptionBadge;
+    [[UNUserNotificationCenter currentNotificationCenter]
+     requestAuthorizationWithOptions:authOptions
+     completionHandler:^(BOOL granted, NSError * _Nullable error) {
+     }
+     ];
+    
+    // For iOS 10 display notification (sent via APNS)
+    [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
+    // For iOS 10 data message (sent via FCM)
+    [[FIRMessaging messaging] setRemoteMessageDelegate:self];
+#endif
   }
+  
+  [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
+
+#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+// Receive displayed notifications for iOS 10 devices.
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+  NSDictionary *userInfo = notification.request.content.userInfo;
+  [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:userInfo];
+}
+
+// Receive data message on iOS 10 devices.
+- (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
+  [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:[remoteMessage appData]];
+}
+#endif
 
 RCT_EXPORT_METHOD(subscribeToTopic: (NSString*) topic)
 {
