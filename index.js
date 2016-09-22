@@ -23,6 +23,7 @@ FCM.requestPermissions = () => {
 };
 
 FCM.presentLocalNotification = (details) => {
+    details.local_notification = true;
     RNFIRMessaging.presentLocalNotification(details);
 };
 
@@ -30,6 +31,7 @@ FCM.scheduleLocalNotification = function(details) {
     if (!details.id) {
         throw new Error("id is required for scheduled notification");
     }
+    details.local_notification = true;
     RNFIRMessaging.scheduleLocalNotification(details);
 };
 
