@@ -129,10 +129,15 @@ pod install Firebase/Messaging
 2. Follow the `README` to link frameworks (Analytics+Messaging)
 
 ### Shared steps
+Edit `AppDelegate.h`:
+```diff
++ @interface AppDelegate : UIResponder <UIApplicationDelegate,UNUserNotificationCenterDelegate>
+- @interface AppDelegate : UIResponder <UIApplicationDelegate>
+```
 
 Edit `AppDelegate.m`:
 ```diff
-+ #import "Firebase.h" // if you are using Non Cocoapod approach
++ @import FirebaseAnalytics;
 + #import "RNFIRMessaging.h"
   //...
 
@@ -140,12 +145,32 @@ Edit `AppDelegate.m`:
   {
   //...
 +   [FIRApp configure];
++   #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
++   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
++   #endif
   }
 
-+ - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
-+   handler(UIBackgroundFetchResultNewData);
++ #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
++ - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification + + withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
++ {
++   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.request.content.userInfo];
++   completionHandler(UNNotificationPresentationOptionAlert);
 + }
+
++ - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
++ {
++   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:response.notification.request.content.userInfo];
++ }
++ #else
++ -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
++   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self + userInfo:notification.userInfo];
++ }
++ 
++ - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
++   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
++   completionHandler(UIBackgroundFetchResultNoData);
++ }
++ #endif
 ```
 
 ### FCM config file
