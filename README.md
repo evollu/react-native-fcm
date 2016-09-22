@@ -373,6 +373,10 @@ You need to add this to your `android/app/proguard-rules.pro`:
 -dontwarn com.google.android.gms.**
 ```
 
+#### I'm getting `com.android.dex.DexException: Multiple dex files define Lcom/google/android/gms/internal/zzqf;`
+It is most likely that you are using other react-native-modules that requires conflicting google play service
+search for `compile "com.google.android.gms` in android and see who specifies specific version. Resolve conflict by loosing their version or specify a version resolve in gradle.
+
 #### How do I tell if user clicks the notification banner?
 Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS base on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
 
