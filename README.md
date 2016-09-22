@@ -3,6 +3,7 @@
 ## NOTE: 
 - If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
 - If you are running RN < 0.33.0, you need to user react-native-fcm@1.1.0
+- Otherwise use latest v2
 
 ## Installation
 
@@ -200,9 +201,12 @@ class App extends Component {
         });
         this.notificationUnsubscribe = FCM.on('notification', (notif) => {
             // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
-        });
-        this.localNotificationUnsubscribe = FCM.on('localNotification', (notif) => {
-            // notif.notification contains the data
+            if(notif.local_notification){
+              //this is a local notification
+            }
+            if(notif.opened_from_tray){
+              //app is open/resumed because user clicked banner
+            }
         });
         this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
             console.log(token)
@@ -214,7 +218,6 @@ class App extends Component {
         // prevent leaking
         this.refreshUnsubscribe();
         this.notificationUnsubscribe();
-        this.localNotificationUnsubscribe();
     }
  
     otherMethods(){
@@ -360,6 +363,18 @@ You can either wait for FCM to develop it or you have to write native code to cr
 - for android, you can do it by implementing a service similar to "com.evollu.react.fcm.MessagingService"
 
 Or if you have a good way to wake up react native javascript thread please let me know, although I'm worring waking up the whole application is too expensive.
+
+#### What about new notifications in iOS 10
+Congratulations, now you have 5 notification handler to register!
+in sum
+- `willPresentNotification` is introduced in iOS 10 and will only be called when local/remote notification will show up. This allows you to run some code **before** notification shows up. You can also decide how to show the notification.
+- `didReceiveNotificationResponse` is introduced in iOS 10 and provides user's response together with local/remote notification. It could be swipe, text input etc.
+- `didReceiveLocalNotification` is for iOS 9 and below. Triggered when user clicks local notification. replaced by `didReceiveNotificationResponse`
+- `didReceiveRemoteNotification` is for iOS 9 and below. Triggered when remote notification received.
+- `didReceiveRemoteNotification:fetchCompletionHandler` is for both iOS 9 and 10. it gets triggered 2 times for each remote notification. 1st time when notification is received. 2nd time when notification is clicked. in iOS 9, it serves us the purpose of both `willPresentNotification` and `didReceiveNotificationResponse` but for remote notification only. in iOS 10, you don't need it in most of the case unless you need to do background fetching
+
+Great, how do I configure for FCM?
+It is up to you! FCM is just a bridging library that passes notification into javascript world. You can define your own NSDictionary and pass it into notification.
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
