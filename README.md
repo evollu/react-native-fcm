@@ -152,7 +152,7 @@ Edit `AppDelegate.m`:
   }
 
 + #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-+ - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification + + withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
++ - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 + {
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.request.content.userInfo];
 +   completionHandler(UNNotificationPresentationOptionAlert);
@@ -297,7 +297,7 @@ class App extends Component {
     * if you just pass `notification`, you will only receive one when user resume the app.
     * you will not see banner if `notification->body` is not defined.
  - Android will receive notificaton from `FCMNotificationReceived` event
-    * if you pass `notification` payload. it will receive data when user click on notification
+    * if you pass `notification` payload, it will receive data when user click on notification
     * if you pass `data` payload only, it will receive data when in background
 
    e.g. fcm payload looks like:
@@ -338,9 +338,9 @@ class App extends Component {
       ```
 
 - When app is running in foreground
- - IOS will receive notification and android **won't** (better not to do anything in foreground for hybrid and send a seprate data message.)
+ - IOS will receive notification and android **won't** (better not to do anything in foreground for hybrid and send a separate data message.)
 
-NOTE: it is recommend not to rely on `data` payload for click_action as it can be overwritten (check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)).
+NOTE: it is recommended not to rely on `data` payload for click_action as it can be overwritten (check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)).
 
 ## Q & A
 
@@ -378,7 +378,7 @@ It is most likely that you are using other react-native-modules that requires co
 search for `compile "com.google.android.gms` in android and see who specifies specific version. Resolve conflict by loosing their version or specify a version resolve in gradle.
 
 #### How do I tell if user clicks the notification banner?
-Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS base on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
+Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS based on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
 
 #### Android notification doesn't vibrate/show head-up display etc
 All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way.
