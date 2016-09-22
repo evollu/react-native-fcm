@@ -105,6 +105,8 @@ RCT_EXPORT_MODULE()
    addObserver:self selector:@selector(onTokenRefresh)
    name:kFIRInstanceIDTokenRefreshNotification object:nil];
   
+  // For iOS 10 data message (sent via FCM)
+  [[FIRMessaging messaging] setRemoteMessageDelegate:self];
 }
 
 - (void)connectToFCM
@@ -125,6 +127,11 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  NSDictionary *localUserInfo = _bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
+  if(localUserInfo){
+    resolve([localUserInfo copy]);
+    return;
+  }
   resolve([_bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy]);
 }
 
@@ -214,11 +221,6 @@ RCT_EXPORT_METHOD(requestPermissions)
      completionHandler:^(BOOL granted, NSError * _Nullable error) {
      }
      ];
-    
-    // For iOS 10 display notification (sent via APNS)
-    [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
-    // For iOS 10 data message (sent via FCM)
-    [[FIRMessaging messaging] setRemoteMessageDelegate:self];
 #endif
   }
   
@@ -226,14 +228,6 @@ RCT_EXPORT_METHOD(requestPermissions)
 }
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-// Receive displayed notifications for iOS 10 devices.
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-       willPresentNotification:(UNNotification *)notification
-         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-  NSDictionary *userInfo = notification.request.content.userInfo;
-  [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:userInfo];
-}
-
 // Receive data message on iOS 10 devices.
 - (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
   [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:[remoteMessage appData]];
