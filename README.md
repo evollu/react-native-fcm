@@ -163,6 +163,7 @@ Edit `AppDelegate.m`:
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:response.notification.request.content.userInfo];
 + }
 + #else
++ //You can skip this method if you don't want to use local notification
 + -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self + userInfo:notification.userInfo];
 + }
