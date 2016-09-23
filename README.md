@@ -182,14 +182,7 @@ In [firebase console](https://console.firebase.google.com/), you can get `google
 NOTE: local notification does NOT have any dependency on FCM library but you still need to include Firebase to compile. If there are enough demand to use this functionality alone, I will separate it out into another repo
 
 ### IOS
-
-Edit Appdelegate.m
-```diff
-+ -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification 
-+ {
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMLocalNotificationReceived object:self userInfo:notification.userInfo];
-+ }
-```
+No change required
  
 ### Android
 Edit AndroidManifest.xml
