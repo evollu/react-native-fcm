@@ -347,8 +347,8 @@ Yes there are `react-native-push-notification` and `react-native-system-notifica
 #### My Android build is failing
 Try update your SDK and google play service
 
-#### My Android doesn't work
-There seems to be link issue with rnpm somethings. Make sure that there is `new FIRMessagingPackage(),` in your `Application.java` file
+#### My App throws FCM function undefined error
+There seems to be link issue with rnpm. Make sure that there is `new FIRMessagingPackage(),` in your `Application.java` file
 
 #### I can't get notification when app is killed
 If you send notification with `data` only, you can only get the data message when app is in foreground or background. Killed app doesn't trigger `FCMNotificationReceived`. Use `notification` in the payload instead.
