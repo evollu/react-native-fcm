@@ -243,7 +243,7 @@ class App extends Component {
     otherMethods(){
         FCM.subscribeToTopic('/topics/foo-bar');
         FCM.unsubscribeFromTopic('/topics/foo-bar');
-        FCM.getInitialNotification().then(...);
+        FCM.getInitialNotification().then(notif=>console.log(notif));
         FCM.presentLocalNotification({
             id: "UNIQ_ID_STRING",                               // (optional for instant notification)
             title: "My Notification Title",                     // as FCM payload
@@ -272,18 +272,18 @@ class App extends Component {
             body: "from future past",
             repeat_interval: "week" //day, hour
         })
- 
-        FCM.getScheduledLocalNotifications().then(...);
+
+        FCM.getScheduledLocalNotifications().then(notif=>console.log(notif));
         FCM.cancelLocalNotification("UNIQ_ID_STRING");
         FCM.cancelAllLocalNotifications();
         FCM.setBadgeNumber();
-        FCM.getBadgeNumber().then(...);
+        FCM.getBadgeNumber().then(number=>console.log(number));
     }
 }
 ```
 
 ### Behaviour when sending `notification` and `data` payload through GCM
-- When app is not running and user clicks notification, notification data will be passed into `FCM.initialData`
+- When app is not running and user clicks notification, notification data will be passed into `FCM.getInitialNotification` event
 
 - When app is running in background (the tricky one, I strongly suggest you try it out yourself)
  - IOS will receive notificaton from `FCMNotificationReceived` event
