@@ -127,25 +127,36 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     private void registerMessageHandler() {
+        Log.d(TAG, "registerMessageHandler");
         IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.ReceiveNotification");
 
         getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-            if (getReactApplicationContext().hasActiveCatalystInstance()) {
-                RemoteMessage message = intent.getParcelableExtra("data");
-                WritableMap params = Arguments.createMap();
-                if(message.getData() != null){
-                    Map data = message.getData();
-                    Set<String> keysIterator = data.keySet();
-                    for(String key: keysIterator){
-                        params.putString(key, (String) data.get(key));
+                if (getReactApplicationContext().hasActiveCatalystInstance()) {
+                    RemoteMessage message = intent.getParcelableExtra("data");
+                    String title = message.getNotification().getTitle();
+                    String body = message.getNotification().getBody();
+                    WritableMap params = Arguments.createMap();
+                    if (message.getData() != null){
+                        Map data = message.getData();
+                        WritableMap wrapper = Arguments.createMap();
+                        Set<String> keysIterator = data.keySet();
+                        for(String key: keysIterator){
+                            wrapper.putString(key, (String) data.get(key));
+                        }
+                        params.putMap("data", wrapper);
                     }
+                    if (title != null) {
+                        params.putString("title", title);
+                    }
+                    if (body != null) {
+                        params.putString("body", body);
+                    }
+                    Log.d(TAG, "FCMNotificationReceived: " + String.valueOf(params));
                     sendEvent("FCMNotificationReceived", params);
                     abortBroadcast();
                 }
-
-            }
             }
         }, intentFilter);
     }
