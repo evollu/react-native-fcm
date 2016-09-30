@@ -167,12 +167,12 @@ Edit `AppDelegate.m`:
 + -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self + userInfo:notification.userInfo];
 + }
++ #endif
 + 
 + - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
 +   completionHandler(UIBackgroundFetchResultNoData);
 + }
-+ #endif
 ```
 
 ### FCM config file
