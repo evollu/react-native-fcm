@@ -238,14 +238,13 @@ public class FIRLocalMessagingHelper {
 
         //store intent
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        JSONObject json = null;
         try {
-            json = BundleJSONConverter.convertToJSON(bundle);
+            JSONObject json = BundleJSONConverter.convertToJSON(bundle);
+            editor.putString(notificationId, json.toString());
+            editor.apply();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        editor.putString(notificationId, json.toString());
-        editor.apply();
     }
 
     public void cancelLocalNotification(String notificationId) {

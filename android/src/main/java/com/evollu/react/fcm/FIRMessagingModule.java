@@ -144,7 +144,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                     Map<String, String> data = message.getData();
                     Set<String> keysIterator = data.keySet();
                     for(String key: keysIterator){
-                        params.putString(key, (String) data.get(key));
+                        params.putString(key, data.get(key));
                     }
                 }
                 sendEvent("FCMNotificationReceived", params);
