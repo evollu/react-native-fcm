@@ -51,6 +51,11 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 
     @ReactMethod
     public void getInitialNotification(Promise promise){
+        Activity activity = getCurrentActivity();
+        if(activity == null){
+            promise.resolve(null);
+            return;
+        }
         promise.resolve(parseIntent(getCurrentActivity().getIntent()));
     }
 
@@ -136,14 +141,14 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                 RemoteMessage message = intent.getParcelableExtra("data");
                 WritableMap params = Arguments.createMap();
                 if(message.getData() != null){
-                    Map data = message.getData();
+                    Map<String, String> data = message.getData();
                     Set<String> keysIterator = data.keySet();
                     for(String key: keysIterator){
                         params.putString(key, (String) data.get(key));
                     }
-                    sendEvent("FCMNotificationReceived", params);
-                    abortBroadcast();
                 }
+                sendEvent("FCMNotificationReceived", params);
+                abortBroadcast();
 
             }
             }
