@@ -264,6 +264,7 @@ class App extends Component {
             tag: 'some_tag',                                    // Android only
             group: "group",                                     // Android only
             my_custom_data:'my_custom_field_value',             // extra data you want to throw
+            lights: true,                                       // Android only, LED blinking (default false)
         });
  
         FCM.scheduleLocalNotification({

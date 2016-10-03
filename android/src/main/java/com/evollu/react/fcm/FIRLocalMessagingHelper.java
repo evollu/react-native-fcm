@@ -150,6 +150,11 @@ public class FIRLocalMessagingHelper {
                 }
             }
 
+            //lights
+            if (bundle.getBoolean("lights")) {
+                notification.setDefaults(NotificationCompat.DEFAULT_LIGHTS);
+            }
+
             if(mIsForeground){
                 Log.d(TAG, "App is in foreground, broadcast intent instead");
                 Intent i = new Intent("com.evollu.react.fcm.ReceiveLocalNotification");
