@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -29,11 +30,12 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
     private FIRLocalMessagingHelper mFIRLocalMessagingHelper;
-    
+
     public FIRMessagingModule(ReactApplicationContext reactContext) {
         super(reactContext);
         mFIRLocalMessagingHelper = new FIRLocalMessagingHelper((Application) reactContext.getApplicationContext());
@@ -129,6 +131,38 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                 }
             }
         }, intentFilter);
+    }
+
+    @ReactMethod
+    public void send(String senderId, ReadableMap payload) throws Exception {
+        FirebaseMessaging fm = FirebaseMessaging.getInstance();
+        RemoteMessage.Builder message = new RemoteMessage.Builder(senderId + "@gcm.googleapis.com")
+            .setMessageId(UUID.randomUUID().toString());
+
+        ReadableMapKeySetIterator iterator = payload.keySetIterator();
+        while (iterator.hasNextKey()) {
+            String key = iterator.nextKey();
+            String value = getStringFromReadableMap(payload, key);
+            message.addData(key, value);
+        }
+        fm.send(message.build());
+    }
+
+    private String getStringFromReadableMap(ReadableMap map, String key) throws Exception {
+        switch (map.getType(key)) {
+            case String:
+                return map.getString(key);
+            case Number:
+                try {
+                    return String.valueOf(map.getInt(key));
+                } catch (Exception e) {
+                    return String.valueOf(map.getDouble(key));
+                }
+            case Boolean:
+                return String.valueOf(map.getBoolean(key));
+            default:
+                throw new Exception("Unknown data type: " + map.getType(key).name() + " for message key " + key );
+        }
     }
 
     private void registerMessageHandler() {

@@ -74,4 +74,8 @@ FCM.unsubscribeFromTopic = (topic) => {
     RNFIRMessaging.unsubscribeFromTopic(topic);
 };
 
+FCM.send = (senderId, payload) => {
+    RNFIRMessaging.send(senderId, payload);
+};
+
 module.exports = FCM;
