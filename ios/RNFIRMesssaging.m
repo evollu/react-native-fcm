@@ -81,12 +81,12 @@ RCT_EXPORT_MODULE()
 - (void)setBridge:(RCTBridge *)bridge
 {
   _bridge = bridge;
-  
+
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(handleNotificationReceived:)
                                                name:FCMNotificationReceived
                                              object:nil];
-  
+
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(disconnectFCM)
                                                name:UIApplicationDidEnterBackgroundNotification
@@ -95,11 +95,11 @@ RCT_EXPORT_MODULE()
                                            selector:@selector(connectToFCM)
                                                name:UIApplicationDidBecomeActiveNotification
                                              object:nil];
-  
+
   [[NSNotificationCenter defaultCenter]
    addObserver:self selector:@selector(onTokenRefresh)
    name:kFIRInstanceIDTokenRefreshNotification object:nil];
-  
+
   // For iOS 10 data message (sent via FCM)
   [[FIRMessaging messaging] setRemoteMessageDelegate:self];
 }
@@ -140,7 +140,7 @@ RCT_EXPORT_METHOD(getScheduledLocalNotifications:(RCTPromiseResolveBlock)resolve
   NSMutableArray* list = [[NSMutableArray alloc] init];
   for(UILocalNotification * notif in [RCTSharedApplication() scheduledLocalNotifications]){
     NSString* interval;
-    
+
     switch(notif.repeatInterval){
       case NSCalendarUnitMinute:
         interval = @"minute";
@@ -183,6 +183,7 @@ RCT_EXPORT_METHOD(getScheduledLocalNotifications:(RCTPromiseResolveBlock)resolve
 
 - (void) onTokenRefresh
 {
+  [self connectToFCM];
   [_bridge.eventDispatcher sendDeviceEventWithName:@"FCMTokenRefreshed" body:[[FIRInstanceID instanceID] token]];
 }
 
@@ -214,11 +215,12 @@ RCT_EXPORT_METHOD(requestPermissions)
     [[UNUserNotificationCenter currentNotificationCenter]
      requestAuthorizationWithOptions:authOptions
      completionHandler:^(BOOL granted, NSError * _Nullable error) {
+      [self connectToFCM];
      }
      ];
 #endif
   }
-  
+
   [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
