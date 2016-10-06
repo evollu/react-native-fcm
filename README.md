@@ -4,6 +4,7 @@
 - If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
 - If you are running RN < 0.33.0, you need to user react-native-fcm@1.1.0
 - Otherwise use latest v2 and use XCode 8 and latest Firebase SDK (iOS 3.6.0)
+- local notification is only available in V2
 
 ## Installation
 
