@@ -415,7 +415,8 @@ Great, how do I configure for FCM?
 It is up to you! FCM is just a bridging library that passes notification into javascript world. You can define your own NSDictionary and pass it into notification.
 
 #### I want to show notification when app is in foreground
-It is more flexible to just build your own notification like banner instead of calling notification API. Here is a tool https://github.com/devBrian/react-native-dropdownalert. If you have a valid case that has to show notification in foreground, you can create it using native code.
+Use `show_in_foreground` attribute to tell app to show banner even if the app is in foreground.
+Warning: foreground banner won't show in android for remote notification due to limitation of FCM SDK. However you can create a local notification yourself. A pull is welcome to fix this.
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
