@@ -160,7 +160,9 @@ public class FIRLocalMessagingHelper {
                 Intent i = new Intent("com.evollu.react.fcm.ReceiveLocalNotification");
                 i.putExtras(bundle);
                 mContext.sendOrderedBroadcast(i, null);
-            }else{
+            }
+
+            if(!mIsForeground || bundle.getBoolean("show_in_foreground")){
                 Intent intent = new Intent(mContext, intentClass);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtras(bundle);

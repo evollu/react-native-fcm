@@ -276,9 +276,14 @@ RCT_EXPORT_METHOD(getBadgeNumber: (RCTPromiseResolveBlock)resolve rejecter:(RCTP
 
 - (void)handleNotificationReceived:(NSNotification *)notification
 {
-  NSMutableDictionary *data = [[NSMutableDictionary alloc]initWithDictionary: notification.userInfo];
-  [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
-  [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:data];
+  if([notification.userInfo valueForKey:@"opened_from_tray"] == nil){
+    NSMutableDictionary *data = [[NSMutableDictionary alloc]initWithDictionary: notification.userInfo];
+    [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
+    [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:data];
+  }else{
+    [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:notification.userInfo];
+  }
+  
 }
 
 @end
