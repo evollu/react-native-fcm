@@ -6,6 +6,8 @@
 - Otherwise use latest v2 and use XCode 8 and latest Firebase SDK (iOS 3.6.0)
 - local notification is only available in V2
 
+- @antoinerousseau has a working project setup so you can check if there is issue https://github.com/antoinerousseau/tribeez
+
 ## Installation
 
 - Run `npm install react-native-fcm --save`
