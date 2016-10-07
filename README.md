@@ -158,12 +158,19 @@ Edit `AppDelegate.m`:
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 + {
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.request.content.userInfo];
-+   completionHandler(UNNotificationPresentationOptionAlert);
++     if([notification.request.content.userInfo valueForKey:@"show_in_foreground"]){
++     completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
++   }else{
++     completionHandler(UNNotificationPresentationOptionNone);
++   }
+
 + }
 
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
 + {
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:response.notification.request.content.userInfo];
++     NSDictionary* userInfo = [[NSMutableDictionary alloc] initWithDictionary: response.notification.request.content.userInfo];
++   [userInfo setValue:@YES forKey:@"opened_from_tray"];
++   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
 + }
 + #else
 + //You can skip this method if you don't want to use local notification
