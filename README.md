@@ -125,6 +125,7 @@ Install the `Firebase/Messaging` pod:
 cd ios && pod init
 pod install Firebase/Messaging
 ```
+uncomment the "use_framework!" line in the podfile.
 
 ### Non Cocoapod approach
 
