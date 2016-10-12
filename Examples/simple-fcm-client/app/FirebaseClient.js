@@ -4,9 +4,14 @@ const API_URL = "https://fcm.googleapis.com/fcm/send";
 
 class FirebaseClient {
 
-  sendNotification() {
+  constructor() {
+    this.sendData = this.sendData.bind(this);
+    this.sendNotification = this.sendNotification.bind(this);
+  }
+
+  sendNotification(token) {
     let body = {
-    	"to": FirebaseConstants.TO,
+    	"to": token,
     	"notification":{
     		"icon": "appLogo",
     		"title": "Notification Title",
@@ -14,15 +19,16 @@ class FirebaseClient {
     		"sound": "default",
     		"click_action": "fcm.ACTION.HELLO"
     	},
+      "content_available": true,
     	"priority": 10
     }
 
     this._send(JSON.stringify(body), "notification");
   }
 
-  sendData() {
+  sendData(token) {
     let body = {
-    	"to": FirebaseConstants.TO,
+    	"to": token,
       "data":{
     		"icon": "appLogo",
     		"title": "Notification Title",
@@ -30,6 +36,7 @@ class FirebaseClient {
     		"sound": "default",
     		"click_action": "fcm.ACTION.HELLO"
     	},
+      "content_available": true,
     	"priority": 10
     }
 

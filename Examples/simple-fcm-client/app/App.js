@@ -16,19 +16,35 @@ import PushController from "./PushController";
 import firebaseClient from  "./FirebaseClient";
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      token: ""
+    }
+  }
+
   render() {
+    let { token } = this.state;
+
     return (
       <View style={styles.container}>
-        <PushController />
+        <PushController
+          onChangeToken={token => this.setState({token: token || ""})}
+        />
         <Text style={styles.welcome}>
           Welcome to Simple Fcm Client!
         </Text>
 
-        <TouchableOpacity onPress={() => firebaseClient.sendNotification()} style={styles.button}>
+        <Text style={styles.instructions}>
+          Token: {this.state.token}
+        </Text>
+
+        <TouchableOpacity onPress={() => firebaseClient.sendNotification(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Notification</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => firebaseClient.sendData()} style={styles.button}>
+        <TouchableOpacity onPress={() => firebaseClient.sendData(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Data</Text>
         </TouchableOpacity>
       </View>
