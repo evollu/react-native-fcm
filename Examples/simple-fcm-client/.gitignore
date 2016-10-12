@@ -43,3 +43,4 @@ android/keystores/debug.keystore
 # FCM
 ios/SimpleFcmClient/GoogleService-Info.plist
 android/app/google-services.json
+app/FirebaseConstants.js
