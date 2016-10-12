@@ -30,6 +30,7 @@
 		4339BFDD1DAEBA7300F53B62 /* GoogleUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4339BFD71DAEBA7300F53B62 /* GoogleUtilities.framework */; };
 		4339BFE01DAEBA7F00F53B62 /* FirebaseMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4339BFDE1DAEBA7F00F53B62 /* FirebaseMessaging.framework */; };
 		4339BFE11DAEBA7F00F53B62 /* GoogleIPhoneUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4339BFDF1DAEBA7F00F53B62 /* GoogleIPhoneUtilities.framework */; };
+		4339BFE51DAED44A00F53B62 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4339BFE41DAED44A00F53B62 /* GoogleService-Info.plist */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		FAE94A218EB64E38BF8D8E9B /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 692E216422234A4CB6A7A838 /* libRNFIRMessaging.a */; };
 /* End PBXBuildFile section */
@@ -151,6 +152,8 @@
 		4339BFDF1DAEBA7F00F53B62 /* GoogleIPhoneUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleIPhoneUtilities.framework; sourceTree = "<group>"; };
 		4339BFE21DAEBB3500F53B62 /* Firebase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Firebase.h; sourceTree = "<group>"; };
 		4339BFE31DAEBB4800F53B62 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		4339BFE41DAED44A00F53B62 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4339BFE61DAED4D900F53B62 /* SimpleFcmClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SimpleFcmClient.entitlements; path = SimpleFcmClient/SimpleFcmClient.entitlements; sourceTree = "<group>"; };
 		692E216422234A4CB6A7A838 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFIRMessaging.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -271,6 +274,8 @@
 		13B07FAE1A68108700A75B9A /* SimpleFcmClient */ = {
 			isa = PBXGroup;
 			children = (
+				4339BFE61DAED4D900F53B62 /* SimpleFcmClient.entitlements */,
+				4339BFE41DAED44A00F53B62 /* GoogleService-Info.plist */,
 				4339BFE31DAEBB4800F53B62 /* module.modulemap */,
 				4339BFE21DAEBB3500F53B62 /* Firebase.h */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -421,7 +426,20 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 7GX5PDNNM3;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 7GX5PDNNM3;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -582,6 +600,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4339BFE51DAED44A00F53B62 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -651,6 +670,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 7GX5PDNNM3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -673,6 +693,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 7GX5PDNNM3;
 				INFOPLIST_FILE = SimpleFcmClientTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -690,8 +711,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SimpleFcmClient/SimpleFcmClient.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 7GX5PDNNM3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -709,7 +733,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = fcm.simplefcmclient;
 				PRODUCT_NAME = SimpleFcmClient;
 				USER_HEADER_SEARCH_PATHS = ./SimpleFcmClient/;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -720,7 +744,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SimpleFcmClient/SimpleFcmClient.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7GX5PDNNM3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -738,7 +765,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = fcm.simplefcmclient;
 				PRODUCT_NAME = SimpleFcmClient;
 				USER_HEADER_SEARCH_PATHS = ./SimpleFcmClient/;
 				VERSIONING_SYSTEM = "apple-generic";
