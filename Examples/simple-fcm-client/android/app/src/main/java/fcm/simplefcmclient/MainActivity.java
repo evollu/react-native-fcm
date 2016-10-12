@@ -1,4 +1,4 @@
-package com.simplefcmclient;
+package fcm.simplefcmclient;
 
 import com.facebook.react.ReactActivity;
 

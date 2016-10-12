@@ -1,4 +1,4 @@
-package com.simplefcmclient;
+package fcm.simplefcmclient;
 
 import android.app.Application;
 import android.util.Log;
