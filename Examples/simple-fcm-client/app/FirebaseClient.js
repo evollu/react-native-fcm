@@ -7,19 +7,18 @@ class FirebaseClient {
   constructor() {
     this.sendData = this.sendData.bind(this);
     this.sendNotification = this.sendNotification.bind(this);
+    this.sendNotificationWithData = this.sendNotificationWithData.bind(this);
   }
 
   sendNotification(token) {
     let body = {
     	"to": token,
-    	"notification":{
-    		"icon": "appLogo",
-    		"title": "Notification Title",
-    		"body": "Notification Body",
+      "notification":{
+    		"title": "Simple FCM Client",
+    		"body": "This is a notification with only NOTIFICATION.",
     		"sound": "default",
     		"click_action": "fcm.ACTION.HELLO"
     	},
-      "content_available": true,
     	"priority": 10
     }
 
@@ -30,17 +29,37 @@ class FirebaseClient {
     let body = {
     	"to": token,
       "data":{
-    		"icon": "appLogo",
-    		"title": "Notification Title",
-    		"body": "Notification Body",
+    		"title": "Simple FCM Client",
+    		"body": "This is a notification with only DATA.",
     		"sound": "default",
-    		"click_action": "fcm.ACTION.HELLO"
+    		"click_action": "fcm.ACTION.HELLO",
+    		"remote": true
     	},
-      "content_available": true,
-    	"priority": 10
+    	"priority": "normal"
     }
 
     this._send(JSON.stringify(body), "data");
+  }
+
+  sendNotificationWithData(token) {
+    let body = {
+      "to": token,
+      "notification":{
+    		"title": "Simple FCM Client",
+    		"body": "This is a notification with NOTIFICATION and DATA (NOTIF).",
+    		"sound": "default",
+    		"click_action": "fcm.ACTION.HELLO"
+    	},
+    	"data":{
+    		"title": "Simple FCM Client",
+    		"body": "This is a notification with NOTIFICATION and DATA (DATA)",
+    		"click_action": "fcm.ACTION.HELLO",
+    		"remote": true
+    	},
+    	"priority": "high"
+    }
+
+    this._send(JSON.stringify(body), "notification-data");
   }
 
   _send(body, type) {

@@ -47,6 +47,10 @@ export default class App extends Component {
         <TouchableOpacity onPress={() => firebaseClient.sendData(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Data</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => firebaseClient.sendNotificationWithData(token)} style={styles.button}>
+          <Text style={styles.buttonText}>Send Notification With Data</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -73,7 +77,7 @@ const styles = StyleSheet.create({
     backgroundColor: "teal",
     paddingHorizontal: 20,
     paddingVertical: 10,
-    marginVertical: 5,
+    marginVertical: 15,
     borderRadius: 10
   },
   buttonText: {

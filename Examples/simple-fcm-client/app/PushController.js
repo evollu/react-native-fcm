@@ -23,11 +23,26 @@ export default class PushController extends Component {
 
     this.notificationUnsubscribe = FCM.on("notification", notif => {
       console.log("Notification", notif);
+      if (notif && notif.local) {
+        return;
+      }
+      this.sendRemote(notif);
     });
 
     this.refreshUnsubscribe = FCM.on("refreshToken", token => {
       console.log("TOKEN (refreshUnsubscribe)", token);
       this.props.onChangeToken(token);
+    });
+  }
+
+  sendRemote(notif) {
+    FCM.presentLocalNotification({
+      title: notif.title,
+      body: notif.body,
+      priority: "high",
+      click_action: notif.click_action,
+      show_in_foreground: true,
+      local: true
     });
   }
 
