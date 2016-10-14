@@ -14,4 +14,6 @@ extern NSString *const FCMNotificationReceived;
 
 @property (nonatomic, assign) bool connectedToFCM;
 
+- (void)connectToFCM;
+
 @end
