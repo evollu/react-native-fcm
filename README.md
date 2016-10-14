@@ -125,7 +125,7 @@ Install the `Firebase/Messaging` pod:
 cd ios && pod init
 pod install Firebase/Messaging
 ```
-uncomment the "use_framework!" line in the podfile.
+uncomment the "use_frameworks!" line in the podfile.
 
 ### Non Cocoapod approach
 
@@ -280,7 +280,7 @@ class App extends Component {
         });
  
         FCM.scheduleLocalNotification({
-            fire_date: new Date().getTime(),      //react convert is used, accept epoch time or ISO string
+            fire_date: new Date().getTime(),      //RN's converter is used, accept epoch time and whatever that converter supports
             id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification. In android notification with same ID will override each other
             body: "from future past",
             repeat_interval: "week" //day, hour

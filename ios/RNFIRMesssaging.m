@@ -99,6 +99,14 @@ RCT_EXPORT_MODULE()
   [[NSNotificationCenter defaultCenter]
    addObserver:self selector:@selector(onTokenRefresh)
    name:kFIRInstanceIDTokenRefreshNotification object:nil];
+
+  [[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(sendDataMessageFailure:)
+            name:FIRMessagingSendErrorNotification object:nil];
+
+  [[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(sendDataMessageSuccess:)
+            name:FIRMessagingSendSuccessNotification object:nil];
   
   // For iOS 10 data message (sent via FCM)
   [[FIRMessaging messaging] setRemoteMessageDelegate:self];
@@ -274,6 +282,25 @@ RCT_EXPORT_METHOD(getBadgeNumber: (RCTPromiseResolveBlock)resolve rejecter:(RCTP
   resolve(@([RCTSharedApplication() applicationIconBadgeNumber]));
 }
 
+RCT_EXPORT_METHOD(send:(NSString*)senderId withPayload:(NSDictionary *)message)
+{
+  NSMutableDictionary * mMessage = [message mutableCopy];
+  NSMutableDictionary * upstreamMessage = [[NSMutableDictionary alloc] init];
+  for (NSString* key in mMessage) {
+    upstreamMessage[key] = [NSString stringWithFormat:@"%@", [mMessage valueForKey:key]];
+  }
+
+  NSDictionary *imMessage = [NSDictionary dictionaryWithDictionary:upstreamMessage];
+
+  int64_t ttl = 3600;
+  NSString * receiver = [NSString stringWithFormat:@"%@@gcm.googleapis.com", senderId];
+
+  NSUUID *uuid = [NSUUID UUID];
+  NSString * messageID = [uuid UUIDString];
+
+  [[FIRMessaging messaging]sendMessage:imMessage to:receiver withMessageID:messageID timeToLive:ttl];
+}
+
 - (void)handleNotificationReceived:(NSNotification *)notification
 {
   if([notification.userInfo valueForKey:@"opened_from_tray"] == nil){
@@ -284,6 +311,20 @@ RCT_EXPORT_METHOD(getBadgeNumber: (RCTPromiseResolveBlock)resolve rejecter:(RCTP
     [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:notification.userInfo];
   }
   
+}
+
+- (void)sendDataMessageFailure:(NSNotification *)notification 
+{
+    NSString *messageID = (NSString *)notification.userInfo[@"messageID"];
+
+    NSLog(@"sendDataMessageFailure: %@", messageID);
+}
+
+- (void)sendDataMessageSuccess:(NSNotification *)notification 
+{
+    NSString *messageID = (NSString *)notification.userInfo[@"messageID"];
+
+    NSLog(@"sendDataMessageSuccess: %@", messageID);
 }
 
 @end
