@@ -291,6 +291,10 @@ class App extends Component {
         FCM.cancelAllLocalNotifications();
         FCM.setBadgeNumber();
         FCM.getBadgeNumber().then(number=>console.log(number));
+        FCM.send('984XXXXXXXXX', {
+          my_custom_data_1: 'my_custom_field_value_1', 
+          my_custom_data_2: 'my_custom_field_value_2'
+        });
     }
 }
 ```
@@ -348,6 +352,18 @@ class App extends Component {
  - IOS will receive notification and android **won't** (better not to do anything in foreground for hybrid and send a separate data message.)
 
 NOTE: it is recommended not to rely on `data` payload for click_action as it can be overwritten (check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)).
+
+### Quick notes about upstream messages
+If your app server implements the [XMPP Connection Server](https://firebase.google.com/docs/cloud-messaging/server#implementing-the-xmpp-connection-server-protocol) protocol, it can receive upstream messages from a user's device to the cloud. To initiate an upstream message, call the `FCM.send()` method with your Firebase `Sender ID` and a `Data Object` as parameters as follows:
+
+```javascript
+FCM.send('984XXXXXXXXX', {
+  my_custom_data_1: 'my_custom_field_value_1', 
+  my_custom_data_2: 'my_custom_field_value_2'
+});
+```
+
+The `Data Object` is message data comprising as many key-value pairs of the message's payload as are needed (ensure that the value of each pair in the data object is a `string`). Your `Sender ID` is a unique numerical value generated when you created your Firebase project, it is available in the `Cloud Messaging` tab of the Firebase console `Settings` pane. The sender ID is used to identify each app server that can send messages to the client app.
 
 ## Q & A
 
