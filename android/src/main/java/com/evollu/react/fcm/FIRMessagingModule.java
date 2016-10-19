@@ -20,6 +20,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.firebase.messaging.RemoteMessage.Notification;
 
 import android.app.Application;
 import android.os.Bundle;
@@ -174,6 +175,19 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             if (getReactApplicationContext().hasActiveCatalystInstance()) {
                 RemoteMessage message = intent.getParcelableExtra("data");
                 WritableMap params = Arguments.createMap();
+                WritableMap fcmData = Arguments.createMap();
+
+                if (message.getNotification() != null) {
+                    Notification notification = message.getNotification();
+                    fcmData.putString("title", notification.getTitle());
+                    fcmData.putString("body", notification.getBody());
+                    fcmData.putString("color", notification.getColor());
+                    fcmData.putString("icon", notification.getIcon());
+                    fcmData.putString("tag", notification.getTag());
+                    fcmData.putString("action", notification.getClickAction());
+                }
+                params.putMap("fcm", fcmData);
+
                 if(message.getData() != null){
                     Map<String, String> data = message.getData();
                     Set<String> keysIterator = data.keySet();
