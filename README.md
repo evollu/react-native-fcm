@@ -96,6 +96,28 @@ If you are using RN < 0.30.0 and react-native-fcm < 1.0.16, pass intent into pac
 +   }       
 ```
 
+NOTE: Verify that react-native links correctly in `MainApplication.java`
+
+```diff
+import android.app.application
+...
++import com.evollu.react.fcm.FIRMessagingPackage;
+```
+....
+```diff
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new VectorIconsPackage(),
++         new FIRMessagingPackage(),
+          new RNDeviceInfo(),
+      );
+    }
+ ```   
+
+
+
 - RN <= 0.27:
 
 ```diff
@@ -125,7 +147,7 @@ Install the `Firebase/Messaging` pod:
 cd ios && pod init
 pod install Firebase/Messaging
 ```
-uncomment the "use_framework!" line in the podfile.
+uncomment the "use_frameworks!" line in the podfile.
 
 ### Non Cocoapod approach
 
@@ -280,7 +302,7 @@ class App extends Component {
         });
  
         FCM.scheduleLocalNotification({
-            fire_date: new Date().getTime(),      //react convert is used, accept epoch time or ISO string
+            fire_date: new Date().getTime(),      //RN's converter is used, accept epoch time and whatever that converter supports
             id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification. In android notification with same ID will override each other
             body: "from future past",
             repeat_interval: "week" //day, hour
@@ -291,6 +313,10 @@ class App extends Component {
         FCM.cancelAllLocalNotifications();
         FCM.setBadgeNumber();                                       // iOS only and there's no way to set it in Android, yet.
         FCM.getBadgeNumber().then(number=>console.log(number));     // iOS only and there's no way to get it in Android, yet.
+        FCM.send('984XXXXXXXXX', {
+          my_custom_data_1: 'my_custom_field_value_1', 
+          my_custom_data_2: 'my_custom_field_value_2'
+        });
     }
 }
 ```
@@ -348,6 +374,18 @@ class App extends Component {
  - IOS will receive notification and android **won't** (better not to do anything in foreground for hybrid and send a separate data message.)
 
 NOTE: it is recommended not to rely on `data` payload for click_action as it can be overwritten (check [this](http://stackoverflow.com/questions/33738848/handle-multiple-notifications-with-gcm)).
+
+### Quick notes about upstream messages
+If your app server implements the [XMPP Connection Server](https://firebase.google.com/docs/cloud-messaging/server#implementing-the-xmpp-connection-server-protocol) protocol, it can receive upstream messages from a user's device to the cloud. To initiate an upstream message, call the `FCM.send()` method with your Firebase `Sender ID` and a `Data Object` as parameters as follows:
+
+```javascript
+FCM.send('984XXXXXXXXX', {
+  my_custom_data_1: 'my_custom_field_value_1', 
+  my_custom_data_2: 'my_custom_field_value_2'
+});
+```
+
+The `Data Object` is message data comprising as many key-value pairs of the message's payload as are needed (ensure that the value of each pair in the data object is a `string`). Your `Sender ID` is a unique numerical value generated when you created your Firebase project, it is available in the `Cloud Messaging` tab of the Firebase console `Settings` pane. The sender ID is used to identify each app server that can send messages to the client app.
 
 ## Q & A
 
