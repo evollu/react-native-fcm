@@ -1,7 +1,7 @@
 
 #import <UIKit/UIKit.h>
 
-@import FirebaseInstanceID;
+@import FirebaseCore;
 
 #import <React/RCTBridgeModule.h>
 
