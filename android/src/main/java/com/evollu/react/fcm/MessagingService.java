@@ -23,6 +23,7 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     public void handleBadge(RemoteMessage remoteMessage) {
+        BadgeHelper badgeHelper = new BadgeHelper(this);
         if (remoteMessage.getData() == null) {
             return;
         }
@@ -34,13 +35,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         try {
             int badgeCount = Integer.parseInt((String)data.get("badge"));
-            if (badgeCount == 0) {
-                ShortcutBadger.removeCount(this);
-                Log.d(TAG, "Remove count");
-            } else {
-                ShortcutBadger.applyCount(this, badgeCount);
-                Log.d(TAG, "Apply count: " + badgeCount);
-            }
+            badgeHelper.setBadgeCount(badgeCount);
         } catch (Exception e) {
             Log.e(TAG, "Badge count needs to be an integer", e);
         }
