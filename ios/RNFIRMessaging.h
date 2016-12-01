@@ -3,7 +3,7 @@
 
 @import FirebaseCore;
 
-#import <React/RCTBridgeModule.h>
+#import "RCTBridgeModule.h"
 
 
 extern NSString *const FCMNotificationReceived;
