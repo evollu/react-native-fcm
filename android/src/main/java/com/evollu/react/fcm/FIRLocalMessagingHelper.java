@@ -109,11 +109,11 @@ public class FIRLocalMessagingHelper {
 
             //large icon
             String largeIcon = bundle.getString("large-icon");
-            if(largeIcon != null){
+            if(largeIcon != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
                 int largeIconResId = res.getIdentifier(largeIcon, "mipmap", packageName);
                 Bitmap largeIconBitmap = BitmapFactory.decodeResource(res, largeIconResId);
 
-                if (largeIconResId != 0 && (largeIcon != null || android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)) {
+                if (largeIconResId != 0) {
                     notification.setLargeIcon(largeIconBitmap);
                 }
             }
@@ -125,7 +125,7 @@ public class FIRLocalMessagingHelper {
             }
 
             //sound
-            if (bundle.containsKey("sound")) {
+            if (bundle.getString("sound") != null) {
                 int soundResourceId = res.getIdentifier(bundle.getString("sound"), "raw", packageName);
                 notification.setSound(Uri.parse("android.resource://" + packageName + "/" + soundResourceId));
             }
