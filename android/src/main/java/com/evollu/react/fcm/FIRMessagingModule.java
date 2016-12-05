@@ -96,6 +96,16 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
+    public void removeDeliveredNotification(String notificationID) {
+        mFIRLocalMessagingHelper.removeDeliveredNotification(notificationID);
+    }
+
+    @ReactMethod
+    public void removeAllDeliveredNotifications(){
+        mFIRLocalMessagingHelper.removeAllDeliveredNotifications();
+    }
+
+    @ReactMethod
     public void subscribeToTopic(String topic){
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
     }

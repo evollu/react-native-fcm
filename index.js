@@ -39,12 +39,26 @@ FCM.getScheduledLocalNotifications = function() {
 };
 
 FCM.cancelLocalNotification = (notificationID) => {
-    RNFIRMessaging.cancelLocalNotification(notificationID);
+    if(!notificationID){
+		return;
+	}
+	RNFIRMessaging.cancelLocalNotification(notificationID);
 };
 
 FCM.cancelAllLocalNotifications = () => {
     RNFIRMessaging.cancelAllLocalNotifications();
 };
+
+FCM.removeDeliveredNotification = (notificationID) => {
+	if(!notificationID){
+		return;
+	}
+	RNFIRMessaging.removeDeliveredNotification(notificationID);
+}
+
+FCM.removeAllDeliveredNotifications = () => {
+	RNFIRMessaging.removeAllDeliveredNotifications();
+}
 
 FCM.setBadgeNumber = (number) => {
     RNFIRMessaging.setBadgeNumber(number);

@@ -276,13 +276,27 @@ RCT_EXPORT_METHOD(scheduleLocalNotification:(id)data resolver:(RCTPromiseResolve
   }
 }
 
+RCT_EXPORT_METHOD(removeDeliveredNotifications:(NSString*) notificationId)
+{
+  if([UNUserNotificationCenter currentNotificationCenter] != nil){
+    [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[notificationId]];
+  }
+}
+
+RCT_EXPORT_METHOD(removeAllDeliveredNotifications)
+{
+  if([UNUserNotificationCenter currentNotificationCenter] != nil){
+    [[UNUserNotificationCenter currentNotificationCenter] removeAllDeliveredNotifications];
+  } else {
+    [RCTSharedApplication() setApplicationIconBadgeNumber: 0];
+  }
+}
+
 RCT_EXPORT_METHOD(cancelAllLocalNotifications)
 {
   if([UNUserNotificationCenter currentNotificationCenter] != nil){
     [[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
-    [[UNUserNotificationCenter currentNotificationCenter] removeAllDeliveredNotifications];
   } else {
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
     [RCTSharedApplication() cancelAllLocalNotifications];
   }
 }

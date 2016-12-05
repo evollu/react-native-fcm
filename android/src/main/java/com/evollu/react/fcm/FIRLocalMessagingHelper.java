@@ -253,24 +253,13 @@ public class FIRLocalMessagingHelper {
     }
 
     public void cancelLocalNotification(String notificationId) {
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.cancel(notificationId.hashCode());
-
         cancelAlarm(notificationId);
-
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(notificationId);
         editor.apply();
     }
 
     public void cancelAllLocalNotifications() {
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.cancelAll();
-
         java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
@@ -278,6 +267,16 @@ public class FIRLocalMessagingHelper {
         }
         editor.clear();
         editor.apply();
+    }
+
+    public void removeDeliveredNotification(String notificationId){
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId.hashCode());
+    }
+
+    public void removeAllDeliveredNotifications(){
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
     public void cancelAlarm(String notificationId) {
