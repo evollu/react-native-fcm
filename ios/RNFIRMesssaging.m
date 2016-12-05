@@ -282,6 +282,7 @@ RCT_EXPORT_METHOD(cancelAllLocalNotifications)
     [[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
     [[UNUserNotificationCenter currentNotificationCenter] removeAllDeliveredNotifications];
   } else {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
     [RCTSharedApplication() cancelAllLocalNotifications];
   }
 }
