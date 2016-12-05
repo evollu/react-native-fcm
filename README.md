@@ -50,6 +50,17 @@
     ...
 ```
 
+- Edit `{YOUR_MAIN_PROJECT}/app/build.gradle`:
+```diff
+ dependencies {
+     compile project(':react-native-fcm')
++    compile 'com.google.firebase:firebase-core:10.0.1' //this decides your firebase SDK version
+     compile fileTree(dir: "libs", include: ["*.jar"])
+     compile "com.android.support:appcompat-v7:23.0.1"
+     compile "com.facebook.react:react-native:+"  // From node_modules
+ }
+```
+
 ### Config for notification and `click_action` in Android
 
 To allow android to respond to `click_action`, you need to define Activities and filter on specific intent. Since all javascript is running in MainActivity, you can have MainActivity to handle actions:
