@@ -240,7 +240,7 @@ RCT_EXPORT_METHOD(unsubscribeFromTopic: (NSString*) topic)
   [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:[remoteMessage appData]];
 }
 
-RCT_EXPORT_METHOD(presentLocalNotification:(UNNotificationRequest *)data resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(presentLocalNotification:(id)data resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   if([UNUserNotificationCenter currentNotificationCenter] != nil){
     UNNotificationRequest* request = [RCTConvert UNNotificationRequest:data];
