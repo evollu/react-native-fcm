@@ -1,12 +1,12 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## NOTE: 
+## NOTE:
 - If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
 - If you are running RN < 0.33.0, you need to user react-native-fcm@1.1.0
 - Otherwise use latest v2 and use XCode 8 and latest Firebase SDK (iOS 3.6.0)
 - local notification is only available in V2
 
-- @antoinerousseau has a working project setup so you can check if there is issue https://github.com/antoinerousseau/tribeez
+- An example working project is available at: https://github.com/evollu/react-native-fcm/tree/master/Examples/simple-fcm-client
 
 ## Installation
 
@@ -208,7 +208,7 @@ Edit `AppDelegate.m`:
 + -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.userInfo];
 + }
-+ 
++
 + - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
 +   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
 +   completionHandler(UIBackgroundFetchResultNoData);
@@ -218,20 +218,20 @@ Edit `AppDelegate.m`:
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
- 
+
 ## Setup Local Notifications
 NOTE: local notification does NOT have any dependency on FCM library but you still need to include Firebase to compile. If there are enough demand to use this functionality alone, I will separate it out into another repo
 
 ### IOS
 No change required
- 
+
 ### Android
 Edit AndroidManifest.xml
 ```diff
   <uses-permission android:name="android.permission.INTERNET" />
 + <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 + <uses-permission android:name="android.permission.VIBRATE" />
- 
+
   <application
 +      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
 +      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
@@ -243,7 +243,7 @@ Edit AndroidManifest.xml
 +          </intent-filter>
 +      </receiver>
   </application>
-``` 
+```
 NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenting local notifications. `com.evollu.react.fcm.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
 
 
@@ -279,9 +279,9 @@ class App extends Component {
         this.refreshUnsubscribe();
         this.notificationUnsubscribe();
     }
- 
+
     otherMethods(){
-        
+
         FCM.subscribeToTopic('/topics/foo-bar');
         FCM.unsubscribeFromTopic('/topics/foo-bar');
         FCM.getInitialNotification().then(notif=>console.log(notif));
@@ -308,7 +308,7 @@ class App extends Component {
             lights: true,                                       // Android only, LED blinking (default false)
             show_in_foreground                                  // notification when app is in foreground (local & remote)
         });
- 
+
         FCM.scheduleLocalNotification({
             fire_date: new Date().getTime(),      //RN's converter is used, accept epoch time and whatever that converter supports
             id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification. In android notification with same ID will override each other
@@ -317,19 +317,19 @@ class App extends Component {
         })
 
         FCM.getScheduledLocalNotifications().then(notif=>console.log(notif));
-        
+
         //these clears notification from notification center/tray
         FCM.removeAllDeliveredNotifications()
         FCM.removeDeliveredNotification("UNIQ_ID_STRING")
-        
+
         //these removes future local notifications
         FCM.cancelAllLocalNotifications()
         FCM.cancelLocalNotification("UNIQ_ID_STRING")
-        
+
         FCM.setBadgeNumber();                                       // iOS only and there's no way to set it in Android, yet.
         FCM.getBadgeNumber().then(number=>console.log(number));     // iOS only and there's no way to get it in Android, yet.
         FCM.send('984XXXXXXXXX', {
-          my_custom_data_1: 'my_custom_field_value_1', 
+          my_custom_data_1: 'my_custom_field_value_1',
           my_custom_data_2: 'my_custom_field_value_2'
         });
     }
@@ -392,7 +392,7 @@ Check local notification guide below for configuration.
     ```
 
     and event callback will receive as:
-    
+
     - Android
       ```json
       {
@@ -401,7 +401,7 @@ Check local notification guide below for configuration.
         "extra": "juice"
       }
       ```
-    
+
     - iOS
       ```json
       {
@@ -421,7 +421,7 @@ If your app server implements the [XMPP Connection Server](https://firebase.goog
 
 ```javascript
 FCM.send('984XXXXXXXXX', {
-  my_custom_data_1: 'my_custom_field_value_1', 
+  my_custom_data_1: 'my_custom_field_value_1',
   my_custom_data_2: 'my_custom_field_value_2'
 });
 ```
@@ -501,6 +501,6 @@ Warning: foreground banner won't show in android for remote notification due to 
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
- 
+
 #### Credits
 Local notification implementation is inspired by react-native-push-notification by zo0r
