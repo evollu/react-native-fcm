@@ -251,7 +251,7 @@ RCT_EXPORT_METHOD(presentLocalNotification:(UNNotificationRequest *)request reso
       }
     }];
   }else{
-    UILocalNotification* notif = [RCTConvert UILocalNotification:data];
+    UILocalNotification* notif = [RCTConvert UILocalNotification:request];
     [RCTSharedApplication() presentLocalNotificationNow:notif];
     resolve(nil);
   }
