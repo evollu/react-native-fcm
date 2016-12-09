@@ -470,8 +470,8 @@ search for `compile "com.google.android.gms` in android and see who specifies sp
 Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS based on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
 
 #### Android notification doesn't vibrate/show head-up display etc
-All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way.
-Or you can send `data` using FCM and build a local notification
+All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. 
+In the mean time, you can pass "custom_notification" in a data message. This repo will show a local notification for you so you can set priority etc
 
 #### How do I do xxx with FCM?
 check out [official docs and see if they support](https://firebase.google.com/docs/cloud-messaging/concept-options)
