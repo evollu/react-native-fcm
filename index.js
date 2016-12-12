@@ -22,6 +22,7 @@ FCM.requestPermissions = () => {
 };
 
 FCM.presentLocalNotification = (details) => {
+    details.id = details.id || new Date().getTime().toString()
     details.local_notification = true;
     RNFIRMessaging.presentLocalNotification(details);
 };
@@ -71,7 +72,7 @@ FCM.getBadgeNumber = () => {
 FCM.on = (event, callback) => {
     const nativeEvent = eventsMap[event];
     if (!nativeEvent) {
-        throw new Error('FCM invalid event');
+        throw new Error('FCM event must be "refreshToken" or "notification"');
     }
     const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
 
