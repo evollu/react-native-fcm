@@ -45,7 +45,12 @@ RCT_ENUM_CONVERTER(NSCalendarUnit,
   UNMutableNotificationContent *content = [UNMutableNotificationContent new];
   content.title =[RCTConvert NSString:details[@"title"]];
   content.body =[RCTConvert NSString:details[@"body"]];
-  content.sound = [RCTConvert NSString:details[@"sound"]] ?: [UNNotificationSound defaultSound];
+  NSString* sound = [RCTConvert NSString:details[@"sound"]];
+  if(sound != nil){
+    content.sound = [UNNotificationSound soundNamed:sound];
+  }else{
+    content.sound = [UNNotificationSound defaultSound];
+  }
   content.categoryIdentifier = [RCTConvert NSString:details[@"click_action"]];
   content.userInfo = details;
   content.badge = [RCTConvert NSNumber:details[@"badge"]];
