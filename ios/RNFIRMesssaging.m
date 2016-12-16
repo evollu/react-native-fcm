@@ -50,7 +50,12 @@ RCT_ENUM_CONVERTER(NSCalendarUnit,
   content.userInfo = details;
   content.badge = [RCTConvert NSNumber:details[@"badge"]];
   
-  NSDate *fireDate = [RCTConvert NSDate:details[@"fire_date"]] ?: [NSDate date];
+  NSDate *fireDate = [RCTConvert NSDate:details[@"fire_date"]];
+  
+  if(fireDate == nil){
+    return [UNNotificationRequest requestWithIdentifier:[RCTConvert NSString:details[@"id"]] content:content trigger:nil];
+  }
+  
   NSCalendarUnit interval = [RCTConvert NSCalendarUnit:details[@"repeat_interval"]];
   NSCalendarUnit unitFlags;
   switch (interval) {
