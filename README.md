@@ -442,8 +442,8 @@ Try update your SDK and google play service
 #### My App throws FCM function undefined error
 There seems to be link issue with rnpm. Make sure that there is `new FIRMessagingPackage(),` in your `Application.java` file
 
-#### I can't get notification when app is killed
-If you send notification with `data` only, you can only get the data message when app is in foreground or background. Killed app doesn't trigger `FCMNotificationReceived`. Use `notification` in the payload instead.
+#### I can't get notification in iOS emulator
+Remote notification can't reach iOS emulator since it can't fetch APNS token. Use real device.
 
 #### App running in background doesn't trigger `FCMNotificationReceived` when receiving hybrid notification [Android]
 These is [an issue opened for that](https://github.com/google/gcm/issues/63). Behavior is not consistent between 2 platforms
