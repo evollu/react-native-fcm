@@ -214,7 +214,12 @@ Edit `AppDelegate.m`:
 +   completionHandler(UIBackgroundFetchResultNoData);
 + }
 ```
-
+ 
+### Xcode post installation steps
+- Select your project **Capabilities** and enable **Keychan Sharing** and *Background Modes* > **Remote notifications**.
+ 
+- In Xcode menu bar, select *Product* > *Scheme* > **Manage schemes**. Select your project name Scheme then click on the minus sign **―** in the bottom left corner, then click on the plus sign **+** and rebuild your project scheme. 
+ 
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
