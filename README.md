@@ -499,6 +499,9 @@ It is up to you! FCM is just a bridging library that passes notification into ja
 Use `show_in_foreground` attribute to tell app to show banner even if the app is in foreground.
 Warning: foreground banner won't show in android for remote notification due to limitation of FCM SDK. However you can create a local notification yourself. A pull is welcome to fix this.
 
+#### Do I need to handle APNS token registration?
+No. Method swizzling in Firebase Cloud Messaging handles this unless you turn that off. Then you are on your own to implement the handling. Check this link https://firebase.google.com/docs/cloud-messaging/ios/client
+
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
 
