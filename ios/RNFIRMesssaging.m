@@ -181,9 +181,9 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
-  NSDictionary *localUserInfo = _bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
-  if(localUserInfo){
-    resolve([localUserInfo copy]);
+  UILocalNotification *localUserInfo = _bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
+  if (localUserInfo) {
+    resolve([[localUserInfo userInfo] copy]);
     return;
   }
   resolve([_bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy]);
