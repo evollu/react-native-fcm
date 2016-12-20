@@ -117,7 +117,6 @@ public class FIRLocalMessagingHelper {
                 if (largeIcon.startsWith("http://") || largeIcon.startsWith("https://")) {
                     Bitmap bitmap = getBitmapFromURL(largeIcon);
                     notification.setLargeIcon(bitmap);
-                    //notification.setStyle(new Notification.BigPictureStyle().bigPicture(bitmap));
                 } else {
                     int largeIconResId = res.getIdentifier(largeIcon, "mipmap", packageName);
                     Bitmap largeIconBitmap = BitmapFactory.decodeResource(res, largeIconResId);
