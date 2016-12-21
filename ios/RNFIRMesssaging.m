@@ -160,7 +160,9 @@ RCT_EXPORT_MODULE()
    name:FIRMessagingSendSuccessNotification object:nil];
   
   // For iOS 10 data message (sent via FCM)
-  [[FIRMessaging messaging] setRemoteMessageDelegate:self];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[FIRMessaging messaging] setRemoteMessageDelegate:self];
+  });
 }
 
 - (void)connectToFCM
