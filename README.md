@@ -166,6 +166,9 @@ uncomment the "use_frameworks!" line in the podfile.
 2. Follow the `README` to link frameworks (Analytics+Messaging)
 
 ### Shared steps
+Make sure you have certificates setup by following
+https://firebase.google.com/docs/cloud-messaging/ios/certs
+
 Edit `AppDelegate.h`:
 ```diff
 + @import UserNotifications;
