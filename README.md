@@ -347,7 +347,7 @@ class App extends Component {
 ### Build custom push notification for Andorid
 Firebase android misses important feature of android notification like `group`, `priority` and etc. As a work around you can send data message (no `notification` payload at all) and this repo will build a local notification for you. If you pass `custom_notification` in the payload, the repo will treat the content as a local notification config and shows immediately.
 
-NOTE: By using this work around, you will have to send different types of payload for iOS and Android devices.
+NOTE: By using this work around, you will have to send different types of payload for iOS and Android devices because custom_notification isn't supported on iOS
 
 Example of payload that is sent to FCM server:
 ```
@@ -356,13 +356,14 @@ Example of payload that is sent to FCM server:
   "data": {
     "type":"MEASURE_CHANGE",
     "custom_notification": {
-	    "body": "test body",
+      "body": "test body",
       "title": "test title",
       "color":"#00ACD4",
       "priority":"high",
       "icon":"ic_notif",
       "group": "GROUP",
-      "id": "id"
+      "id": "id",
+      "show_in_foreground": true
     }
   }
 }
@@ -505,7 +506,7 @@ It is up to you! FCM is just a bridging library that passes notification into ja
 
 #### I want to show notification when app is in foreground
 Use `show_in_foreground` attribute to tell app to show banner even if the app is in foreground.
-Warning: foreground banner won't show in android for remote notification due to limitation of FCM SDK. However you can create a local notification yourself. A pull is welcome to fix this.
+NOTE: this flag doesn't work for Android push notification, use `custom_notification` to achieve this.
 
 #### Do I need to handle APNS token registration?
 No. Method swizzling in Firebase Cloud Messaging handles this unless you turn that off. Then you are on your own to implement the handling. Check this link https://firebase.google.com/docs/cloud-messaging/ios/client
