@@ -134,8 +134,13 @@ public class FIRLocalMessagingHelper {
             }
 
             //sound
-            if (bundle.getString("sound") != null) {
-                int soundResourceId = res.getIdentifier(bundle.getString("sound"), "raw", packageName);
+            String soundName = bundle.getString("sound", "default");
+            if (!soundName.equalsIgnoreCase("default")) {
+                int soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                if(soundResourceId == 0){
+                    soundName = soundName.substring(0, soundName.lastIndexOf('.'));
+                    soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                }
                 notification.setSound(Uri.parse("android.resource://" + packageName + "/" + soundResourceId));
             }
 
