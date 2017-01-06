@@ -6,7 +6,9 @@
     "url": "https://github.com/evollu/react-native-fcm/issues"
   },
   "description": "React Native bridge for firebase cloud messaging (FCM)",
-  "devDependencies": {},
+  "peerDependencies": {
+    "react-native": ">=0.40.0"
+  },
   "homepage": "https://github.com/evollu/react-native-fcm",
   "keywords": [
     "React-Native",
