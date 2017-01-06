@@ -1,9 +1,8 @@
 #import "RNFIRMessaging.h"
 
-#import "RCTBridge.h"
-#import "RCTConvert.h"
-#import "RCTEventDispatcher.h"
-#import "RCTUtils.h"
+#import <React/RCTConvert.h>
+#import <React/RCTEventDispatcher.h>
+#import <React/RCTUtils.h>
 
 @import UserNotifications;
 @import FirebaseMessaging;
@@ -160,7 +159,9 @@ RCT_EXPORT_MODULE()
    name:FIRMessagingSendSuccessNotification object:nil];
   
   // For iOS 10 data message (sent via FCM)
-  [[FIRMessaging messaging] setRemoteMessageDelegate:self];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[FIRMessaging messaging] setRemoteMessageDelegate:self];
+  });
 }
 
 - (void)connectToFCM
@@ -181,9 +182,9 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
-  NSDictionary *localUserInfo = _bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
-  if(localUserInfo){
-    resolve([localUserInfo copy]);
+  UILocalNotification *localUserInfo = _bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
+  if (localUserInfo) {
+    resolve([[localUserInfo userInfo] copy]);
     return;
   }
   resolve([_bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy]);
