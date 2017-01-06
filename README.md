@@ -218,11 +218,11 @@ Edit `AppDelegate.m`:
 +   completionHandler(UIBackgroundFetchResultNoData);
 + }
 ```
-
+ 
 ### Xcode post installation steps
 - Select your project **Capabilities** and enable **Keychan Sharing** and *Background Modes* > **Remote notifications**.
 
-- In Xcode menu bar, select *Product* > *Scheme* > **Manage schemes**. Select your project name Scheme then click on the minus sign **―** in the bottom left corner, then click on the plus sign **+** and rebuild your project scheme. 
+- In Xcode menu bar, select *Product* > *Scheme* > **Manage schemes**. Select your project name Scheme then click on the minus sign **―** in the bottom left corner, then click on the plus sign **+** and rebuild your project scheme.
 
 ### FCM config file
 
@@ -480,7 +480,7 @@ search for `compile "com.google.android.gms` in android and see who specifies sp
 Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS based on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
 
 #### Android notification doesn't vibrate/show head-up display etc
-All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. 
+All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline.
 In the mean time, you can pass "custom_notification" in a data message. This repo will show a local notification for you so you can set priority etc
 
 #### How do I do xxx with FCM?
