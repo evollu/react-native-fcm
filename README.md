@@ -218,7 +218,7 @@ Edit `AppDelegate.m`:
 +   completionHandler(UIBackgroundFetchResultNoData);
 + }
 ```
- 
+
 ### Xcode post installation steps
 - Select your project **Capabilities** and enable **Keychan Sharing** and *Background Modes* > **Remote notifications**.
 
@@ -285,8 +285,8 @@ class App extends Component {
 
     componentWillUnmount() {
         // stop listening for events
-        this.notificationListener.unsubscribe();
-        this.refreshTokenListener.unsubscribe();
+        this.notificationListener.remove();
+        this.refreshTokenListener.remove();
     }
 
     otherMethods(){

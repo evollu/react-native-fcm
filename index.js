@@ -73,14 +73,9 @@ FCM.on = (event, callback) => {
     const nativeEvent = eventsMap[event];
     if (!nativeEvent) {
         throw new Error('FCM event must be "refreshToken" or "notification"');
-    }
-    const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
-
-    return {
-      unsubscribe: function() {
-          listener.remove();
-      }
-    }
+    };
+    
+    return DeviceEventEmitter.addListener(nativeEvent, callback);
 };
 
 FCM.subscribeToTopic = (topic) => {
