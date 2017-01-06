@@ -76,9 +76,11 @@ FCM.on = (event, callback) => {
     }
     const listener = DeviceEventEmitter.addListener(nativeEvent, callback);
 
-    return function remove() {
-        listener.remove();
-    };
+    return {
+      unsubscribe: function() {
+          listener.remove();
+      }
+    }
 };
 
 FCM.subscribeToTopic = (topic) => {
