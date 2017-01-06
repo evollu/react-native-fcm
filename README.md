@@ -221,9 +221,9 @@ Edit `AppDelegate.m`:
  
 ### Xcode post installation steps
 - Select your project **Capabilities** and enable **Keychan Sharing** and *Background Modes* > **Remote notifications**.
- 
-- In Xcode menu bar, select *Product* > *Scheme* > **Manage schemes**. Select your project name Scheme then click on the minus sign **―** in the bottom left corner, then click on the plus sign **+** and rebuild your project scheme. 
- 
+
+- In Xcode menu bar, select *Product* > *Scheme* > **Manage schemes**. Select your project name Scheme then click on the minus sign **―** in the bottom left corner, then click on the plus sign **+** and rebuild your project scheme.
+
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
@@ -268,7 +268,7 @@ class App extends Component {
             console.log(token)
             // store fcm token in your server
         });
-        this.notificationUnsubscribe = FCM.on('notification', (notif) => {
+        this.notificationListener = FCM.on('notification', (notif) => {
             // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
             if(notif.local_notification){
               //this is a local notification
@@ -277,16 +277,16 @@ class App extends Component {
               //app is open/resumed because user clicked banner
             }
         });
-        this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
+        this.refreshTokenListener = FCM.on('refreshToken', (token) => {
             console.log(token)
             // fcm token may not be available on first load, catch it here
         });
     }
 
     componentWillUnmount() {
-        // prevent leaking
-        this.refreshUnsubscribe();
-        this.notificationUnsubscribe();
+        // stop listening for events
+        this.notificationListener.unsubscribe();
+        this.refreshTokenListener.unsubscribe();
     }
 
     otherMethods(){
@@ -480,7 +480,7 @@ search for `compile "com.google.android.gms` in android and see who specifies sp
 Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS based on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
 
 #### Android notification doesn't vibrate/show head-up display etc
-All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. 
+All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline.
 In the mean time, you can pass "custom_notification" in a data message. This repo will show a local notification for you so you can set priority etc
 
 #### How do I do xxx with FCM?
