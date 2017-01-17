@@ -170,6 +170,8 @@ uncomment the "use_frameworks!" line in the podfile.
 Make sure you have certificates setup by following
 https://firebase.google.com/docs/cloud-messaging/ios/certs
 
+Go to project settings -> Build Settings -> Header Search Paths and add `$(SRCROOT)/../node_modules/react-native-fcm/ios` as a value.  
+
 Edit `AppDelegate.h`:
 ```diff
 + @import UserNotifications;
