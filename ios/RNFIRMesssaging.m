@@ -288,7 +288,7 @@ RCT_EXPORT_METHOD(scheduleLocalNotification:(id)data resolver:(RCTPromiseResolve
   }
 }
 
-RCT_EXPORT_METHOD(removeDeliveredNotifications:(NSString*) notificationId)
+RCT_EXPORT_METHOD(removeDeliveredNotification:(NSString*) notificationId)
 {
   if([UNUserNotificationCenter currentNotificationCenter] != nil){
     [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[notificationId]];
