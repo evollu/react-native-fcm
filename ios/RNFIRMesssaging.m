@@ -161,6 +161,7 @@ RCT_EXPORT_MODULE()
   // For iOS 10 data message (sent via FCM)
   dispatch_async(dispatch_get_main_queue(), ^{
     [[FIRMessaging messaging] setRemoteMessageDelegate:self];
+    [self connectToFCM];
   });
 }
 
