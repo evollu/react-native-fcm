@@ -1,7 +1,7 @@
 
 #import <UIKit/UIKit.h>
 
-@import FirebaseCore;
+#import <FirebaseCore/FIRApp.h>
 
 #import <React/RCTBridgeModule.h>
 
@@ -13,3 +13,4 @@ extern NSString *const FCMNotificationReceived;
 @property (nonatomic, assign) bool connectedToFCM;
 
 @end
+

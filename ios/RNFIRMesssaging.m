@@ -5,8 +5,8 @@
 #import <React/RCTUtils.h>
 
 @import UserNotifications;
-@import FirebaseMessaging;
-@import FirebaseInstanceID;
+#import <FirebaseMessaging/FirebaseMessaging.h>
+#import <FirebaseInstanceID/FirebaseInstanceID.h>
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 
