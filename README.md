@@ -23,7 +23,7 @@
 +   classpath 'com.google.gms:google-services:3.0.0'
 ```
 
-- Edit `android/app/build.gradle`:
+- Edit `android/app/build.gradle`. Add at the bottom of the file:
 ```diff
   apply plugin: "com.android.application"
 + apply plugin: 'com.google.gms.google-services'
