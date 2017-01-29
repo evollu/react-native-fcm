@@ -144,21 +144,21 @@ RCT_EXPORT_MODULE()
 
 + (void)didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(RCTRemoteNotificationCallback)completionHandler {
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: userInfo];
-  [data setValue:@"remote_notification" forKey:@"notification_event_type"];
+  [data setValue:@"remote_notification" forKey:@"_notificationType"];
   [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
 
 + (void)didReceiveLocalNotification:(UILocalNotification *)notification {
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: notification.userInfo];
-  [data setValue:@"local_notification" forKey:@"notification_event_type"];
+  [data setValue:@"local_notification" forKey:@"_notificationType"];
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:data];
 }
 
 + (void)didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(RCTNotificationResponseCallback)completionHandler
 {
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: response.notification.request.content.userInfo];
-  [data setValue:@"notification_response" forKey:@"notification_event_type"];
+  [data setValue:@"notification_response" forKey:@"_notificationType"];
   [data setValue:@YES forKey:@"opened_from_tray"];
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
@@ -166,7 +166,7 @@ RCT_EXPORT_MODULE()
 + (void)willPresentNotification:(UNNotification *)notification withCompletionHandler:(RCTWillPresentNotificationCallback)completionHandler
 {
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: notification.request.content.userInfo];
-  [data setValue:@"will_present_notification" forKey:@"notification_event_type"];
+  [data setValue:@"will_present_notification" forKey:@"_notificationType"];
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
 

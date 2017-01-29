@@ -16,6 +16,13 @@ export const WillPresentNotificationResult = {
   None: 'UNNotificationPresentationOptionNone'
 }
 
+export const NotificationType = {
+  Remote: 'remote_notification',
+  NotificationResponse: 'notification_response',
+  WillPresent: 'will_present_notification',
+  Local: 'local_notification'
+}
+
 const RNFIRMessaging = NativeModules.RNFIRMessaging;
 
 const FCM = {};
@@ -87,18 +94,18 @@ function finish(result){
   }
   if(!this._finishCalled && this._completionHandlerId){
     this._finishCalled = true;
-    switch(this.notification_event_type){
-      case 'remote_notification':
+    switch(this._notificationType){
+      case NotificationType.Remote:
         result = result || RemoteNotificationResult.NoData;
         if(!Object.values(RemoteNotificationResult).includes(result)){
           throw new Error(`Invalid RemoteNotificationResult, use import {RemoteNotificationResult} from 'react-native-fcm' to avoid typo`);
         }
         RNFIRMessaging.finishRemoteNotification(this._completionHandlerId, result);
         return;
-      case 'notification_response':
+      case NotificationType.NotificationResponse:
         RNFIRMessaging.finishNotificationResponse(this._completionHandlerId);
         return;
-      case 'will_present_notification':
+      case NotificationType.WillPresent:
         result = result || (this.show_in_foreground ? WillPresentNotificationResult.All : WillPresentNotificationResult.None);
         if(!Object.values(WillPresentNotificationResult).includes(result)){
           throw new Error(`Invalid WillPresentNotificationResult, make sure you use import {WillPresentNotificationResult} from 'react-native-fcm' to avoid typo`);
