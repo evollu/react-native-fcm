@@ -18,6 +18,10 @@
 
 #endif
 
+typedef void (^RCTRemoteNotificationCallback)(UIBackgroundFetchResult result);
+typedef void (^RCTWillPresentNotificationCallback)(UNNotificationPresentationOptions result);
+typedef void (^RCTNotificationResponseCallback)();
+
 NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
 
 @implementation RCTConvert (NSCalendarUnit)
@@ -115,6 +119,21 @@ RCT_ENUM_CONVERTER(NSCalendarUnit,
   notification.applicationIconBadgeNumber = [RCTConvert NSInteger:details[@"badge"]];
   return notification;
 }
+
+RCT_ENUM_CONVERTER(UIBackgroundFetchResult, (@{
+                                               @"UIBackgroundFetchResultNewData": @(UIBackgroundFetchResultNewData),
+                                               @"UIBackgroundFetchResultNoData": @(UIBackgroundFetchResultNoData),
+                                               @"UIBackgroundFetchResultFailed": @(UIBackgroundFetchResultFailed),
+                                               }), UIBackgroundFetchResultNoData, integerValue)
+
+RCT_ENUM_CONVERTER(UNNotificationPresentationOptions, (@{
+                                               @"UNNotificationPresentationOptionAll": @(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound),
+                                               @"UNNotificationPresentationOptionNone": @(UNNotificationPresentationOptionNone)}), UIBackgroundFetchResultNoData, integerValue)
+
+@end
+
+@interface RNFIRMessaging ()
+  @property (nonatomic, strong) NSMutableDictionary *notificationCallbacks;
 @end
 
 @implementation RNFIRMessaging
@@ -122,6 +141,34 @@ RCT_ENUM_CONVERTER(NSCalendarUnit,
 RCT_EXPORT_MODULE()
 
 @synthesize bridge = _bridge;
+
++ (void)didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(RCTRemoteNotificationCallback)completionHandler {
+  NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: userInfo];
+  [data setValue:@"remote_notification" forKey:@"notification_event_type"];
+  [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
+  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
+}
+
++ (void)didReceiveLocalNotification:(UILocalNotification *)notification {
+  NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: notification.userInfo];
+  [data setValue:@"local_notification" forKey:@"notification_event_type"];
+  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:data];
+}
+
++ (void)didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(RCTNotificationResponseCallback)completionHandler
+{
+  NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: response.notification.request.content.userInfo];
+  [data setValue:@"notification_response" forKey:@"notification_event_type"];
+  [data setValue:@YES forKey:@"opened_from_tray"];
+  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
+}
+
++ (void)willPresentNotification:(UNNotification *)notification withCompletionHandler:(RCTWillPresentNotificationCallback)completionHandler
+{
+  NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: notification.request.content.userInfo];
+  [data setValue:@"will_present_notification" forKey:@"notification_event_type"];
+  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
+}
 
 - (void)dealloc
 {
@@ -377,15 +424,51 @@ RCT_EXPORT_METHOD(send:(NSString*)senderId withPayload:(NSDictionary *)message)
   [[FIRMessaging messaging]sendMessage:imMessage to:receiver withMessageID:messageID timeToLive:ttl];
 }
 
+RCT_EXPORT_METHOD(finishRemoteNotification: (NSString *)completionHandlerId fetchResult:(UIBackgroundFetchResult)result){
+  RCTRemoteNotificationCallback completionHandler = self.notificationCallbacks[completionHandlerId];
+  if (!completionHandler) {
+    RCTLogError(@"There is no completion handler with completionHandlerId: %@", completionHandlerId);
+    return;
+  }
+  completionHandler(result);
+  [self.notificationCallbacks removeObjectForKey:completionHandlerId];
+}
+
+RCT_EXPORT_METHOD(finishWillPresentNotification: (NSString *)completionHandlerId fetchResult:(UNNotificationPresentationOptions)result){
+  RCTWillPresentNotificationCallback completionHandler = self.notificationCallbacks[completionHandlerId];
+  if (!completionHandler) {
+    RCTLogError(@"There is no completion handler with completionHandlerId: %@", completionHandlerId);
+    return;
+  }
+  completionHandler(result);
+  [self.notificationCallbacks removeObjectForKey:completionHandlerId];
+}
+
+RCT_EXPORT_METHOD(finishNotificationResponse: (NSString *)completionHandlerId){
+  RCTNotificationResponseCallback completionHandler = self.notificationCallbacks[completionHandlerId];
+  if (!completionHandler) {
+    RCTLogError(@"There is no completion handler with completionHandlerId: %@", completionHandlerId);
+    return;
+  }
+  completionHandler();
+  [self.notificationCallbacks removeObjectForKey:completionHandlerId];
+}
+
 - (void)handleNotificationReceived:(NSNotification *)notification
 {
-  if([notification.userInfo valueForKey:@"opened_from_tray"] == nil){
-    NSMutableDictionary *data = [[NSMutableDictionary alloc]initWithDictionary: notification.userInfo];
-    [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
-    [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:data];
-  }else{
-    [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:notification.userInfo];
+  id completionHandler = notification.userInfo[@"completionHandler"];
+  NSMutableDictionary* data = notification.userInfo[@"data"];
+  if(completionHandler != nil){
+    NSString *completionHandlerId = [[NSUUID UUID] UUIDString];
+    if (!self.notificationCallbacks) {
+      // Lazy initialization
+      self.notificationCallbacks = [NSMutableDictionary dictionary];
+    }
+    self.notificationCallbacks[completionHandlerId] = completionHandler;
+    data[@"_completionHandlerId"] = completionHandlerId;
   }
+  
+  [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:data];
   
 }
 
