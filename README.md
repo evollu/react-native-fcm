@@ -193,30 +193,21 @@ Edit `AppDelegate.m`:
 +
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 + {
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.request.content.userInfo];
-+     if([[notification.request.content.userInfo valueForKey:@"show_in_foreground"] isEqual:@YES]){
-+     completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
-+   }else{
-+     completionHandler(UNNotificationPresentationOptionNone);
-+   }
-+
++   [RNFIRMessaging willPresentNotification:notification withCompletionHandler:completionHandler];
 + }
 +
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
 + {
-+     NSDictionary* userInfo = [[NSMutableDictionary alloc] initWithDictionary: response.notification.request.content.userInfo];
-+   [userInfo setValue:@YES forKey:@"opened_from_tray"];
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
++   [RNFIRMessaging didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
 + }
 +
 + //You can skip this method if you don't want to use local notification
 + -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.userInfo];
++   [RNFIRMessaging didReceiveLocalNotification:notification];
 + }
 +
 + - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
-+   completionHandler(UIBackgroundFetchResultNoData);
++   [RNFIRMessaging didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 + }
 ```
 
@@ -260,7 +251,7 @@ NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenti
 ## Usage
 
 ```javascript
-import FCM from 'react-native-fcm';
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult} from 'react-native-fcm';
 
 class App extends Component {
     componentDidMount() {
@@ -269,7 +260,7 @@ class App extends Component {
             console.log(token)
             // store fcm token in your server
         });
-        this.notificationListener = FCM.on('notification', (notif) => {
+        this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
             // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
             if(notif.local_notification){
               //this is a local notification
@@ -277,8 +268,27 @@ class App extends Component {
             if(notif.opened_from_tray){
               //app is open/resumed because user clicked banner
             }
+            await someAsyncCall();
+            
+            if(Platform.OS ==='ios'){
+              //optional
+              //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link. 
+              //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
+              //notif._notificationType is available for iOS platfrom
+              switch(notif._notificationType){
+                case NotificationType.Remote:
+                  notif.finish(RemoteNotificationResult.NewData) //other types available: RemoteNotificationResult.NewData, RemoteNotificationResult.ResultFailed
+                  break;
+                case NotificationType.NotificationResponse:
+                  notif.finish();
+                  break;
+                case NotificationType.WillPresent:
+                  notif.finish(WillPresentNotificationResult.All) //other types available: WillPresentNotificationResult.None
+                  break;
+              }
+            }
         });
-        this.refreshTokenListener = FCM.on('refreshToken', (token) => {
+        this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
             console.log(token)
             // fcm token may not be available on first load, catch it here
         });
