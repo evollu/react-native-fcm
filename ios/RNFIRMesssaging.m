@@ -18,10 +18,6 @@
 
 #endif
 
-typedef void (^RCTRemoteNotificationCallback)(UIBackgroundFetchResult result);
-typedef void (^RCTWillPresentNotificationCallback)(UNNotificationPresentationOptions result);
-typedef void (^RCTNotificationResponseCallback)();
-
 NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
 
 @implementation RCTConvert (NSCalendarUnit)
@@ -142,7 +138,7 @@ RCT_EXPORT_MODULE()
 
 @synthesize bridge = _bridge;
 
-+ (void)didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(RCTRemoteNotificationCallback)completionHandler {
++ (void)didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull RCTRemoteNotificationCallback)completionHandler {
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: userInfo];
   [data setValue:@"remote_notification" forKey:@"_notificationType"];
   [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
@@ -155,7 +151,7 @@ RCT_EXPORT_MODULE()
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:data];
 }
 
-+ (void)didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(RCTNotificationResponseCallback)completionHandler
++ (void)didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(nonnull RCTNotificationResponseCallback)completionHandler
 {
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: response.notification.request.content.userInfo];
   [data setValue:@"notification_response" forKey:@"_notificationType"];
@@ -163,7 +159,7 @@ RCT_EXPORT_MODULE()
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
 
-+ (void)willPresentNotification:(UNNotification *)notification withCompletionHandler:(RCTWillPresentNotificationCallback)completionHandler
++ (void)willPresentNotification:(UNNotification *)notification withCompletionHandler:(nonnull RCTWillPresentNotificationCallback)completionHandler
 {
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: notification.request.content.userInfo];
   [data setValue:@"will_present_notification" forKey:@"_notificationType"];
