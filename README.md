@@ -251,7 +251,7 @@ NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenti
 ## Usage
 
 ```javascript
-import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult} from 'react-native-fcm';
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 
 class App extends Component {
     componentDidMount() {
