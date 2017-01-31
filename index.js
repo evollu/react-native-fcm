@@ -127,7 +127,7 @@ FCM.on = (event, callback) => {
       return DeviceEventEmitter.addListener(event, async(data)=>{
         data.finish = finish;
         try{
-          await callback();
+          await callback(data);
         } catch(err){
           console.error('Notification handler err', err)
           throw err;
