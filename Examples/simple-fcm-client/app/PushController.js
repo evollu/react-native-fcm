@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import FCM, {FCMEvent} from "react-native-fcm";
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from "react-native-fcm";
 
 import firebaseClient from  "./FirebaseClient";
 
