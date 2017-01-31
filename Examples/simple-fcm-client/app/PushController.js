@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import FCM from "react-native-fcm";
+import FCM, {FCMEvent} from "react-native-fcm";
 
 import firebaseClient from  "./FirebaseClient";
 
@@ -21,21 +21,42 @@ export default class PushController extends Component {
       console.log("INITIAL NOTIFICATION", notif)
     });
 
-    this.notificationUnsubscribe = FCM.on("notification", notif => {
+    this.notificationListner = FCM.on(FCMEvent.Notification, notif => {
       console.log("Notification", notif);
-      if (notif && notif.local) {
+      if(notif.local_notification){
         return;
       }
-      this.sendRemote(notif);
+      if(notif.opened_from_tray){
+        return;
+      }
+
+      if(Platform.OS ==='ios'){
+              //optional
+              //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link.
+              //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
+              //notif._notificationType is available for iOS platfrom
+              switch(notif._notificationType){
+                case NotificationType.Remote:
+                  notif.finish(RemoteNotificationResult.NewData) //other types available: RemoteNotificationResult.NewData, RemoteNotificationResult.ResultFailed
+                  break;
+                case NotificationType.NotificationResponse:
+                  notif.finish();
+                  break;
+                case NotificationType.WillPresent:
+                  notif.finish(WillPresentNotificationResult.All) //other types available: WillPresentNotificationResult.None
+                  break;
+              }
+            }
+      this.showLocalNotification(notif);
     });
 
-    this.refreshUnsubscribe = FCM.on("refreshToken", token => {
+    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, token => {
       console.log("TOKEN (refreshUnsubscribe)", token);
       this.props.onChangeToken(token);
     });
   }
 
-  sendRemote(notif) {
+  showLocalNotification(notif) {
     FCM.presentLocalNotification({
       title: notif.title,
       body: notif.body,
@@ -47,8 +68,8 @@ export default class PushController extends Component {
   }
 
   componentWillUnmount() {
-    this.refreshUnsubscribe();
-    this.notificationUnsubscribe();
+    this.notificationListner.remove();
+    this.refreshTokenListener.remove();
   }
 
 
