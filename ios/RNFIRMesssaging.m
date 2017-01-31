@@ -379,7 +379,7 @@ RCT_EXPORT_METHOD(send:(NSString*)senderId withPayload:(NSDictionary *)message)
 
 - (void)handleNotificationReceived:(NSNotification *)notification
 {
-  if([notification.userInfo valueForKey:@"opened_from_tray"] == nil){
+  if([notification.userInfo valueForKey:@"opened_from_tray"] == nil && [notification.userInfo valueForKey:@"received_in_foreground"] == nil){
     NSMutableDictionary *data = [[NSMutableDictionary alloc]initWithDictionary: notification.userInfo];
     [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
     [_bridge.eventDispatcher sendDeviceEventWithName:FCMNotificationReceived body:data];

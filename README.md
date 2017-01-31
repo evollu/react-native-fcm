@@ -191,7 +191,10 @@ Edit `AppDelegate.m`:
 +
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 + {
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.request.content.userInfo];
++   NSDictionary *userInfo = [[NSMutableDictionary alloc] initWithDictionary: notification.request.content.userInfo];
++   [userInfo setValue:@YES forKey:@"received_in_foreground"];
++   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
++
 +     if([[notification.request.content.userInfo valueForKey:@"show_in_foreground"] isEqual:@YES]){
 +     completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
 +   }else{
