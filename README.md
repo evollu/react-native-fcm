@@ -458,7 +458,19 @@ Yes there are `react-native-push-notification` and `react-native-system-notifica
 - The PushNotificationIOS by react native team is still missing features that recurring, so we are adding it here
 
 #### My Android build is failing
-Try update your SDK and google play service
+Try update your SDK and google play service. If you are having multiple plugins requiring different version of play-service sdk, use force to lock in version
+```
+dependencies {
+    ...
+    compile ('com.android.support:appcompat-v7:25.0.1') {
+        exclude group: 'com.google.android', module: 'support-v4'
+    }
+    compile ('com.google.android.gms:play-services-gcm:10.0.1') {
+        force = true;
+    }
+   ...
+}
+```
 
 #### My App throws FCM function undefined error
 There seems to be link issue with rnpm. Make sure that there is `new FIRMessagingPackage(),` in your `Application.java` file
