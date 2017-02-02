@@ -16,12 +16,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.util.Patterns;
 import android.content.SharedPreferences;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.HttpURLConnection;
 
 public class FIRLocalMessagingHelper {
     private static final long DEFAULT_VIBRATION = 300L;
@@ -108,13 +112,18 @@ public class FIRLocalMessagingHelper {
             notification.setSmallIcon(smallIconResId);
 
             //large icon
-            String largeIcon = bundle.getString("large-icon");
-            if(largeIcon != null){
-                int largeIconResId = res.getIdentifier(largeIcon, "mipmap", packageName);
-                Bitmap largeIconBitmap = BitmapFactory.decodeResource(res, largeIconResId);
+            String largeIcon = bundle.getString("large_icon");
+            if(largeIcon != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
+                if (largeIcon.startsWith("http://") || largeIcon.startsWith("https://")) {
+                    Bitmap bitmap = getBitmapFromURL(largeIcon);
+                    notification.setLargeIcon(bitmap);
+                } else {
+                    int largeIconResId = res.getIdentifier(largeIcon, "mipmap", packageName);
+                    Bitmap largeIconBitmap = BitmapFactory.decodeResource(res, largeIconResId);
 
-                if (largeIconResId != 0 && (largeIcon != null || android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)) {
-                    notification.setLargeIcon(largeIconBitmap);
+                    if (largeIconResId != 0) {
+                        notification.setLargeIcon(largeIconBitmap);
+                    }
                 }
             }
 
@@ -125,8 +134,13 @@ public class FIRLocalMessagingHelper {
             }
 
             //sound
-            if (bundle.containsKey("sound")) {
-                int soundResourceId = res.getIdentifier(bundle.getString("sound"), "raw", packageName);
+            String soundName = bundle.getString("sound", "default");
+            if (!soundName.equalsIgnoreCase("default")) {
+                int soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                if(soundResourceId == 0){
+                    soundName = soundName.substring(0, soundName.lastIndexOf('.'));
+                    soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                }
                 notification.setSound(Uri.parse("android.resource://" + packageName + "/" + soundResourceId));
             }
 
@@ -253,24 +267,13 @@ public class FIRLocalMessagingHelper {
     }
 
     public void cancelLocalNotification(String notificationId) {
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.cancel(notificationId.hashCode());
-
         cancelAlarm(notificationId);
-
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(notificationId);
         editor.apply();
     }
 
     public void cancelAllLocalNotifications() {
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.cancelAll();
-
         java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
@@ -278,6 +281,16 @@ public class FIRLocalMessagingHelper {
         }
         editor.clear();
         editor.apply();
+    }
+
+    public void removeDeliveredNotification(String notificationId){
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(notificationId.hashCode());
+    }
+
+    public void removeAllDeliveredNotifications(){
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
     public void cancelAlarm(String notificationId) {
@@ -303,5 +316,19 @@ public class FIRLocalMessagingHelper {
 
     public void setApplicationForeground(boolean foreground){
         mIsForeground = foreground;
+    }
+
+    public Bitmap getBitmapFromURL(String strURL) {
+        try {
+            URL url = new URL(strURL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

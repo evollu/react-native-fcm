@@ -1,12 +1,13 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## NOTE: 
-- If you are running RN < 0.30.0, you need to use react-native-fcm@1.0.15
-- If you are running RN < 0.33.0, you need to user react-native-fcm@1.1.0
-- Otherwise use latest v2 and use XCode 8 and latest Firebase SDK (iOS 3.6.0)
-- local notification is only available in V2
+## NOTE:
+- for latest RN, use latest
+- for RN < 0.40.0, use v2.5.6
+- for RN < 0.33.0, you need to user react-native-fcm@1.1.0
+- for RN < 0.30.0, you need to use react-native-fcm@1.0.15
+- local notification is not only available in V1
 
-- @antoinerousseau has a working project setup so you can check if there is issue https://github.com/antoinerousseau/tribeez
+- An example working project is available at: https://github.com/evollu/react-native-fcm/tree/master/Examples/simple-fcm-client
 
 ## Installation
 
@@ -22,7 +23,7 @@
 +   classpath 'com.google.gms:google-services:3.0.0'
 ```
 
-- Edit `android/app/build.gradle`:
+- Edit `android/app/build.gradle`. Add at the bottom of the file:
 ```diff
   apply plugin: "com.android.application"
 + apply plugin: 'com.google.gms.google-services'
@@ -48,6 +49,17 @@
 +   </service>
 
     ...
+```
+
+- Edit `{YOUR_MAIN_PROJECT}/app/build.gradle`:
+```diff
+ dependencies {
+     compile project(':react-native-fcm')
++    compile 'com.google.firebase:firebase-core:10.0.1' //this decides your firebase SDK version
+     compile fileTree(dir: "libs", include: ["*.jar"])
+     compile "com.android.support:appcompat-v7:23.0.1"
+     compile "com.facebook.react:react-native:+"  // From node_modules
+ }
 ```
 
 ### Config for notification and `click_action` in Android
@@ -151,10 +163,14 @@ uncomment the "use_frameworks!" line in the podfile.
 
 ### Non Cocoapod approach
 
-1. Download the Firebase SDK framework from [Integrate without CocoaPods](https://firebase.google.com/docs/ios/setup#frameworks)
+1. Download the Firebase SDK framework from [Integrate without CocoaPods](https://firebase.google.com/docs/ios/setup#frameworks).
+- Import libraries, add Capabilities (background running and push notification), upload APNS and etc etc etc...
 2. Follow the `README` to link frameworks (Analytics+Messaging)
 
 ### Shared steps
+Make sure you have certificates setup by following
+https://firebase.google.com/docs/cloud-messaging/ios/certs
+
 Edit `AppDelegate.h`:
 ```diff
 + @import UserNotifications;
@@ -172,59 +188,51 @@ Edit `AppDelegate.m`:
   {
   //...
 +   [FIRApp configure];
-+   #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 +   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
-+   #endif
-  }
-
-+ #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
++ }
++
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 + {
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.request.content.userInfo];
-+     if([[notification.request.content.userInfo valueForKey:@"show_in_foreground"] isEqual:@YES]){
-+     completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
-+   }else{
-+     completionHandler(UNNotificationPresentationOptionNone);
-+   }
-
++   [RNFIRMessaging willPresentNotification:notification withCompletionHandler:completionHandler];
 + }
-
++
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
 + {
-+     NSDictionary* userInfo = [[NSMutableDictionary alloc] initWithDictionary: response.notification.request.content.userInfo];
-+   [userInfo setValue:@YES forKey:@"opened_from_tray"];
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
++   [RNFIRMessaging didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
 + }
-+ #else
++
 + //You can skip this method if you don't want to use local notification
 + -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self + userInfo:notification.userInfo];
++   [RNFIRMessaging didReceiveLocalNotification:notification];
 + }
-+ #endif
-+ 
++
 + - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
-+   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
-+   completionHandler(UIBackgroundFetchResultNoData);
++   [RNFIRMessaging didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 + }
 ```
+
+### Xcode post installation steps
+- Select your project **Capabilities** and enable **Keychan Sharing** and *Background Modes* > **Remote notifications**.
+
+- In Xcode menu bar, select *Product* > *Scheme* > **Manage schemes**. Select your project name Scheme then click on the minus sign **―** in the bottom left corner, then click on the plus sign **+** and rebuild your project scheme.
 
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
- 
+
 ## Setup Local Notifications
 NOTE: local notification does NOT have any dependency on FCM library but you still need to include Firebase to compile. If there are enough demand to use this functionality alone, I will separate it out into another repo
 
 ### IOS
 No change required
- 
+
 ### Android
 Edit AndroidManifest.xml
 ```diff
   <uses-permission android:name="android.permission.INTERNET" />
 + <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 + <uses-permission android:name="android.permission.VIBRATE" />
- 
+
   <application
 +      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
 +      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
@@ -236,14 +244,14 @@ Edit AndroidManifest.xml
 +          </intent-filter>
 +      </receiver>
   </application>
-``` 
+```
 NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenting local notifications. `com.evollu.react.fcm.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
 
 
 ## Usage
 
 ```javascript
-import FCM from 'react-native-fcm';
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 
 class App extends Component {
     componentDidMount() {
@@ -252,7 +260,7 @@ class App extends Component {
             console.log(token)
             // store fcm token in your server
         });
-        this.notificationUnsubscribe = FCM.on('notification', (notif) => {
+        this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
             // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
             if(notif.local_notification){
               //this is a local notification
@@ -260,20 +268,40 @@ class App extends Component {
             if(notif.opened_from_tray){
               //app is open/resumed because user clicked banner
             }
+            await someAsyncCall();
+            
+            if(Platform.OS ==='ios'){
+              //optional
+              //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link. 
+              //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
+              //notif._notificationType is available for iOS platfrom
+              switch(notif._notificationType){
+                case NotificationType.Remote:
+                  notif.finish(RemoteNotificationResult.NewData) //other types available: RemoteNotificationResult.NewData, RemoteNotificationResult.ResultFailed
+                  break;
+                case NotificationType.NotificationResponse:
+                  notif.finish();
+                  break;
+                case NotificationType.WillPresent:
+                  notif.finish(WillPresentNotificationResult.All) //other types available: WillPresentNotificationResult.None
+                  break;
+              }
+            }
         });
-        this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
+        this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
             console.log(token)
             // fcm token may not be available on first load, catch it here
         });
     }
 
     componentWillUnmount() {
-        // prevent leaking
-        this.refreshUnsubscribe();
-        this.notificationUnsubscribe();
+        // stop listening for events
+        this.notificationListener.remove();
+        this.refreshTokenListener.remove();
     }
- 
+
     otherMethods(){
+
         FCM.subscribeToTopic('/topics/foo-bar');
         FCM.unsubscribeFromTopic('/topics/foo-bar');
         FCM.getInitialNotification().then(notif=>console.log(notif));
@@ -289,7 +317,7 @@ class App extends Component {
             ticker: "My Notification Ticker",                   // Android only
             auto_cancel: true,                                  // Android only (default true)
             large_icon: "ic_launcher",                           // Android only
-            icon: "ic_notification",                            // as FCM payload
+            icon: "ic_launcher",                                // as FCM payload, you can relace this with custom icon you put in mipmap
             big_text: "Show when notification is expanded",     // Android only
             sub_text: "This is a subText",                      // Android only
             color: "red",                                       // Android only
@@ -300,7 +328,7 @@ class App extends Component {
             lights: true,                                       // Android only, LED blinking (default false)
             show_in_foreground                                  // notification when app is in foreground (local & remote)
         });
- 
+
         FCM.scheduleLocalNotification({
             fire_date: new Date().getTime(),      //RN's converter is used, accept epoch time and whatever that converter supports
             id: "UNIQ_ID_STRING",    //REQUIRED! this is what you use to lookup and delete notification. In android notification with same ID will override each other
@@ -309,17 +337,51 @@ class App extends Component {
         })
 
         FCM.getScheduledLocalNotifications().then(notif=>console.log(notif));
-        FCM.cancelLocalNotification("UNIQ_ID_STRING");
-        FCM.cancelAllLocalNotifications();
-        FCM.setBadgeNumber();
-        FCM.getBadgeNumber().then(number=>console.log(number));
+
+        //these clears notification from notification center/tray
+        FCM.removeAllDeliveredNotifications()
+        FCM.removeDeliveredNotification("UNIQ_ID_STRING")
+
+        //these removes future local notifications
+        FCM.cancelAllLocalNotifications()
+        FCM.cancelLocalNotification("UNIQ_ID_STRING")
+
+        FCM.setBadgeNumber(1);                                       // iOS only and there's no way to set it in Android, yet.
+        FCM.getBadgeNumber().then(number=>console.log(number));     // iOS only and there's no way to get it in Android, yet.
         FCM.send('984XXXXXXXXX', {
-          my_custom_data_1: 'my_custom_field_value_1', 
+          my_custom_data_1: 'my_custom_field_value_1',
           my_custom_data_2: 'my_custom_field_value_2'
         });
     }
 }
 ```
+
+### Build custom push notification for Android
+Firebase android misses important feature of android notification like `group`, `priority` and etc. As a work around you can send data message (no `notification` payload at all) and this repo will build a local notification for you. If you pass `custom_notification` in the payload, the repo will treat the content as a local notification config and shows immediately.
+
+NOTE: By using this work around, you will have to send different types of payload for iOS and Android devices because custom_notification isn't supported on iOS
+
+Example of payload that is sent to FCM server:
+```
+{
+  "to":"FCM_TOKEN",
+  "data": {
+    "type":"MEASURE_CHANGE",
+    "custom_notification": {
+      "body": "test body",
+      "title": "test title",
+      "color":"#00ACD4",
+      "priority":"high",
+      "icon":"ic_notif",
+      "group": "GROUP",
+      "id": "id",
+      "show_in_foreground": true
+    }
+  }
+}
+```
+
+Check local notification guide below for configuration.
 
 ### Behaviour when sending `notification` and `data` payload through GCM
 - When app is not running and user clicks notification, notification data will be passed into `FCM.getInitialNotification` event
@@ -351,7 +413,7 @@ class App extends Component {
     ```
 
     and event callback will receive as:
-    
+
     - Android
       ```json
       {
@@ -360,7 +422,7 @@ class App extends Component {
         "extra": "juice"
       }
       ```
-    
+
     - iOS
       ```json
       {
@@ -380,7 +442,7 @@ If your app server implements the [XMPP Connection Server](https://firebase.goog
 
 ```javascript
 FCM.send('984XXXXXXXXX', {
-  my_custom_data_1: 'my_custom_field_value_1', 
+  my_custom_data_1: 'my_custom_field_value_1',
   my_custom_data_2: 'my_custom_field_value_2'
 });
 ```
@@ -396,13 +458,25 @@ Yes there are `react-native-push-notification` and `react-native-system-notifica
 - The PushNotificationIOS by react native team is still missing features that recurring, so we are adding it here
 
 #### My Android build is failing
-Try update your SDK and google play service
+Try update your SDK and google play service. If you are having multiple plugins requiring different version of play-service sdk, use force to lock in version
+```
+dependencies {
+    ...
+    compile ('com.android.support:appcompat-v7:25.0.1') {
+        exclude group: 'com.google.android', module: 'support-v4'
+    }
+    compile ('com.google.android.gms:play-services-gcm:10.0.1') {
+        force = true;
+    }
+   ...
+}
+```
 
 #### My App throws FCM function undefined error
 There seems to be link issue with rnpm. Make sure that there is `new FIRMessagingPackage(),` in your `Application.java` file
 
-#### I can't get notification when app is killed
-If you send notification with `data` only, you can only get the data message when app is in foreground or background. Killed app doesn't trigger `FCMNotificationReceived`. Use `notification` in the payload instead.
+#### I can't get notification in iOS emulator
+Remote notification can't reach iOS emulator since it can't fetch APNS token. Use real device.
 
 #### App running in background doesn't trigger `FCMNotificationReceived` when receiving hybrid notification [Android]
 These is [an issue opened for that](https://github.com/google/gcm/issues/63). Behavior is not consistent between 2 platforms
@@ -429,8 +503,8 @@ search for `compile "com.google.android.gms` in android and see who specifies sp
 Check open from tray flag in notification. It will be either 0 or 1 for iOS and undefined or 1 for android. I decide for iOS based on [this](http://stackoverflow.com/questions/20569201/remote-notification-method-called-twice), and for android I set it if notification is triggered by intent change.
 
 #### Android notification doesn't vibrate/show head-up display etc
-All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline. If you need these features now, send notification with `data` only and creating notification locally is the only way.
-Or you can send `data` using FCM and build a local notification
+All available features are [here](https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support). FCM may add more support in the future but there is no timeline.
+In the mean time, you can pass "custom_notification" in a data message. This repo will show a local notification for you so you can set priority etc
 
 #### How do I do xxx with FCM?
 check out [official docs and see if they support](https://firebase.google.com/docs/cloud-messaging/concept-options)
@@ -456,10 +530,13 @@ It is up to you! FCM is just a bridging library that passes notification into ja
 
 #### I want to show notification when app is in foreground
 Use `show_in_foreground` attribute to tell app to show banner even if the app is in foreground.
-Warning: foreground banner won't show in android for remote notification due to limitation of FCM SDK. However you can create a local notification yourself. A pull is welcome to fix this.
+NOTE: this flag doesn't work for Android push notification, use `custom_notification` to achieve this.
+
+#### Do I need to handle APNS token registration?
+No. Method swizzling in Firebase Cloud Messaging handles this unless you turn that off. Then you are on your own to implement the handling. Check this link https://firebase.google.com/docs/cloud-messaging/ios/client
 
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
- 
+
 #### Credits
 Local notification implementation is inspired by react-native-push-notification by zo0r
