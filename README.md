@@ -36,7 +36,7 @@
     ...
     android:theme="@style/AppTheme">
 
-+   <service android:name="com.evollu.react.fcm.MessagingService">
++   <service android:name="com.evollu.react.fcm.MessagingService" android:enabled="true" android:exported="true">
 +     <intent-filter>
 +       <action android:name="com.google.firebase.MESSAGING_EVENT"/>
 +     </intent-filter>
