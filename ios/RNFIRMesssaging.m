@@ -148,7 +148,7 @@ RCT_EXPORT_MODULE()
 + (void)didReceiveLocalNotification:(UILocalNotification *)notification {
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: notification.userInfo];
   [data setValue:@"local_notification" forKey:@"_notificationType"];
-  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:data];
+  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data}];
 }
 
 + (void)didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(nonnull RCTNotificationResponseCallback)completionHandler
