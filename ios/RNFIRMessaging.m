@@ -156,6 +156,9 @@ RCT_EXPORT_MODULE()
   NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: response.notification.request.content.userInfo];
   [data setValue:@"notification_response" forKey:@"_notificationType"];
   [data setValue:@YES forKey:@"opened_from_tray"];
+  if (response.actionIdentifier) {
+      [data setValue:response.actionIdentifier forKey:@"action_identifier"];
+  }
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
 
