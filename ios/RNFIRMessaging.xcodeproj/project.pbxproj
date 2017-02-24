@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3AD1DC2B1CFA802F008C092E /* RNFIRMesssaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD1DC2A1CFA802F008C092E /* RNFIRMesssaging.m */; };
+		3AD1DC2B1CFA802F008C092E /* RNFIRMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD1DC2A1CFA802F008C092E /* RNFIRMessaging.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,7 +25,7 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNFIRMessaging.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AD1DC291CFA802F008C092E /* RNFIRMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNFIRMessaging.h; sourceTree = "<group>"; };
-		3AD1DC2A1CFA802F008C092E /* RNFIRMesssaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNFIRMesssaging.m; sourceTree = "<group>"; };
+		3AD1DC2A1CFA802F008C092E /* RNFIRMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNFIRMessaging.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,7 @@
 			isa = PBXGroup;
 			children = (
 				3AD1DC291CFA802F008C092E /* RNFIRMessaging.h */,
-				3AD1DC2A1CFA802F008C092E /* RNFIRMesssaging.m */,
+				3AD1DC2A1CFA802F008C092E /* RNFIRMessaging.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			indentWidth = 2;
@@ -114,7 +114,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AD1DC2B1CFA802F008C092E /* RNFIRMesssaging.m in Sources */,
+				3AD1DC2B1CFA802F008C092E /* RNFIRMessaging.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
