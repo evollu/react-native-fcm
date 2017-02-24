@@ -535,6 +535,9 @@ NOTE: this flag doesn't work for Android push notification, use `custom_notifica
 #### Do I need to handle APNS token registration?
 No. Method swizzling in Firebase Cloud Messaging handles this unless you turn that off. Then you are on your own to implement the handling. Check this link https://firebase.google.com/docs/cloud-messaging/ios/client
 
+#### I want to add actions in iOS notification
+Check this https://github.com/evollu/react-native-fcm/issues/325
+
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
 
