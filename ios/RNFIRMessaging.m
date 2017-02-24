@@ -157,7 +157,7 @@ RCT_EXPORT_MODULE()
   [data setValue:@"notification_response" forKey:@"_notificationType"];
   [data setValue:@YES forKey:@"opened_from_tray"];
   if (response.actionIdentifier) {
-      [data setValue:response.actionIdentifier forKey:@"action_identifier"];
+      [data setValue:response.actionIdentifier forKey:@"_actionIdentifier"];
   }
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
