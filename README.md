@@ -384,7 +384,7 @@ Example of payload that is sent to FCM server:
 Check local notification guide below for configuration.
 
 ### Behaviour when sending `notification` and `data` payload through GCM
-- When user clicks notification to ** launch ** the application, you can get that notification by calling `FCM.getInitialNotification`. (NOTE: reloading javascript or resuming from background won't change the value)
+- When user clicks notification to **launch** the application, you can get that notification by calling `FCM.getInitialNotification`. (NOTE: reloading javascript or resuming from background won't change the value)
 
 - When app is running in background (the tricky one, I strongly suggest you try it out yourself)
  - IOS will receive notificaton from `FCMNotificationReceived` event
