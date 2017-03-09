@@ -3,7 +3,7 @@
 ## NOTE:
 - for latest RN, use latest
 - for RN < 0.40.0, use v2.5.6
-- for RN < 0.33.0, you need to user react-native-fcm@1.1.0
+- for RN < 0.33.0, you need to use react-native-fcm@1.1.0
 - for RN < 0.30.0, you need to use react-native-fcm@1.0.15
 - local notification is not only available in V1
 
