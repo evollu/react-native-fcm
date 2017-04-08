@@ -193,6 +193,11 @@ Edit `AppDelegate.m`:
  }
  
 +
+// Required to register for notifications
++ - (void)application:(__unused UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
++ {
++   [RNFIRMessaging didRegisterUserNotificationSettings:notificationSettings];
++ }
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 + {
 +   [RNFIRMessaging willPresentNotification:notification withCompletionHandler:completionHandler];

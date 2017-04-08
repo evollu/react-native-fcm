@@ -14,13 +14,15 @@ import {
 
 import PushController from "./PushController";
 import firebaseClient from  "./FirebaseClient";
+import FCM from "react-native-fcm";
 
 export default class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      token: ""
+      token: "",
+      requestStatus: "pending"
     }
   }
 
@@ -31,6 +33,8 @@ export default class App extends Component {
       <View style={styles.container}>
         <PushController
           onChangeToken={token => this.setState({token: token || ""})}
+          onPermissionRequest={success =>
+            this.setState({requestStatus: success ? "success" : "failed"})}
         />
         <Text style={styles.welcome}>
           Welcome to Simple Fcm Client!
@@ -39,6 +43,17 @@ export default class App extends Component {
         <Text style={styles.instructions}>
           Token: {this.state.token}
         </Text>
+        
+        <Text style={styles.instructions}>
+          Request status: {this.state.requestStatus}
+        </Text>
+        <TouchableOpacity onPress={() => {
+            FCM.requestPermissions()
+              .catch(() => this.setState({requestStatus: "failed"}))
+              .then(({alert}) => this.setState({requestStatus: alert ? "success" : "failed"}))
+        }} style={styles.button}>
+          <Text style={styles.buttonText}>Request permission</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={() => firebaseClient.sendNotification(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Notification</Text>

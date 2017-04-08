@@ -19,6 +19,8 @@
 #endif
 
 NSString *const FCMNotificationReceived = @"FCMNotificationReceived";
+NSString *const RNFIRErrorUnableToRequestPermissions = @"E_UNABLE_TO_REQUEST_PERMISSIONS";
+NSString *const RNFIRRegisterUserNotificationSettings = @"RegisterUserNotificationSettings";
 
 @implementation RCTConvert (NSCalendarUnit)
 
@@ -133,6 +135,9 @@ RCT_ENUM_CONVERTER(UNNotificationPresentationOptions, (@{
 @end
 
 @implementation RNFIRMessaging
+{
+  RCTPromiseResolveBlock _requestPermissionsResolveBlock;
+}
 
 RCT_EXPORT_MODULE()
 
@@ -169,9 +174,43 @@ RCT_EXPORT_MODULE()
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
 
++ (void)didRegisterUserNotificationSettings:(__unused UIUserNotificationSettings *)notificationSettings
+{
+  if ([UIApplication instancesRespondToSelector:@selector(registerForRemoteNotifications)]) {
+    [RCTSharedApplication() registerForRemoteNotifications];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RNFIRRegisterUserNotificationSettings
+                                                        object:self
+                                                      userInfo:@{@"notificationSettings": notificationSettings}];
+  }
+}
+
 - (void)dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)startObservingRegistrationNotifications
+{
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(handleRegisterUserNotificationSettings:)
+                                               name:RNFIRRegisterUserNotificationSettings
+                                             object:nil];
+}
+- (void)handleRegisterUserNotificationSettings:(NSNotification *)notification
+{
+  if (_requestPermissionsResolveBlock == nil) {
+    return;
+  }
+
+  UIUserNotificationSettings *notificationSettings = notification.userInfo[@"notificationSettings"];
+  NSDictionary *notificationTypes = @{
+                                      @"alert": @((notificationSettings.types & UIUserNotificationTypeAlert) > 0),
+                                      @"sound": @((notificationSettings.types & UIUserNotificationTypeSound) > 0),
+                                      @"badge": @((notificationSettings.types & UIUserNotificationTypeBadge) > 0),
+                                      };
+  
+  _requestPermissionsResolveBlock(notificationTypes);
+  _requestPermissionsResolveBlock = nil;
 }
 
 - (void)setBridge:(RCTBridge *)bridge
@@ -247,39 +286,31 @@ RCT_EXPORT_METHOD(getFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
   [_bridge.eventDispatcher sendDeviceEventWithName:@"FCMTokenRefreshed" body:[[FIRInstanceID instanceID] token]];
 }
 
-RCT_EXPORT_METHOD(requestPermissions)
-{
+RCT_REMAP_METHOD(requestPermissions,
+                 resolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject){
   if (RCTRunningInAppExtension()) {
+    reject(RNFIRErrorUnableToRequestPermissions, nil, RCTErrorWithMessage(@"Requesting push notifications is currently unavailable in an app extension"));
+  }
+  if (_requestPermissionsResolveBlock != nil) {
+    RCTLogError(@"Cannot call requestPermissions twice before the first has returned.");
     return;
   }
-  if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
-    UIUserNotificationType allNotificationTypes =
-    (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-    UIApplication *app = RCTSharedApplication();
-    if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-      //iOS 8 or later
-      UIUserNotificationSettings *notificationSettings =
-      [UIUserNotificationSettings settingsForTypes:(NSUInteger)allNotificationTypes categories:nil];
-      [app registerUserNotificationSettings:notificationSettings];
-    } else {
-      //iOS 7 or below
-      [app registerForRemoteNotificationTypes:(NSUInteger)allNotificationTypes];
-    }
+  [self startObservingRegistrationNotifications];
+  _requestPermissionsResolveBlock = resolve;
+  UIUserNotificationType allNotificationTypes =
+  (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+  UIApplication *app = RCTSharedApplication();
+  if ([app respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+    //iOS 8 or later
+    UIUserNotificationSettings *notificationSettings =
+    [UIUserNotificationSettings settingsForTypes:(NSUInteger)allNotificationTypes categories:nil];
+    [app registerUserNotificationSettings:notificationSettings];
   } else {
-    // iOS 10 or later
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-    UNAuthorizationOptions authOptions =
-    UNAuthorizationOptionAlert
-    | UNAuthorizationOptionSound
-    | UNAuthorizationOptionBadge;
-    [[UNUserNotificationCenter currentNotificationCenter]
-     requestAuthorizationWithOptions:authOptions
-     completionHandler:^(BOOL granted, NSError * _Nullable error) {
-     }
-     ];
-#endif
+    //iOS 7 or below
+    [app registerForRemoteNotificationTypes:(NSUInteger)allNotificationTypes];
   }
-  
+
   [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
