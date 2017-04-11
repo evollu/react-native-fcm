@@ -189,7 +189,10 @@ Edit `AppDelegate.m`:
   //...
 +   [FIRApp configure];
 +   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
-+ }
+
+    return YES;
+ }
+ 
 +
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 + {
