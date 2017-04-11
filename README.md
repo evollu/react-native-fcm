@@ -215,7 +215,10 @@ Edit `AppDelegate.m`:
 ```
 
 ### Xcode post installation steps
-- Select your project **Capabilities** and enable **Keychan Sharing** and *Background Modes* > **Remote notifications**.
+- Select your project **Capabilities** and enable:
+  - **Push Notifications**
+  - **Keychain Sharing** 
+  - *Background Modes* > **Remote notifications**.
 
 - In Xcode menu bar, select *Product* > *Scheme* > **Manage schemes**. Select your project name Scheme then click on the minus sign **―** in the bottom left corner, then click on the plus sign **+** and rebuild your project scheme.
 
