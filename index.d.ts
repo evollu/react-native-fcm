@@ -24,7 +24,7 @@ declare module "react-native-fcm" {
         const Local = "local_notification";
     }
 
-    interface Subscription {
+    export interface Subscription {
         remove(): void;
     }
 
