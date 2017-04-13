@@ -30,7 +30,6 @@ declare module "react-native-fcm" {
         from: string;
         notification: {
             body: string;
-            e: string;
             icon: string;
         };
         _notificationType: string;
