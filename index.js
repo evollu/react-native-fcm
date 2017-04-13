@@ -49,6 +49,9 @@ FCM.scheduleLocalNotification = function(details) {
     if (!details.id) {
         throw new Error("id is required for scheduled notification");
     }
+    if (!details.fire_date) {
+        throw new Error("fire_date is required for scheduled notification");
+    }
     details.local_notification = true;
     RNFIRMessaging.scheduleLocalNotification(details);
 };

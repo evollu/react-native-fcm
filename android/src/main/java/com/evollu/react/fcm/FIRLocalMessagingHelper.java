@@ -156,7 +156,7 @@ public class FIRLocalMessagingHelper {
 
             //vibrate
             if(bundle.containsKey("vibrate")){
-                long vibrate = bundle.getLong("vibrate", Math.round(bundle.getDouble("vibrate", bundle.getInt("vibrate"))));
+                long vibrate = Math.round(bundle.getDouble("vibrate", DEFAULT_VIBRATION));
                 if(vibrate > 0){
                     notification.setVibrate(new long[]{0, vibrate});
                 }else{
