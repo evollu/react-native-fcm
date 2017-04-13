@@ -24,6 +24,19 @@ declare module "react-native-fcm" {
         const Local = "local_notification";
     }
 
+    export interface Notification {
+        collapse_key: string;
+        opened_from_tray: boolean;
+        from: string;
+        notification: {
+            body: string;
+            e: string;
+            icon: string;
+        };
+        _notificationType: string;
+        finish(type?: string): void;
+    }
+
     export interface Subscription {
         remove(): void;
     }
@@ -32,11 +45,11 @@ declare module "react-native-fcm" {
         static requestPermissions(): void;
         static getFCMToken(): Promise<string>;
         static on(event: "FCMTokenRefreshed", handler: (token: string) => void): Subscription;
-        static on(event: "FCMNotificationReceived", handler: (notification: any) => void): Subscription;
+        static on(event: "FCMNotificationReceived", handler: (notification: Notification) => void): Subscription;
         static subscribeToTopic(topic: string): void;
         static unsubscribeFromTopic(topic: string): void;
         static getInitialNotification(): Promise<any>;
-        static presentLocalNotification(notification: any): void;
+        static presentLocalNotification(notification: Notification): void;
 
         static scheduleLocalNotification(schedule: any): void;
         static getScheduledLocalNotifications(): Promise<any>;
