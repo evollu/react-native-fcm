@@ -24,11 +24,12 @@ declare module "react-native-fcm" {
         const Local = "local_notification";
     }
 
-    export interface Notification {
+  export interface Notification {
         collapse_key: string;
         opened_from_tray: boolean;
         from: string;
         notification: {
+            title?: string
             body: string;
             icon: string;
         };
@@ -36,9 +37,20 @@ declare module "react-native-fcm" {
         finish(type?: string): void;
     }
 
-    export interface LocalNotification extends Notification{
+    export interface LocalNotification {
+        title?: string;
+        body: string;
+        icon?: string;
+        vibrate?: number;
+        sound?: boolean;
+        big_text?: string;
+        large_icon?: string;
+        priority?: string
+    }
+
+    export interface ScheduleLocalNotification extends LocalNotification{
         id: string;
-        fire_date: number;
+        fire_date: number
     }
 
     export interface Subscription {
