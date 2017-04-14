@@ -24,6 +24,35 @@ declare module "react-native-fcm" {
         const Local = "local_notification";
     }
 
+  export interface Notification {
+        collapse_key: string;
+        opened_from_tray: boolean;
+        from: string;
+        notification: {
+            title?: string
+            body: string;
+            icon: string;
+        };
+        _notificationType: string;
+        finish(type?: string): void;
+    }
+
+    export interface LocalNotification {
+        title?: string;
+        body: string;
+        icon?: string;
+        vibrate?: number;
+        sound?: boolean;
+        big_text?: string;
+        large_icon?: string;
+        priority?: string
+    }
+
+    export interface ScheduleLocalNotification extends LocalNotification{
+        id: string;
+        fire_date: number
+    }
+
     export interface Subscription {
         remove(): void;
     }
@@ -32,14 +61,14 @@ declare module "react-native-fcm" {
         static requestPermissions(): void;
         static getFCMToken(): Promise<string>;
         static on(event: "FCMTokenRefreshed", handler: (token: string) => void): Subscription;
-        static on(event: "FCMNotificationReceived", handler: (notification: any) => void): Subscription;
+        static on(event: "FCMNotificationReceived", handler: (notification: Notification) => void): Subscription;
         static subscribeToTopic(topic: string): void;
         static unsubscribeFromTopic(topic: string): void;
-        static getInitialNotification(): Promise<any>;
-        static presentLocalNotification(notification: any): void;
+        static getInitialNotification(): Promise<Notification>;
+        static presentLocalNotification(notification: LocalNotification): void;
 
-        static scheduleLocalNotification(schedule: any): void;
-        static getScheduledLocalNotifications(): Promise<any>;
+        static scheduleLocalNotification(schedule: LocalNotification): void;
+        static getScheduledLocalNotifications(): Promise<LocalNotification>;
 
         static removeAllDeliveredNotifications(): void;
         static removeDeliveredNotification(id: string): void;
