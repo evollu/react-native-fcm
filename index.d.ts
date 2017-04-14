@@ -36,6 +36,11 @@ declare module "react-native-fcm" {
         finish(type?: string): void;
     }
 
+    export interface LocalNotification extends Notification{
+        id: string;
+        fire_date: number;
+    }
+
     export interface Subscription {
         remove(): void;
     }
@@ -47,11 +52,11 @@ declare module "react-native-fcm" {
         static on(event: "FCMNotificationReceived", handler: (notification: Notification) => void): Subscription;
         static subscribeToTopic(topic: string): void;
         static unsubscribeFromTopic(topic: string): void;
-        static getInitialNotification(): Promise<any>;
-        static presentLocalNotification(notification: Notification): void;
+        static getInitialNotification(): Promise<Notification>;
+        static presentLocalNotification(notification: LocalNotification): void;
 
-        static scheduleLocalNotification(schedule: any): void;
-        static getScheduledLocalNotifications(): Promise<any>;
+        static scheduleLocalNotification(schedule: LocalNotification): void;
+        static getScheduledLocalNotifications(): Promise<LocalNotification>;
 
         static removeAllDeliveredNotifications(): void;
         static removeDeliveredNotification(id: string): void;
