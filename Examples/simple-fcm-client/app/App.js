@@ -9,7 +9,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  Clipboard
 } from 'react-native';
 
 import PushController from "./PushController";
@@ -20,12 +21,13 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      token: ""
+      token: "",
+      tokenCopyFeedback: ""
     }
   }
 
   render() {
-    let { token } = this.state;
+    let { token, tokenCopyFeedback } = this.state;
 
     return (
       <View style={styles.container}>
@@ -36,8 +38,12 @@ export default class App extends Component {
           Welcome to Simple Fcm Client!
         </Text>
 
-        <Text style={styles.instructions}>
+        <Text selectable={true} onPress={() => this.setClipboardContent(this.state.token)} style={styles.instructions}>
           Token: {this.state.token}
+        </Text>
+
+        <Text style={styles.feedback}>
+          {this.state.tokenCopyFeedback}
         </Text>
 
         <TouchableOpacity onPress={() => firebaseClient.sendNotification(token)} style={styles.button}>
@@ -53,6 +59,16 @@ export default class App extends Component {
         </TouchableOpacity>
       </View>
     );
+  }
+
+  setClipboardContent(text) {
+    Clipboard.setString(text);
+    this.setState({tokenCopyFeedback: "Token copied to clipboard."});
+    setTimeout(() => {this.clearTokenCopyFeedback()}, 2000);
+  }
+
+  clearTokenCopyFeedback() {
+    this.setState({tokenCopyFeedback: ""});
   }
 }
 
@@ -71,7 +87,12 @@ const styles = StyleSheet.create({
   instructions: {
     textAlign: 'center',
     color: '#333333',
-    marginBottom: 5,
+    marginBottom: 2,
+  },
+  feedback: {
+    textAlign: 'center',
+    color: '#996633',
+    marginBottom: 3,
   },
   button: {
     backgroundColor: "teal",
