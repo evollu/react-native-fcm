@@ -54,7 +54,7 @@
 - Edit `{YOUR_MAIN_PROJECT}/app/build.gradle`:
 ```diff
  dependencies {
-     compile project(':react-native-fcm')
++    compile project(':react-native-fcm')
 +    compile 'com.google.firebase:firebase-core:10.0.1' //this decides your firebase SDK version
      compile fileTree(dir: "libs", include: ["*.jar"])
      compile "com.android.support:appcompat-v7:23.0.1"
