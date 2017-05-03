@@ -2955,9 +2955,8 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
-react-native-fcm@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-fcm/-/react-native-fcm-6.0.2.tgz#432578deaf9ad0fa968424c1babb5563c68eaa7e"
+"react-native-fcm@file:../../":
+  version "6.2.0"
 
 react-native@^0.40.0:
   version "0.40.0"

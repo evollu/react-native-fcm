@@ -16,6 +16,7 @@ typedef void (^RCTNotificationResponseCallback)();
 @property (nonatomic, assign) bool connectedToFCM;
 
 #if !TARGET_OS_TV
++ (void)didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings;
 + (void)didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull RCTRemoteNotificationCallback)completionHandler;
 + (void)didReceiveLocalNotification:(nonnull UILocalNotification *)notification;
 + (void)didReceiveNotificationResponse:(nonnull UNNotificationResponse *)response withCompletionHandler:(nonnull RCTNotificationResponseCallback)completionHandler;
