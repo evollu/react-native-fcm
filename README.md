@@ -483,6 +483,10 @@ There seems to be link issue with rnpm. Make sure that there is `new FIRMessagin
 #### I can't get notification in iOS emulator
 Remote notification can't reach iOS emulator since it can't fetch APNS token. Use real device.
 
+#### I'm not getting notfication when app is in background
+1. Make sure you've uploaded APNS certificates to Firebase and test with Firebase's native example to make sure certs are correct
+2. Try simple payload first, sometimes notification doesn't show up because of empty body, wrong sound name etc.
+
 #### App running in background doesn't trigger `FCMNotificationReceived` when receiving hybrid notification [Android]
 These is [an issue opened for that](https://github.com/google/gcm/issues/63). Behavior is not consistent between 2 platforms
 
