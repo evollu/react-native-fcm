@@ -544,6 +544,9 @@ No. Method swizzling in Firebase Cloud Messaging handles this unless you turn th
 #### I want to add actions in iOS notification
 Check this https://github.com/evollu/react-native-fcm/issues/325
 
+#### React/RCTBridgeModule.h not found
+This is mostly caused by React Native upgrade. Here is a fix http://stackoverflow.com/questions/41477241/react-native-xcode-upgrade-and-now-rctconvert-h-not-found
+
 #### Some features are missing
 Issues and pull requests are welcome. Let's make this thing better!
 
