@@ -223,7 +223,9 @@ Edit `AppDelegate.m`:
 
 ### FCM config file
 
-In [firebase console](https://console.firebase.google.com/), you can get `google-services.json` file and place it in `android/app` directory and get `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
+In [firebase console](https://console.firebase.google.com/), you can:
+- for **Android**: download `google-services.json` file and place it in `android/app` directory 
+- for **iOS**: download `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
 
 ## Setup Local Notifications
 NOTE: local notification does NOT have any dependency on FCM library but you still need to include Firebase to compile. If there are enough demand to use this functionality alone, I will separate it out into another repo
