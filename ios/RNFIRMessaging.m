@@ -222,7 +222,7 @@ RCT_EXPORT_MODULE()
 
 - (void)disconnectFCM
 {
-  [[FIRMessaging messaging] shouldEstablishDirectChannel];
+  [[FIRMessaging messaging] disconnect];
   NSLog(@"Disconnected from FCM");
 }
 
