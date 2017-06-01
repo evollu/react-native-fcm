@@ -207,6 +207,10 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                     fcmData.putString("action", notification.getClickAction());
                 }
                 params.putMap("fcm", fcmData);
+                params.putString("collapse_key", message.getCollapseKey());
+                params.putString("from", message.getFrom());
+                params.putString("google.message_id", message.getMessageId());
+                params.putDouble("google.sent_time", message.getSentTime());
 
                 if(message.getData() != null){
                     Map<String, String> data = message.getData();
