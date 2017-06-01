@@ -1,10 +1,12 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## NOTE:
-- for latest RN, use latest
-- for RN < 0.40.0, use v2.5.6
-- for RN < 0.33.0, you need to use react-native-fcm@1.1.0
-- for RN < 0.30.0, you need to use react-native-fcm@1.0.15
+## NOTES:
+
+- The new FCM SDK v4.0.0 for iOS is [not yet supported](https://github.com/evollu/react-native-fcm/issues/422); please remain on v3 for now
+- for latest RN, use latest react-native-fcm
+- for RN < 0.40.0, use react-native-fcm@2.5.6
+- for RN < 0.33.0, use react-native-fcm@1.1.0
+- for RN < 0.30.0, use react-native-fcm@1.0.15
 - local notification is not only available in V1
 
 - An example working project is available at: https://github.com/evollu/react-native-fcm/tree/master/Examples/simple-fcm-client
