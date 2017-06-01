@@ -61,6 +61,13 @@
      compile "com.facebook.react:react-native:+"  // From node_modules
  }
 ```
+- Edit `android/app/settings.gradle`
+```diff
+  ...
++ include ':react-native-fcm'
++ project(':react-native-fcm').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fcm/android')
+  include ':app'
+```
 
 ### Config for notification and `click_action` in Android
 
