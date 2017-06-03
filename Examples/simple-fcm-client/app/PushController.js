@@ -56,6 +56,16 @@ export default class PushController extends Component {
       console.log("TOKEN (refreshUnsubscribe)", token);
       this.props.onChangeToken(token);
     });
+
+    // direct channel related methods are ios only
+    // directly channel is truned off in iOS by default, this method enables it
+    FCM.enableDirectChannel();
+    this.channelConnectionListener = FCM.on(FCMEvent.DirectChannelConnectionChanged, (data) => {
+      console.log('direct channel connected' + data);
+    });
+    setTimeout(function() {
+      FCM.isDirectChannelEstablished().then(d => console.log(d));
+    }, 1000);
   }
 
   showLocalNotification(notif) {

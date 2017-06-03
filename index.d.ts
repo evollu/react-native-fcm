@@ -1,9 +1,10 @@
 declare module "react-native-fcm" {
 
-    type FCMEventType = "FCMTokenRefreshed" | "FCMNotificationReceived";
+    type FCMEventType = "FCMTokenRefreshed" | "FCMNotificationReceived" | 'FCMDirectChannelConnectionChanged';
     export module FCMEvent {
         const RefreshToken = "FCMTokenRefreshed";
         const Notification = "FCMNotificationReceived";
+        const DirectChannelConnectionChanged: 'FCMDirectChannelConnectionChanged'
     }
 
     export module RemoteNotificationResult {
@@ -79,6 +80,10 @@ declare module "react-native-fcm" {
         static setBadgeNumber(badge: number): void;
         static getBadgeNumber(): Promise<number>;
         static send(id: string, data: any): void;
+
+        static enableDirectChannel(): void
+        static isDirectChannelEstablished(): Promise<boolean>
+        static getAPNSToken(): Promise<string>
     }
 
     export default FCM;
