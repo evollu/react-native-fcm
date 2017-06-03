@@ -48,34 +48,23 @@ export default class PushController extends Component {
                   notif.finish(WillPresentNotificationResult.All) //other types available: WillPresentNotificationResult.None
                   break;
               }
-            }
-      this.showLocalNotification(notif);
-    });
+      }
 
-    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, token => {
-      console.log("TOKEN (refreshUnsubscribe)", token);
-      this.props.onChangeToken(token);
-    });
+      this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, token => {
+        console.log("TOKEN (refreshUnsubscribe)", token);
+        this.props.onChangeToken(token);
+      });
 
-    // direct channel related methods are ios only
-    // directly channel is truned off in iOS by default, this method enables it
-    FCM.enableDirectChannel();
-    this.channelConnectionListener = FCM.on(FCMEvent.DirectChannelConnectionChanged, (data) => {
-      console.log('direct channel connected' + data);
-    });
-    setTimeout(function() {
-      FCM.isDirectChannelEstablished().then(d => console.log(d));
-    }, 1000);
-  }
-
-  showLocalNotification(notif) {
-    FCM.presentLocalNotification({
-      title: notif.title,
-      body: notif.body,
-      priority: "high",
-      click_action: notif.click_action,
-      show_in_foreground: true
-    });
+      // direct channel related methods are ios only
+      // directly channel is truned off in iOS by default, this method enables it
+      FCM.enableDirectChannel();
+      this.channelConnectionListener = FCM.on(FCMEvent.DirectChannelConnectionChanged, (data) => {
+        console.log('direct channel connected' + data);
+      });
+      setTimeout(function() {
+        FCM.isDirectChannelEstablished().then(d => console.log(d));
+      }, 1000);
+    })
   }
 
   componentWillUnmount() {
