@@ -2,12 +2,13 @@
 #import <UIKit/UIKit.h>
 
 #import <FirebaseCore/FIRApp.h>
+#import <FirebaseMessaging/FirebaseMessaging.h>
 
-#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
 @import UserNotifications;
 
-@interface RNFIRMessaging : NSObject <RCTBridgeModule>
+@interface RNFIRMessaging : RCTEventEmitter <RCTBridgeModule, FIRMessagingDelegate>
 
 typedef void (^RCTRemoteNotificationCallback)(UIBackgroundFetchResult result);
 typedef void (^RCTWillPresentNotificationCallback)(UNNotificationPresentationOptions result);
