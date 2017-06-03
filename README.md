@@ -2,7 +2,7 @@
 
 ## NOTES:
 
-- for iOS SDK < 4, use react-native-fcm@6.2.3
+- for iOS SDK < 4, use react-native-fcm@6.2.3 (v6.x is still compatible with Firebase SDK v4)
 - for latest RN, use latest react-native-fcm
 - for RN < 0.40.0, use react-native-fcm@2.5.6
 - for RN < 0.33.0, use react-native-fcm@1.1.0
