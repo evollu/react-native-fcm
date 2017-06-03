@@ -133,6 +133,28 @@ public class FIRLocalMessagingHelper {
                 notification.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
             }
 
+            //picture
+            String picture = bundle.getString("picture");
+            if(picture!=null){
+                NotificationCompat.BigPictureStyle bigPicture = new NotificationCompat.BigPictureStyle();
+
+                if (picture.startsWith("http://") || picture.startsWith("https://")) {
+                    Bitmap bitmap = getBitmapFromURL(picture);
+                    bigPicture.bigPicture(bitmap);
+                } else {
+                    int pictureResId = res.getIdentifier(picture, "mipmap", packageName);
+                    Bitmap pictureResIdBitmap = BitmapFactory.decodeResource(res, pictureResId);
+
+                    if (pictureResId != 0) {
+                        bigPicture.bigPicture(pictureResIdBitmap);
+                    }
+                }
+                bigPicture.setBigContentTitle(title);
+                bigPicture.setSummaryText(bundle.getString("body"));
+
+                notification.setStyle(bigPicture);
+            }
+
             //sound
             String soundName = bundle.getString("sound", "default");
             if (!soundName.equalsIgnoreCase("default")) {
