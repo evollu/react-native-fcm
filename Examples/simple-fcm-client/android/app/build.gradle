@@ -88,7 +88,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "fcm.simplefcmclient"
+        applicationId "com.google.firebase.quickstart.fcm"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

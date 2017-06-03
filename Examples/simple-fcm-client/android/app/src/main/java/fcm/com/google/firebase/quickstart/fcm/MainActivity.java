@@ -1,4 +1,4 @@
-package fcm.simplefcmclient;
+package com.google.firebase.quickstart.fcm;
 
 import com.facebook.react.ReactActivity;
 
