@@ -22,15 +22,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		3A6D62871E20430000D0D2C7 /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62801E20430000D0D2C7 /* FirebaseAnalytics.framework */; };
-		3A6D62881E20430000D0D2C7 /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62811E20430000D0D2C7 /* FirebaseCore.framework */; };
-		3A6D62891E20430000D0D2C7 /* FirebaseInstanceID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62821E20430000D0D2C7 /* FirebaseInstanceID.framework */; };
-		3A6D628A1E20430000D0D2C7 /* FirebaseMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62831E20430000D0D2C7 /* FirebaseMessaging.framework */; };
-		3A6D628B1E20430000D0D2C7 /* GoogleInterchangeUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62841E20430000D0D2C7 /* GoogleInterchangeUtilities.framework */; };
-		3A6D628C1E20430000D0D2C7 /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62851E20430000D0D2C7 /* GoogleSymbolUtilities.framework */; };
-		3A6D628D1E20430000D0D2C7 /* GoogleToolboxForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62861E20430000D0D2C7 /* GoogleToolboxForMac.framework */; };
 		3A6D62911E2044AB00D0D2C7 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62901E2044AB00D0D2C7 /* libz.tbd */; };
 		4339BFE81DAEE9D100F53B62 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4339BFE71DAEE9D100F53B62 /* GoogleService-Info.plist */; };
+		5FE70723D2AE04BF2D98342D /* libPods-SimpleFcmClientTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E8C044191FA88F1BCCF08BD /* libPods-SimpleFcmClientTests.a */; };
+		6976C617E52062E3EE272128 /* libPods-SimpleFcmClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A959965489E40CE19F2B06B4 /* libPods-SimpleFcmClient.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		FAE94A218EB64E38BF8D8E9B /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 692E216422234A4CB6A7A838 /* libRNFIRMessaging.a */; };
 /* End PBXBuildFile section */
@@ -223,6 +218,7 @@
 		00E356EE1AD99517003FC87E /* SimpleFcmClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimpleFcmClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* SimpleFcmClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SimpleFcmClientTests.m; sourceTree = "<group>"; };
+		0E8C044191FA88F1BCCF08BD /* libPods-SimpleFcmClientTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SimpleFcmClientTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SimpleFcmClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleFcmClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -233,23 +229,20 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SimpleFcmClient/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SimpleFcmClient/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		3A6D62801E20430000D0D2C7 /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
-		3A6D62811E20430000D0D2C7 /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = frameworks/FirebaseCore.framework; sourceTree = "<group>"; };
-		3A6D62821E20430000D0D2C7 /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseInstanceID.framework; path = frameworks/FirebaseInstanceID.framework; sourceTree = "<group>"; };
-		3A6D62831E20430000D0D2C7 /* FirebaseMessaging.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseMessaging.framework; path = frameworks/FirebaseMessaging.framework; sourceTree = "<group>"; };
-		3A6D62841E20430000D0D2C7 /* GoogleInterchangeUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleInterchangeUtilities.framework; path = frameworks/GoogleInterchangeUtilities.framework; sourceTree = "<group>"; };
-		3A6D62851E20430000D0D2C7 /* GoogleSymbolUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSymbolUtilities.framework; path = frameworks/GoogleSymbolUtilities.framework; sourceTree = "<group>"; };
-		3A6D62861E20430000D0D2C7 /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleToolboxForMac.framework; path = frameworks/GoogleToolboxForMac.framework; sourceTree = "<group>"; };
 		3A6D628E1E20449400D0D2C7 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		3A6D62901E2044AB00D0D2C7 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		4339BFE21DAEBB3500F53B62 /* Firebase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Firebase.h; sourceTree = "<group>"; };
 		4339BFE31DAEBB4800F53B62 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		4339BFE61DAED4D900F53B62 /* SimpleFcmClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SimpleFcmClient.entitlements; path = SimpleFcmClient/SimpleFcmClient.entitlements; sourceTree = "<group>"; };
 		4339BFE71DAEE9D100F53B62 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		55A6E80F734FA3F596B96C04 /* Pods-SimpleFcmClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SimpleFcmClientTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SimpleFcmClientTests/Pods-SimpleFcmClientTests.debug.xcconfig"; sourceTree = "<group>"; };
+		64204739CA77D9B1EB1F0788 /* Pods-SimpleFcmClientTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SimpleFcmClientTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SimpleFcmClientTests/Pods-SimpleFcmClientTests.release.xcconfig"; sourceTree = "<group>"; };
 		692E216422234A4CB6A7A838 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFIRMessaging.a; sourceTree = "<group>"; };
+		73B4AFC1AC5C6373F8074CBC /* Pods-SimpleFcmClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SimpleFcmClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SimpleFcmClient/Pods-SimpleFcmClient.debug.xcconfig"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		A959965489E40CE19F2B06B4 /* libPods-SimpleFcmClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SimpleFcmClient.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7DEB70C413E484CBFA6AC45 /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFIRMessaging.xcodeproj; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; };
+		CF6939675D5A4A68FBE567C0 /* Pods-SimpleFcmClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SimpleFcmClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-SimpleFcmClient/Pods-SimpleFcmClient.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,6 +251,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
+				5FE70723D2AE04BF2D98342D /* libPods-SimpleFcmClientTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,23 +261,17 @@
 			files = (
 				3A6D62911E2044AB00D0D2C7 /* libz.tbd in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
-				3A6D628B1E20430000D0D2C7 /* GoogleInterchangeUtilities.framework in Frameworks */,
-				3A6D62881E20430000D0D2C7 /* FirebaseCore.framework in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
-				3A6D628A1E20430000D0D2C7 /* FirebaseMessaging.framework in Frameworks */,
-				3A6D628C1E20430000D0D2C7 /* GoogleSymbolUtilities.framework in Frameworks */,
-				3A6D628D1E20430000D0D2C7 /* GoogleToolboxForMac.framework in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
-				3A6D62871E20430000D0D2C7 /* FirebaseAnalytics.framework in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
-				3A6D62891E20430000D0D2C7 /* FirebaseInstanceID.framework in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				FAE94A218EB64E38BF8D8E9B /* libRNFIRMessaging.a in Frameworks */,
+				6976C617E52062E3EE272128 /* libPods-SimpleFcmClient.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,7 +361,6 @@
 				4339BFE71DAEE9D100F53B62 /* GoogleService-Info.plist */,
 				4339BFE61DAED4D900F53B62 /* SimpleFcmClient.entitlements */,
 				4339BFE31DAEBB4800F53B62 /* module.modulemap */,
-				4339BFE21DAEBB3500F53B62 /* Firebase.h */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -413,13 +400,8 @@
 			children = (
 				3A6D62901E2044AB00D0D2C7 /* libz.tbd */,
 				3A6D628E1E20449400D0D2C7 /* libc++.tbd */,
-				3A6D62801E20430000D0D2C7 /* FirebaseAnalytics.framework */,
-				3A6D62811E20430000D0D2C7 /* FirebaseCore.framework */,
-				3A6D62821E20430000D0D2C7 /* FirebaseInstanceID.framework */,
-				3A6D62831E20430000D0D2C7 /* FirebaseMessaging.framework */,
-				3A6D62841E20430000D0D2C7 /* GoogleInterchangeUtilities.framework */,
-				3A6D62851E20430000D0D2C7 /* GoogleSymbolUtilities.framework */,
-				3A6D62861E20430000D0D2C7 /* GoogleToolboxForMac.framework */,
+				A959965489E40CE19F2B06B4 /* libPods-SimpleFcmClient.a */,
+				0E8C044191FA88F1BCCF08BD /* libPods-SimpleFcmClientTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -431,6 +413,17 @@
 				3A6D62571E20427F00D0D2C7 /* libRCTLinking-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7E63D0154B6803F90ADF7C78 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				73B4AFC1AC5C6373F8074CBC /* Pods-SimpleFcmClient.debug.xcconfig */,
+				CF6939675D5A4A68FBE567C0 /* Pods-SimpleFcmClient.release.xcconfig */,
+				55A6E80F734FA3F596B96C04 /* Pods-SimpleFcmClientTests.debug.xcconfig */,
+				64204739CA77D9B1EB1F0788 /* Pods-SimpleFcmClientTests.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -468,6 +461,7 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* SimpleFcmClientTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
+				7E63D0154B6803F90ADF7C78 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -489,9 +483,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "SimpleFcmClientTests" */;
 			buildPhases = (
+				53F91F9909896C758F1B39D7 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				635872D924B63A1432428C56 /* [CP] Embed Pods Frameworks */,
+				867C784EBDC6B6879CC23C43 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -507,10 +504,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "SimpleFcmClient" */;
 			buildPhases = (
+				F9E9BD9B8FD54DB4CDC0B27B /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				5FF00A260C7092D33989ED96 /* [CP] Embed Pods Frameworks */,
+				A9113A171CB85E9FE58BA52C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -820,6 +820,96 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh";
 		};
+		53F91F9909896C758F1B39D7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		5FF00A260C7092D33989ED96 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SimpleFcmClient/Pods-SimpleFcmClient-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		635872D924B63A1432428C56 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SimpleFcmClientTests/Pods-SimpleFcmClientTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		867C784EBDC6B6879CC23C43 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SimpleFcmClientTests/Pods-SimpleFcmClientTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A9113A171CB85E9FE58BA52C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SimpleFcmClient/Pods-SimpleFcmClient-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9E9BD9B8FD54DB4CDC0B27B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -865,6 +955,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A6E80F734FA3F596B96C04 /* Pods-SimpleFcmClientTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 7GX5PDNNM3;
@@ -887,6 +978,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 64204739CA77D9B1EB1F0788 /* Pods-SimpleFcmClientTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -906,6 +998,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73B4AFC1AC5C6373F8074CBC /* Pods-SimpleFcmClient.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SimpleFcmClient/SimpleFcmClient.entitlements;
@@ -940,6 +1033,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CF6939675D5A4A68FBE567C0 /* Pods-SimpleFcmClient.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SimpleFcmClient/SimpleFcmClient.entitlements;

@@ -1,0 +1,1 @@
+../../../../FirebaseMessaging/Frameworks/FirebaseMessaging.framework/Headers/FIRMessaging.h

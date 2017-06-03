@@ -13,6 +13,8 @@ import {
   Clipboard
 } from 'react-native';
 
+import FCM from "react-native-fcm";
+
 import PushController from "./PushController";
 import firebaseClient from  "./FirebaseClient";
 
@@ -24,6 +26,15 @@ export default class App extends Component {
       token: "",
       tokenCopyFeedback: ""
     }
+  }
+
+  showLocalNotification() {
+    FCM.presentLocalNotification({
+      title: 'Hello',
+      body: 'Test Notification',
+      priority: "high",
+      show_in_foreground: true
+    });
   }
 
   render() {
@@ -56,6 +67,10 @@ export default class App extends Component {
 
         <TouchableOpacity onPress={() => firebaseClient.sendNotificationWithData(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Notification With Data</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => this.showLocalNotification()} style={styles.button}>
+          <Text style={styles.buttonText}>Send Local Notification</Text>
         </TouchableOpacity>
       </View>
     );

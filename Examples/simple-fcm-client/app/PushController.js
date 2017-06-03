@@ -74,8 +74,7 @@ export default class PushController extends Component {
       body: notif.body,
       priority: "high",
       click_action: notif.click_action,
-      show_in_foreground: true,
-      local: true
+      show_in_foreground: true
     });
   }
 
