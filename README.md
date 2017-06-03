@@ -2,7 +2,7 @@
 
 ## NOTES:
 
-- The new FCM SDK v4.0.0 for iOS is [not yet supported](https://github.com/evollu/react-native-fcm/issues/422); please remain on v3 for now
+- for iOS SDK < 4, use react-native-fcm@6.2.3
 - for latest RN, use latest react-native-fcm
 - for RN < 0.40.0, use react-native-fcm@2.5.6
 - for RN < 0.33.0, use react-native-fcm@1.1.0
