@@ -57,6 +57,7 @@
  dependencies {
 +    compile project(':react-native-fcm')
 +    compile 'com.google.firebase:firebase-core:10.0.1' //this decides your firebase SDK version
++    compile 'com.google.firebase:firebase-messaging:10.0.1' //this is needed for remote notifications
      compile fileTree(dir: "libs", include: ["*.jar"])
      compile "com.android.support:appcompat-v7:23.0.1"
      compile "com.facebook.react:react-native:+"  // From node_modules
