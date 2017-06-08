@@ -12,6 +12,8 @@
 
 ## Installation
 
+[![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 - Run `npm install react-native-fcm --save`
 - Run `react-native link react-native-fcm` (RN 0.29.1+, otherwise `rnpm link react-native-fcm`)
 
