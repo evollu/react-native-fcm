@@ -15,6 +15,16 @@
 - Run `npm install react-native-fcm --save`
 - Run `react-native link react-native-fcm` (RN 0.29.1+, otherwise `rnpm link react-native-fcm`)
 
+## Configure Firebase Console
+### FCM config file
+
+In [firebase console](https://console.firebase.google.com/), you can:
+- for **Android**: download `google-services.json` file and place it in `android/app` directory 
+- for **iOS**: download `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
+
+Make sure you have certificates setup by following
+https://firebase.google.com/docs/cloud-messaging/ios/certs
+
 ## Android Configuration
 
 - Edit `android/build.gradle`:
@@ -175,8 +185,6 @@ pod install Firebase/Messaging
 2. Follow the `README` to link frameworks (Analytics+Messaging)
 
 ### Shared steps
-Make sure you have certificates setup by following
-https://firebase.google.com/docs/cloud-messaging/ios/certs
 
 Edit `AppDelegate.h`:
 ```diff
@@ -221,19 +229,13 @@ Edit `AppDelegate.m`:
 + }
 ```
 
-### Xcode post installation steps
+### Add Capabilities
 - Select your project **Capabilities** and enable:
   - **Push Notifications**
   - **Keychain Sharing** 
   - *Background Modes* > **Remote notifications**.
 
 - In Xcode menu bar, select *Product* > *Scheme* > **Manage schemes**. Select your project name Scheme then click on the minus sign **―** in the bottom left corner, then click on the plus sign **+** and rebuild your project scheme.
-
-### FCM config file
-
-In [firebase console](https://console.firebase.google.com/), you can:
-- for **Android**: download `google-services.json` file and place it in `android/app` directory 
-- for **iOS**: download `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
 
 ## Setup Local Notifications
 NOTE: local notification does NOT have any dependency on FCM library but you still need to include Firebase to compile. If there are enough demand to use this functionality alone, I will separate it out into another repo
