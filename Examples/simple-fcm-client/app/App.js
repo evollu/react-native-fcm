@@ -28,11 +28,32 @@ export default class App extends Component {
     }
   }
 
+  componentDidMount(){
+    FCM.getInitialNotification().then(notif => {
+      this.setState({
+        initNotif: notif
+      })
+    });
+  }
+
   showLocalNotification() {
     FCM.presentLocalNotification({
       vibrate: 500,
       title: 'Hello',
       body: 'Test Notification',
+      priority: "high",
+      show_in_foreground: true,
+      picture: 'https://firebase.google.com/_static/af7ae4b3fc/images/firebase/lockup.png'
+    });
+  }
+
+  scheduleLocalNotification() {
+    FCM.scheduleLocalNotification({
+      id: 'testnotif',
+      fire_date: new Date().getTime()+5000,
+      vibrate: 500,
+      title: 'Hello',
+      body: 'Test Scheduled Notification',
       priority: "high",
       show_in_foreground: true,
       picture: 'https://firebase.google.com/_static/af7ae4b3fc/images/firebase/lockup.png'
@@ -49,6 +70,11 @@ export default class App extends Component {
         />
         <Text style={styles.welcome}>
           Welcome to Simple Fcm Client!
+        </Text>
+
+        <Text>
+          Init notif: {JSON.stringify(this.state.initNotif)}
+
         </Text>
 
         <Text selectable={true} onPress={() => this.setClipboardContent(this.state.token)} style={styles.instructions}>
@@ -73,6 +99,10 @@ export default class App extends Component {
 
         <TouchableOpacity onPress={() => this.showLocalNotification()} style={styles.button}>
           <Text style={styles.buttonText}>Send Local Notification</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => this.scheduleLocalNotification()} style={styles.button}>
+          <Text style={styles.buttonText}>Schedule Notification in 5s</Text>
         </TouchableOpacity>
       </View>
     );
