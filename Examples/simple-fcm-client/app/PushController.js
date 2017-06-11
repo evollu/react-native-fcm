@@ -18,10 +18,12 @@ export default class PushController extends Component {
       console.log("TOKEN (getFCMToken)", token);
       this.props.onChangeToken(token);
     });
-    
-    FCM.getAPNSToken().then(token => {
-      console.log("APNS TOKEN (getFCMToken)", token);
-    });
+
+    if(Platform.OS === 'ios'){
+      FCM.getAPNSToken().then(token => {
+        console.log("APNS TOKEN (getFCMToken)", token);
+      });
+    }
 
     FCM.getInitialNotification().then(notif => {
       console.log("INITIAL NOTIFICATION", notif)

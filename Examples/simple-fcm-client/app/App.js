@@ -30,6 +30,7 @@ export default class App extends Component {
 
   showLocalNotification() {
     FCM.presentLocalNotification({
+      vibrate: 500,
       title: 'Hello',
       body: 'Test Notification',
       priority: "high",
