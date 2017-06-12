@@ -383,7 +383,7 @@ RCT_EXPORT_METHOD(getScheduledLocalNotifications:(RCTPromiseResolveBlock)resolve
     }
 }
 
-RCT_EXPORT_METHOD(setBadgeNumber: (NSInteger*) number)
+RCT_EXPORT_METHOD(setBadgeNumber: (NSInteger) number)
 {
     [RCTSharedApplication() setApplicationIconBadgeNumber:number];
 }
