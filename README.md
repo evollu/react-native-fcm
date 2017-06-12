@@ -72,7 +72,7 @@ https://firebase.google.com/docs/cloud-messaging/ios/certs
      compile "com.facebook.react:react-native:+"  // From node_modules
  }
 ```
-- Edit `android/app/settings.gradle`
+- Edit `android/settings.gradle`
 ```diff
   ...
 + include ':react-native-fcm'
