@@ -29,7 +29,7 @@ export default class PushController extends Component {
       console.log("INITIAL NOTIFICATION", notif)
     });
 
-    this.notificationListner = FCM.on(FCMEvent.Notification, notif => {
+    this.notificationListener = FCM.on(FCMEvent.Notification, notif => {
       console.log("Notification", notif);
       if(notif.local_notification){
         return;
@@ -74,7 +74,7 @@ export default class PushController extends Component {
   }
 
   componentWillUnmount() {
-    this.notificationListner.remove();
+    this.notificationListener.remove();
     this.refreshTokenListener.remove();
   }
 
