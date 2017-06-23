@@ -41,16 +41,11 @@ public class FIRLocalMessagingHelper {
         sharedPreferences = (SharedPreferences) mContext.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
     }
 
-    public Class getMainActivityClass() {
+    public String getMainActivityClassName() {
         String packageName = mContext.getPackageName();
         Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
         String className = launchIntent.getComponent().getClassName();
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return className;
     }
 
     private AlarmManager getAlarmManager() {
@@ -59,8 +54,8 @@ public class FIRLocalMessagingHelper {
 
     public void sendNotification(Bundle bundle) {
         try {
-            Class intentClass = getMainActivityClass();
-            if (intentClass == null) {
+            String intentClassName = getMainActivityClassName();
+            if (intentClassName == null) {
                 return;
             }
 
@@ -197,7 +192,8 @@ public class FIRLocalMessagingHelper {
             mContext.sendOrderedBroadcast(i, null);
 
             if(!mIsForeground || bundle.getBoolean("show_in_foreground")){
-                Intent intent = new Intent(mContext, intentClass);
+                Intent intent = new Intent();
+                intent.setClassName(mContext, intentClassName);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtras(bundle);
                 intent.setAction(bundle.getString("click_action"));
@@ -232,8 +228,8 @@ public class FIRLocalMessagingHelper {
     }
 
     public void sendNotificationScheduled(Bundle bundle) {
-        Class intentClass = getMainActivityClass();
-        if (intentClass == null) {
+        String intentClassName = getMainActivityClassName();
+        if (intentClassName == null) {
             return;
         }
 
