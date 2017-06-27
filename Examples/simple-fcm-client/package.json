@@ -7,9 +7,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "firebase-admin": "^5.0.0",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.44.2",
-    "react-native-fcm": "^7.0.0"
+    "react-native-fcm": "^7.1.0"
   },
   "jest": {
     "preset": "jest-react-native"

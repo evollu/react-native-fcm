@@ -1,31 +1,33 @@
 import FirebaseConstants from './FirebaseConstants'
-// import * as admin from 'firebase-admin'
+import * as admin from 'firebase-admin'
 
-// const API_URL = 'https://fcm.googleapis.com/fcm/send'
+const API_URL = 'https://fcm.googleapis.com/fcm/send'
 
-// defaultApp = admin.initializeApp({
-//   credential: admin.credential.cert({
-//     projectId: 'fir-thing-2029b',
-//     clientEmail: 'pcgcloud@gmail.com',
-//     privateKey: '-----BEGIN PRIVATE KEY-----\nAIzaSyDWB9rvgmKT_RWQyMB2gVEMYURByJPj6f4\n-----END PRIVATE KEY-----\n'
-//   }),
-//   databaseURL: 'gs://fir-thing-2029b.appspot.com'
-// })
+var serviceAccount = require('path/to/serviceAccountKey.json')
 
-// console.log(defaultApp.name); // "[DEFAULT]"
+defaultApp = admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: 'fir-thing-2029b',
+    clientEmail: 'pcgcloud@gmail.com',
+    privateKey: '-----BEGIN PRIVATE KEY-----\nAIzaSyDWB9rvgmKT_RWQyMB2gVEMYURByJPj6f4\n-----END PRIVATE KEY-----\n'
+  }),
+  databaseURL: 'gs://fir-thing-2029b.appspot.com'
+})
 
-// // Retrieve services via the defaultApp variable...
-// var defaultAuth = defaultApp.auth()
-// var defaultDatabase = defaultApp.database()
+console.log(defaultApp.name); // "[DEFAULT]"
 
-// defaultAuth.auth().getUserByEmail('e.meek.s@pcgus.com')
-//   .then(function (userRecord) {
-//     // See the UserRecord reference doc for the contents of userRecord.
-//     console.log('Successfully fetched user data:', userRecord.toJSON())
-//   })
-//   .catch(function (error) {
-//     console.log('Error fetching user data:', error)
-//   })
+// Retrieve services via the defaultApp variable...
+var defaultAuth = defaultApp.auth()
+var defaultDatabase = defaultApp.database()
+
+defaultAuth.auth().getUserByEmail('e.meek.s@pcgus.com')
+  .then(function (userRecord) {
+    // See the UserRecord reference doc for the contents of userRecord.
+    console.log('Successfully fetched user data:', userRecord.toJSON())
+  })
+  .catch(function (error) {
+    console.log('Error fetching user data:', error)
+  })
 
 class FirebaseClient {
 
