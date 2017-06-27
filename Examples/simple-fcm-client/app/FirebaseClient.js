@@ -3,13 +3,93 @@ import FirebaseConstants from './FirebaseConstants'
 
 // const API_URL = 'https://fcm.googleapis.com/fcm/send'
 
-// defaultApp = admin.initializeApp({
+// const defaultApp = admin.initializeApp({
 //   credential: admin.credential.cert({
-//     projectId: 'fir-thing-2029b',
-//     clientEmail: 'pcgcloud@gmail.com',
-//     privateKey: '-----BEGIN PRIVATE KEY-----\nAIzaSyDWB9rvgmKT_RWQyMB2gVEMYURByJPj6f4\n-----END PRIVATE KEY-----\n'
-//   }),
-//   databaseURL: 'gs://fir-thing-2029b.appspot.com'
+//     'project_info': {
+//       'project_number': '724737413503',
+//       'firebase_url': 'https://fir-thing-2029b.firebaseio.com',
+//       'project_id': 'fir-thing-2029b',
+//       'storage_bucket': 'fir-thing-2029b.appspot.com'
+//     },
+//     'client': [
+//       {
+//         'client_info': {
+//           'mobilesdk_app_id': '1:724737413503:android:ddd9404b28cde600',
+//           'android_client_info': {
+//             'package_name': 'com.amazonaws.mobile'
+//           }
+//         },
+//         'oauth_client': [
+//           {
+//             'client_id': '724737413503-cualrn5j5vqmko4ac9ear9e2sc0eo7jq.apps.googleusercontent.com',
+//             'client_type': 3
+//           }
+//         ],
+//         'api_key': [
+//           {
+//             'current_key': 'AIzaSyBM3w-Nm36dXWhTk9HKaIk378H1ywo6w2M'
+//           }
+//         ],
+//         'services': {
+//           'analytics_service': {
+//             'status': 1
+//           },
+//           'appinvite_service': {
+//             'status': 1,
+//             'other_platform_oauth_client': []
+//           },
+//           'ads_service': {
+//             'status': 2
+//           }
+//         }
+//       },
+//       {
+//         'client_info': {
+//           'mobilesdk_app_id': '1:724737413503:android:5920de3503a2d18c',
+//           'android_client_info': {
+//             'package_name': 'com.google.firebase.quickstart.fcm'
+//           }
+//         },
+//         'oauth_client': [
+//           {
+//             'client_id': '724737413503-3va22siu8r2aad9s8kf1rrdi6bs4hdbn.apps.googleusercontent.com',
+//             'client_type': 1,
+//             'android_info': {
+//               'package_name': 'com.google.firebase.quickstart.fcm',
+//               'certificate_hash': '3c0d638f75d2ee82afd74a5377f4c2e532d34a6a'
+//             }
+//           },
+//           {
+//             'client_id': '724737413503-cualrn5j5vqmko4ac9ear9e2sc0eo7jq.apps.googleusercontent.com',
+//             'client_type': 3
+//           }
+//         ],
+//         'api_key': [
+//           {
+//             'current_key': 'AIzaSyBM3w-Nm36dXWhTk9HKaIk378H1ywo6w2M'
+//           }
+//         ],
+//         'services': {
+//           'analytics_service': {
+//             'status': 1
+//           },
+//           'appinvite_service': {
+//             'status': 2,
+//             'other_platform_oauth_client': [
+//               {
+//                 'client_id': '724737413503-cualrn5j5vqmko4ac9ear9e2sc0eo7jq.apps.googleusercontent.com',
+//                 'client_type': 3
+//               }
+//             ]
+//           },
+//           'ads_service': {
+//             'status': 2
+//           }
+//         }
+//       }
+//     ],
+//     'configuration_version': '1'
+//   })
 // })
 
 // console.log(defaultApp.name); // "[DEFAULT]"
