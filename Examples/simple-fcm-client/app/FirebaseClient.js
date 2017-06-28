@@ -1,7 +1,7 @@
 import FirebaseConstants from './FirebaseConstants'
 // import * as admin from 'firebase-admin'
 
-// const API_URL = 'https://fcm.googleapis.com/fcm/send'
+const API_URL = 'https://fcm.googleapis.com/fcm/send'
 
 // const defaultApp = admin.initializeApp({
 //   credential: admin.credential.cert({

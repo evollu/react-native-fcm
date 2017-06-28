@@ -26,7 +26,7 @@ export default class PushController extends Component {
     }
 
     FCM.getInitialNotification().then(notif => {
-      console.log('INITIAL NOTIFICATION', notif)
+      console.log('INITIAL NOTIFICATIONs', notif)
     })
 
     this.notificationListener = FCM.on(FCMEvent.Notification, notif => {
@@ -68,6 +68,8 @@ export default class PushController extends Component {
             // app server.
             setTokenSentToServer(false)
             // Send Instance ID token to app server.
+            console.log('sendTokenToServer', sendTokenToServer)
+            console.log('refreshedToken', refreshedToken)
             sendTokenToServer(refreshedToken)
           // ...
           })
