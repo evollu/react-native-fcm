@@ -1,0 +1,51 @@
+{
+	"id": "b99b90b6-b56c-a201-1a59-4867e66ce545",
+	"name": "Firebase GCM",
+	"description": "",
+	"order": [
+		"65e0de6a-9dc7-dedd-e91f-e73b876089b3"
+	],
+	"folders": [],
+	"timestamp": 1496236318388,
+	"owner": "2145023",
+	"public": false,
+	"requests": [
+		{
+			"id": "65e0de6a-9dc7-dedd-e91f-e73b876089b3",
+			"headers": "Content-Type: application/json\nAuthorization: key=AAAA4ndpriA:APA91bFoLMg2G3LRfeFRncrALTr8TwcxnoA8zFEau6EcWeLyDRCQda8wWJ7NIa-XD199Px1KR40iUzzL13W5TsbxH-0snRHaaQjeulS8iGBHqE8yDrx7uF1K0pdF3OGKG7wpbMvVzfvA\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "key=AAAA4ndpriA:APA91bFoLMg2G3LRfeFRncrALTr8TwcxnoA8zFEau6EcWeLyDRCQda8wWJ7NIa-XD199Px1KR40iUzzL13W5TsbxH-0snRHaaQjeulS8iGBHqE8yDrx7uF1K0pdF3OGKG7wpbMvVzfvA",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://fcm.googleapis.com/fcm/send",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "b99b90b6-b56c-a201-1a59-4867e66ce545",
+			"data": [],
+			"dataMode": "raw",
+			"name": "https://fcm.googleapis.com/fcm/send",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1496236318387,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"to\": \"/topics/news\",\n  \"data\": {\n    \"message\": \"This is a Firebase Cloud Messaging Topic Message!\"\n   }\n}"
+		}
+	]
+}

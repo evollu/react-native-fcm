@@ -1,0 +1,51 @@
+{
+	"id": "86c8c2bb-06fa-8277-e2cb-0a00edda83fa",
+	"name": "works",
+	"description": "",
+	"order": [
+		"3b62e895-b43f-762b-6c39-766cb08b627f"
+	],
+	"folders": [],
+	"timestamp": 1498547100506,
+	"owner": "2145023",
+	"public": false,
+	"requests": [
+		{
+			"id": "3b62e895-b43f-762b-6c39-766cb08b627f",
+			"headers": "Content-Type: application/json\nAuthorization: key=AIzaSyC7y8Tv84jSTkosKq4HXG6jVyfkFjp4AwI\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Authorization",
+					"value": "key=AIzaSyC7y8Tv84jSTkosKq4HXG6jVyfkFjp4AwI",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://fcm.googleapis.com/fcm/send",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "86c8c2bb-06fa-8277-e2cb-0a00edda83fa",
+			"data": [],
+			"dataMode": "raw",
+			"name": "https://fcm.googleapis.com/fcm/send",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1498547100506,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n \"to\": \"eF76gUONJ2E:APA91bFzWGQ8ROvMxYThEVfRwY8YQTwqkGQwU_MqPanbHFixKVBr3NZQpSw-5DIU1zO2vRd-81js5u5muDNW04R_itMNcotgvBamhgbFAN-IdH7skIQWd8UOtk9zXvv4CQVinotgly-z\",  \n   \"data\": {\n    \"type\":\"MEASURE_CHANGE\",\n    \"custom_notification\": {\n      \"body\": \"test body\",\n      \"title\": \"test title\",\n      \"color\":\"#00ACD4\",\n      \"priority\":\"high\",\n      \"icon\":\"ic_notif\",\n      \"group\": \"GROUP\",\n      \"id\": \"id\",\n      \"show_in_foreground\": true\n    }\n  }\n}"
+		}
+	]
+}

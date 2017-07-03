@@ -1,0 +1,36 @@
+{
+	"variables": [],
+	"info": {
+		"name": "works",
+		"_postman_id": "86c8c2bb-06fa-8277-e2cb-0a00edda83fa",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://fcm.googleapis.com/fcm/send",
+			"request": {
+				"url": "https://fcm.googleapis.com/fcm/send",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "key=AIzaSyC7y8Tv84jSTkosKq4HXG6jVyfkFjp4AwI",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"to\": \"eF76gUONJ2E:APA91bFzWGQ8ROvMxYThEVfRwY8YQTwqkGQwU_MqPanbHFixKVBr3NZQpSw-5DIU1zO2vRd-81js5u5muDNW04R_itMNcotgvBamhgbFAN-IdH7skIQWd8UOtk9zXvv4CQVinotgly-z\",  \n   \"data\": {\n    \"type\":\"MEASURE_CHANGE\",\n    \"custom_notification\": {\n      \"body\": \"test body\",\n      \"title\": \"test title\",\n      \"color\":\"#00ACD4\",\n      \"priority\":\"high\",\n      \"icon\":\"ic_notif\",\n      \"group\": \"GROUP\",\n      \"id\": \"id\",\n      \"show_in_foreground\": true\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
