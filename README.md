@@ -236,7 +236,7 @@ Edit `AppDelegate.m`:
   - *Background Modes* > **Remote notifications**.
 
 ### FirebaseAppDelegateProxyEnabled
-This instruction assumes that you have FirebaseAppDelegateProxyEnabled=YES so that Firebase will hook on push notification registration events. If you turn this flag off, you will be on your own to manage APNS tokens and link with Firebase token.
+This instruction assumes that you have FirebaseAppDelegateProxyEnabled=YES (default) so that Firebase will hook on push notification registration events. If you turn this flag off, you will be on your own to manage APNS tokens and link with Firebase token.
 
 ## Setup Local Notifications
 NOTE: local notification does NOT have any dependency on FCM library but you still need to include Firebase to compile. If there are enough demand to use this functionality alone, I will separate it out into another repo
