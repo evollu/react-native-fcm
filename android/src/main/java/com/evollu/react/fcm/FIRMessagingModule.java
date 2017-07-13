@@ -27,7 +27,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import android.content.Context;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -74,6 +74,17 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         promise.resolve(FirebaseInstanceId.getInstance().getToken());
     }
 
+    @ReactMethod
+    public void deleteInstanceId(Promise promise){
+        try {
+            FirebaseInstanceId.getInstance().deleteInstanceId();
+            promise.resolve(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e.getCause());
+        }
+    }
+    
     @ReactMethod
     public void presentLocalNotification(ReadableMap details) {
         Bundle bundle = Arguments.toBundle(details);
