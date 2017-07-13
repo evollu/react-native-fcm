@@ -3,7 +3,7 @@
 
 #import <FirebaseCore/FIRApp.h>
 #import <FirebaseMessaging/FirebaseMessaging.h>
-
+#import <FirebaseInstanceID/FirebaseInstanceID.h>
 #import <React/RCTEventEmitter.h>
 
 @import UserNotifications;

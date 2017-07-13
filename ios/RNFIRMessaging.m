@@ -231,6 +231,18 @@ RCT_EXPORT_METHOD(getFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
     resolve([FIRMessaging messaging].FCMToken);
 }
 
+RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  [[FIRInstanceID instanceID]deleteIDWithHandler:^(NSError * _Nullable error) {
+    
+    if (error != nil) {
+      reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,error);
+    } else {
+      resolve(NULL);
+    }
+  }];
+}
+
 - (void)messaging:(nonnull FIRMessaging *)messaging didRefreshRegistrationToken:(nonnull NSString *)fcmToken {
     [self sendEventWithName:FCMTokenRefreshed body:fcmToken];
 }
