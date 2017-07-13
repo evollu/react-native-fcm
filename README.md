@@ -372,6 +372,13 @@ class App extends Component {
           my_custom_data_1: 'my_custom_field_value_1',
           my_custom_data_2: 'my_custom_field_value_2'
         });
+
+        FCM.deleteInstanceId().then(()={
+          //Deleted instance id successfully
+          //This will reset Instance ID and revokes all tokens.
+        }).catch(error =>{
+          //Error while deleting instance id 
+        })
     }
 }
 ```
