@@ -236,9 +236,9 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
   [[FIRInstanceID instanceID]deleteIDWithHandler:^(NSError * _Nullable error) {
     
     if (error != nil) {
-      reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,error);
+      reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
     } else {
-      resolve(NULL);
+      resolve(nil);
     }
   }];
 }
