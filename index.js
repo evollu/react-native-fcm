@@ -48,6 +48,10 @@ FCM.getFCMToken = () => {
   return RNFIRMessaging.getFCMToken();
 };
 
+FCM.deleteInstanceId = () =>{
+  return RNFIRMessaging.deleteInstanceId();
+};
+
 FCM.getAPNSToken = () => {
   if (Platform.OS === 'ios') {
     return RNFIRMessaging.getAPNSToken();
