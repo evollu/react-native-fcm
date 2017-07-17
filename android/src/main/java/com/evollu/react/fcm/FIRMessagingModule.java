@@ -81,7 +81,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             promise.resolve(null);
         } catch (IOException e) {
             e.printStackTrace();
-            promise.reject(e.getCause());
+            promise.reject(null,e.getMessage());
         }
     }
     
