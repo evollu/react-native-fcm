@@ -42,7 +42,7 @@ declare module "react-native-fcm" {
         body: string;
         icon?: string;
         vibrate?: number;
-        sound?: boolean;
+        sound?: string;
         big_text?: string;
         large_icon?: string;
         priority?: string
