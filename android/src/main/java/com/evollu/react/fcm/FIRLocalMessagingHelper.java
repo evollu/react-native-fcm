@@ -186,10 +186,12 @@ public class FIRLocalMessagingHelper {
                 notification.setDefaults(NotificationCompat.DEFAULT_LIGHTS);
             }
 
-            Log.d(TAG, "broadcast intent before showing notification");
-            Intent i = new Intent("com.evollu.react.fcm.ReceiveLocalNotification");
-            i.putExtras(bundle);
-            mContext.sendOrderedBroadcast(i, null);
+            if(bundle.containsKey("fire_date")) {
+                Log.d(TAG, "broadcast intent if it is a scheduled notification");
+                Intent i = new Intent("com.evollu.react.fcm.ReceiveLocalNotification");
+                i.putExtras(bundle);
+                mContext.sendOrderedBroadcast(i, null);
+            }
 
             if(!mIsForeground || bundle.getBoolean("show_in_foreground")){
                 Intent intent = new Intent();
