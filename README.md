@@ -46,6 +46,13 @@ https://firebase.google.com/docs/cloud-messaging/ios/certs
   <application
     ...
     android:theme="@style/AppTheme">
+    
++    <meta-data
++        android:name="com.google.firebase.messaging.default_notification_icon"
++        android:resource="@mipmap/ic_launcher" />
++    <meta-data
++        android:name="com.google.firebase.messaging.default_notification_color"
++        android:resource="@android:color/transparent" />
 
 +   <service android:name="com.evollu.react.fcm.MessagingService" android:enabled="true" android:exported="true">
 +     <intent-filter>

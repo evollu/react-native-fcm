@@ -16,6 +16,19 @@ public class MessagingService extends FirebaseMessagingService {
     private static final String TAG = "MessagingService";
 
     @Override
+    public void handleIntent(Intent intent) {
+
+        Bundle extras = intent.getExtras();
+        extras.putString("title", extras.getString("gcm.notification.title"));
+        extras.putString("body", extras.getString("gcm.notification.body"));
+        extras.putString("large_icon", "icon");
+        extras.putString("picture", "icon");
+
+        FIRLocalMessagingHelper helper = new FIRLocalMessagingHelper(this.getApplication());
+        helper.sendNotification(extras);
+    }
+
+    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "Remote message received");
         Intent i = new Intent("com.evollu.react.fcm.ReceiveNotification");
