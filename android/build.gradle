@@ -21,6 +21,6 @@ dependencies {
     compile 'com.facebook.react:react-native:+'
     compile 'com.google.firebase:firebase-core:+'
     compile 'com.google.firebase:firebase-messaging:+'
-    compile 'me.leolin:ShortcutBadger:1.1.10@aar'
+    compile 'me.leolin:ShortcutBadger:1.1.17@aar'
 }
 
