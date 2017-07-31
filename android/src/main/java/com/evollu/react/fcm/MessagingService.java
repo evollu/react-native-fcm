@@ -3,8 +3,13 @@ package com.evollu.react.fcm;
 import java.util.Map;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
+import com.facebook.react.ReactApplication;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.bridge.ReactContext;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -22,6 +27,8 @@ public class MessagingService extends FirebaseMessagingService {
         i.putExtra("data", remoteMessage);
         handleBadge(remoteMessage);
         buildLocalNotification(remoteMessage);
+
+        final Intent message = i;
         
         // We need to run this on the main thread, as the React code assumes that is true.
         // Namely, DevServerHelper constructs a Handler() without a Looper, which triggers:
