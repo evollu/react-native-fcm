@@ -562,6 +562,9 @@ in sum
 Great, how do I configure for FCM?
 It is up to you! FCM is just a bridging library that passes notification into javascript world. You can define your own NSDictionary and pass it into notification.
 
+#### Javascript code doesn't run when iOS app is killed
+React Native's content is not available when app is waken up by notification. There is a way for Android to init a RN context in background but I haven't found an iOS way yet. PR is welcomed if you find a way.
+
 #### I want to show notification when app is in foreground
 Use `show_in_foreground` attribute to tell app to show banner even if the app is in foreground.
 NOTE: this flag doesn't work for Android push notification, use `custom_notification` to achieve this.
