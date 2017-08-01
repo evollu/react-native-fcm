@@ -275,7 +275,7 @@ RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(R
              if(granted){
                  resolve(nil);
              } else{
-                 reject(@"notification_error", @"Failed to grand permission", error);
+                 reject(@"notification_error", @"Failed to grant permission", error);
              }
          }
          ];
