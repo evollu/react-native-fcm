@@ -84,6 +84,10 @@ public class FIRLocalMessagingHelper {
                     .setVibrate(new long[]{0, DEFAULT_VIBRATION})
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setExtras(bundle.getBundle("data"));
+            
+            if (bundle.containsKey("ongoing") || bundle.getBoolean("ongoing")) {
+                notification.setOngoing(bundle.getBoolean("ongoing"));
+            }
 
             //priority
             String priority = bundle.getString("priority", "");
