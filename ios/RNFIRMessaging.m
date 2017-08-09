@@ -270,7 +270,6 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 - (void)handleRegisterUserNotificationSettings:(NSNotification *)notification
 {
-    NSLog(@"handleRegisterUserNotificationSettings");
     if (_requestPermissionsResolveBlock == nil) {
       return;
     }
@@ -337,8 +336,6 @@ RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(R
          ];
 #endif
     }
-
-    NSLog(@"registerForRemoteNotifications");
 
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
