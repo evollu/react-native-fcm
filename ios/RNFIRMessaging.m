@@ -132,8 +132,16 @@ RCT_ENUM_CONVERTER(UNNotificationPresentationOptions, (@{
 @end
 
 @implementation RNFIRMessaging
+@implementation RNFIRMessaging
+{
+  RCTPromiseResolveBlock _requestPermissionsResolveBlock;
+  RCTPromiseRejectBlock _requestPermissionsRejectBlock;
+}
 
 RCT_EXPORT_MODULE();
+
+static NSString *const kRemoteNotificationsRegistered = @"RemoteNotificationsRegistered";
+static NSString *const kRemoteNotificationRegistrationFailed = @"RemoteNotificationRegistrationFailed";
 
 - (NSArray<NSString *> *)supportedEvents {
     return @[FCMNotificationReceived, FCMTokenRefreshed, FCMDirectChannelConnectionChanged];
@@ -170,6 +178,26 @@ RCT_EXPORT_MODULE();
     [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
 
++ (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  NSMutableString *hexString = [NSMutableString string];
+  NSUInteger deviceTokenLength = deviceToken.length;
+  const unsigned char *bytes = deviceToken.bytes;
+  for (NSUInteger i = 0; i < deviceTokenLength; i++) {
+    [hexString appendFormat:@"%02x", bytes[i]];
+  }
+  [[NSNotificationCenter defaultCenter] postNotificationName:kRemoteNotificationsRegistered
+                                                      object:self
+                                                    userInfo:@{@"deviceToken" : [hexString copy]}];
+}
+
++ (void)didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+  [[NSNotificationCenter defaultCenter] postNotificationName:kRemoteNotificationRegistrationFailed
+                                                      object:self
+                                                    userInfo:@{@"error": error}];
+}
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -193,6 +221,16 @@ RCT_EXPORT_MODULE();
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(connectionStateChanged:)
      name:FIRMessagingConnectionStateChangedNotification object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                          selector:@selector(handleRegisterUserNotificationSettings:)
+                                          name:kRegisterUserNotificationSettings
+                                          object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                          selector:@selector(handleRemoteNotificationRegistrationError:)
+                                          name:kRemoteNotificationRegistrationFailed
+                                          object:nil];
 
     // For iOS 10 data message (sent via FCM)
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -234,7 +272,7 @@ RCT_EXPORT_METHOD(getFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
 RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   [[FIRInstanceID instanceID]deleteIDWithHandler:^(NSError * _Nullable error) {
-    
+
     if (error != nil) {
       reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
     } else {
@@ -247,12 +285,54 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
     [self sendEventWithName:FCMTokenRefreshed body:fcmToken];
 }
 
+- (void)handleRemoteNotificationsRegistered:(NSNotification *)notification
+{
+    if (_requestPermissionsResolveBlock == nil) {
+      return;
+    }
+
+    UIUserNotificationSettings *notificationSettings = notification.userInfo[@"notificationSettings"];
+    NSDictionary *notificationTypes = @{
+                                        @"alert": @((notificationSettings.types & UIUserNotificationTypeAlert) > 0),
+                                        @"sound": @((notificationSettings.types & UIUserNotificationTypeSound) > 0),
+                                        @"badge": @((notificationSettings.types & UIUserNotificationTypeBadge) > 0),
+                                        };
+
+    _requestPermissionsResolveBlock(notificationTypes);
+    _requestPermissionsResolveBlock = nil;
+    _requestPermissionsRejectBlock = nil;
+}
+
+- (void)handleRemoteNotificationRegistrationError:(NSNotification *)notification
+{
+  if (_requestPermissionsRejectBlock == nil) {
+    return;
+  }
+
+  NSError *error = notification.userInfo[@"error"];
+  NSDictionary *errorDetails = @{
+    @"message": error.localizedDescription,
+    @"code": @(error.code),
+    @"details": error.userInfo,
+  };
+  _requestPermissionsRejectBlock(errorDetails);
+  _requestPermissionsResolveBlock = nil;
+  _requestPermissionsRejectBlock = nil;
+}
+
 RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     if (RCTRunningInAppExtension()) {
         return;
     }
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
+        if ((_requestPermissionsResolveBlock != nil) || (_requestPermissionsRejectBlock != nil)_ {
+          RCTLogError(@"Cannot call requestPermissions twice before the first has returned.");
+          return;
+        }
+        _requestPermissionsResolveBlock = resolve;
+        _requestPermissionsRejectBlock = reject;
+
         UIUserNotificationType allNotificationTypes =
         (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
         UIApplication *app = RCTSharedApplication();
