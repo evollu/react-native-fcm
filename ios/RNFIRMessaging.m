@@ -132,7 +132,6 @@ RCT_ENUM_CONVERTER(UNNotificationPresentationOptions, (@{
 @end
 
 @implementation RNFIRMessaging
-@implementation RNFIRMessaging
 {
   RCTPromiseResolveBlock _requestPermissionsResolveBlock;
   RCTPromiseRejectBlock _requestPermissionsRejectBlock;
@@ -223,8 +222,8 @@ static NSString *const kRemoteNotificationRegistrationFailed = @"RemoteNotificat
      name:FIRMessagingConnectionStateChangedNotification object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                          selector:@selector(handleRegisterUserNotificationSettings:)
-                                          name:kRegisterUserNotificationSettings
+                                          selector:@selector(handleRemoteNotificationsRegistered:)
+                                          name:kRemoteNotificationsRegistered
                                           object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -310,12 +309,9 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
   }
 
   NSError *error = notification.userInfo[@"error"];
-  NSDictionary *errorDetails = @{
-    @"message": error.localizedDescription,
-    @"code": @(error.code),
-    @"details": error.userInfo,
-  };
-  _requestPermissionsRejectBlock(errorDetails);
+
+  _requestPermissionsRejectBlock(@"notification_error", @"Failed to grant permission", error);
+
   _requestPermissionsResolveBlock = nil;
   _requestPermissionsRejectBlock = nil;
 }
@@ -326,7 +322,7 @@ RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(R
         return;
     }
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
-        if ((_requestPermissionsResolveBlock != nil) || (_requestPermissionsRejectBlock != nil)_ {
+        if ((_requestPermissionsResolveBlock != nil) || (_requestPermissionsRejectBlock != nil)) {
           RCTLogError(@"Cannot call requestPermissions twice before the first has returned.");
           return;
         }
