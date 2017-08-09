@@ -139,8 +139,7 @@ RCT_ENUM_CONVERTER(UNNotificationPresentationOptions, (@{
 
 RCT_EXPORT_MODULE();
 
-static NSString *const kRemoteNotificationsRegistered = @"RemoteNotificationsRegistered";
-static NSString *const kRemoteNotificationRegistrationFailed = @"RemoteNotificationRegistrationFailed";
+NSString *const RNFIRRegisterUserNotificationSettings = @"RegisterUserNotificationSettings";
 
 - (NSArray<NSString *> *)supportedEvents {
     return @[FCMNotificationReceived, FCMTokenRefreshed, FCMDirectChannelConnectionChanged];
@@ -177,24 +176,14 @@ static NSString *const kRemoteNotificationRegistrationFailed = @"RemoteNotificat
     [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
 }
 
-+ (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
++ (void)didRegisterUserNotificationSettings:(__unused UIUserNotificationSettings *)notificationSettings
 {
-  NSMutableString *hexString = [NSMutableString string];
-  NSUInteger deviceTokenLength = deviceToken.length;
-  const unsigned char *bytes = deviceToken.bytes;
-  for (NSUInteger i = 0; i < deviceTokenLength; i++) {
-    [hexString appendFormat:@"%02x", bytes[i]];
+  if ([UIApplication instancesRespondToSelector:@selector(registerForRemoteNotifications)]) {
+    [RCTSharedApplication() registerForRemoteNotifications];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RNFIRRegisterUserNotificationSettings
+                                          object:self
+                                          userInfo:@{@"notificationSettings": notificationSettings}];
   }
-  [[NSNotificationCenter defaultCenter] postNotificationName:kRemoteNotificationsRegistered
-                                                      object:self
-                                                    userInfo:@{@"deviceToken" : [hexString copy]}];
-}
-
-+ (void)didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-  [[NSNotificationCenter defaultCenter] postNotificationName:kRemoteNotificationRegistrationFailed
-                                                      object:self
-                                                    userInfo:@{@"error": error}];
 }
 
 - (void)dealloc
@@ -222,13 +211,8 @@ static NSString *const kRemoteNotificationRegistrationFailed = @"RemoteNotificat
      name:FIRMessagingConnectionStateChangedNotification object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                          selector:@selector(handleRemoteNotificationsRegistered:)
-                                          name:kRemoteNotificationsRegistered
-                                          object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                          selector:@selector(handleRemoteNotificationRegistrationError:)
-                                          name:kRemoteNotificationRegistrationFailed
+                                          selector:@selector(handleRegisterUserNotificationSettings:)
+                                          name:RNFIRRegisterUserNotificationSettings
                                           object:nil];
 
     // For iOS 10 data message (sent via FCM)
@@ -284,36 +268,31 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
     [self sendEventWithName:FCMTokenRefreshed body:fcmToken];
 }
 
-- (void)handleRemoteNotificationsRegistered:(NSNotification *)notification
+- (void)handleRegisterUserNotificationSettings:(NSNotification *)notification
 {
+    NSLog(@"handleRegisterUserNotificationSettings");
     if (_requestPermissionsResolveBlock == nil) {
       return;
     }
 
     UIUserNotificationSettings *notificationSettings = notification.userInfo[@"notificationSettings"];
-    NSDictionary *notificationTypes = @{
-                                        @"alert": @((notificationSettings.types & UIUserNotificationTypeAlert) > 0),
-                                        @"sound": @((notificationSettings.types & UIUserNotificationTypeSound) > 0),
-                                        @"badge": @((notificationSettings.types & UIUserNotificationTypeBadge) > 0),
-                                        };
 
-    _requestPermissionsResolveBlock(notificationTypes);
+    if (((notificationSettings.types & UIUserNotificationTypeAlert) == 0) ||
+        ((notificationSettings.types & UIUserNotificationTypeSound) == 0) ||
+        ((notificationSettings.types & UIUserNotificationTypeBadge) == 0)){
+        _requestPermissionsRejectBlock(@"notification_error", @"Failed to grant permission", nil);
+    } else{
+      NSDictionary *notificationTypes = @{
+                                          @"alert": @((notificationSettings.types & UIUserNotificationTypeAlert) > 0),
+                                          @"sound": @((notificationSettings.types & UIUserNotificationTypeSound) > 0),
+                                          @"badge": @((notificationSettings.types & UIUserNotificationTypeBadge) > 0),
+                                          };
+
+      _requestPermissionsResolveBlock(notificationTypes);
+    }
+
     _requestPermissionsResolveBlock = nil;
     _requestPermissionsRejectBlock = nil;
-}
-
-- (void)handleRemoteNotificationRegistrationError:(NSNotification *)notification
-{
-  if (_requestPermissionsRejectBlock == nil) {
-    return;
-  }
-
-  NSError *error = notification.userInfo[@"error"];
-
-  _requestPermissionsRejectBlock(@"notification_error", @"Failed to grant permission", error);
-
-  _requestPermissionsResolveBlock = nil;
-  _requestPermissionsRejectBlock = nil;
 }
 
 RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
@@ -322,6 +301,7 @@ RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(R
         return;
     }
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
+        // For ios <=9 we will use callbacks in AppDelegate.m to get notification of permission granted/denied
         if ((_requestPermissionsResolveBlock != nil) || (_requestPermissionsRejectBlock != nil)) {
           RCTLogError(@"Cannot call requestPermissions twice before the first has returned.");
           return;
@@ -357,6 +337,8 @@ RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(R
          ];
 #endif
     }
+
+    NSLog(@"registerForRemoteNotifications");
 
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 }

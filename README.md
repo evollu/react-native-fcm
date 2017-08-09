@@ -230,16 +230,9 @@ Edit `AppDelegate.m`:
 +   [RNFIRMessaging didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 + }
 +
-+ // Required for the remoteNotificationsRegistered event. (only on ios <= 9)
-+ - (void)application:(__unused UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
++ - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 + {
-+   [RNFIRMessaging didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
-+ }
-
-+ // Required for the remoteNotificationRegistrationError event. (only on ios <= 9)
-+ - (void)application:(__unused UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-+ {
-+   [RNFIRMessaging didFailToRegisterForRemoteNotificationsWithError:error];
++    [RNFIRMessaging didRegisterUserNotificationSettings:notificationSettings];
 + }
 ```
 
