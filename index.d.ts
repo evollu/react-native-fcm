@@ -34,24 +34,40 @@ declare module "react-native-fcm" {
             body: string;
             icon: string;
         };
+        local_notification?: boolean;
         _notificationType: string;
         finish(type?: string): void;
     }
 
     export interface LocalNotification {
+        id?: string;
         title?: string;
         body: string;
         icon?: string;
         vibrate?: number;
         sound?: string;
         big_text?: string;
+        sub_text?: string;
+        color?: string;
         large_icon?: string;
-        priority?: string
+        priority?: string;
+        show_in_foreground?: boolean;
+        click_action?: string;
+        badge?: number; 
+        number?: number;
+        ticker?: string;
+        auto_cancel?: boolean;
+        tag?: string;
+        group?: string;
+        picture?: string;
+        my_custom_data?: string;
+        lights?: boolean
     }
 
     export interface ScheduleLocalNotification extends LocalNotification{
         id: string;
-        fire_date: number
+        fire_date: number;
+        repeat_interval?: "week" | "day" | "hour"
     }
 
     export interface Subscription {
