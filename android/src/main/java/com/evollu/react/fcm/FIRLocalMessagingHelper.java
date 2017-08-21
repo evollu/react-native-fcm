@@ -82,7 +82,6 @@ public class FIRLocalMessagingHelper {
                     .setSubText(bundle.getString("sub_text"))
                     .setGroup(bundle.getString("group"))
                     .setVibrate(new long[]{0, DEFAULT_VIBRATION})
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setExtras(bundle.getBundle("data"));
 
             //priority
@@ -151,14 +150,18 @@ public class FIRLocalMessagingHelper {
             }
 
             //sound
-            String soundName = bundle.getString("sound", "default");
-            if (!soundName.equalsIgnoreCase("default")) {
-                int soundResourceId = res.getIdentifier(soundName, "raw", packageName);
-                if(soundResourceId == 0){
-                    soundName = soundName.substring(0, soundName.lastIndexOf('.'));
-                    soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+            String soundName = bundle.getString("sound");
+            if (soundName != null) {
+                if (soundName.equalsIgnoreCase("default")) {
+                    notification.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                } else {
+                    int soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                    if (soundResourceId == 0) {
+                        soundName = soundName.substring(0, soundName.lastIndexOf('.'));
+                        soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                    }
+                    notification.setSound(Uri.parse("android.resource://" + packageName + "/" + soundResourceId));
                 }
-                notification.setSound(Uri.parse("android.resource://" + packageName + "/" + soundResourceId));
             }
 
             //color
