@@ -152,7 +152,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
        promise.resolve(mBadgeHelper.getBadgeCount());
     }
 
-      @ReactMethod
+    @ReactMethod
     public void getFCMHistory(Callback callback){
         HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
         String historyList = historyHelper.getHistory();
@@ -172,21 +172,8 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     private void registerTokenRefreshHandler() {
-        IntentFilter inte
-
-          @ReactMethod
-    public void getFCMHistory(Callback callback){
-        HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
-        String historyList = historyHelper.getHistory();
-        callback.invoke(historyList);
-    }
-
-    @ReactMethod
-    public void clearFCMHistory(){
-        HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
-        historyHelper.clearHistory();
-    }
-ntFilter = new IntentFilter("com.evollu.react.fcm.FCMRefreshToken");        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
+        IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.FCMRefreshToken");
+        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getReactApplicationContext().hasActiveCatalystInstance()) {
