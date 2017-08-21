@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -151,6 +152,19 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
        promise.resolve(mBadgeHelper.getBadgeCount());
     }
 
+      @ReactMethod
+    public void getFCMHistory(Callback callback){
+        HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
+        String historyList = historyHelper.getHistory();
+        callback.invoke(historyList);
+    }
+
+    @ReactMethod
+    public void clearFCMHistory(){
+        HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
+        historyHelper.clearHistory();
+    }
+
     private void sendEvent(String eventName, Object params) {
         getReactApplicationContext()
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -158,8 +172,21 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     private void registerTokenRefreshHandler() {
-        IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.FCMRefreshToken");
-        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
+        IntentFilter inte
+
+          @ReactMethod
+    public void getFCMHistory(Callback callback){
+        HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
+        String historyList = historyHelper.getHistory();
+        callback.invoke(historyList);
+    }
+
+    @ReactMethod
+    public void clearFCMHistory(){
+        HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
+        historyHelper.clearHistory();
+    }
+ntFilter = new IntentFilter("com.evollu.react.fcm.FCMRefreshToken");        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getReactApplicationContext().hasActiveCatalystInstance()) {
