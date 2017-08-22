@@ -58,8 +58,8 @@ FCM.getAPNSToken = () => {
   }
 };
 
-FCM.requestPermissions = () => {
-  return RNFIRMessaging.requestPermissions();
+FCM.requestPermissions = (permissions = {badge: true, sound: true, alert: true}) => {
+  return RNFIRMessaging.requestPermissions(permissions);
 };
 
 FCM.presentLocalNotification = (details) => {
