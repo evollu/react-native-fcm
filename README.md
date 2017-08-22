@@ -280,7 +280,18 @@ import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, 
 
 class App extends Component {
     componentDidMount() {
-        FCM.requestPermissions(); // for iOS
+        // for iOS, returns a promise which will be rejected if the app does not receive permission for these notifications
+        FCM.requestPermissions({badge: false, sound: true, alert: true});
+        /* Using await in es2017
+        try {
+          console.log("[Push] requestPermissions");
+          const values = await FCM.requestPermissions({badge: false, sound: true, alert: true});
+        } catch(err){
+          console.log("[Push] requestPermissions error: " + err);
+          return;
+        }
+        */
+
         FCM.getFCMToken().then(token => {
             console.log(token)
             // store fcm token in your server
