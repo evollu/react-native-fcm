@@ -10,16 +10,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Date;
 
-
-/**
- * Created by riayzahmed on 20/08/17.
- */
-
 public class HistoryHelper {
 
     private static final String TAG = "HistoryHelper";
     private static final String PREFERENCES_FILE = "HistoryList";
-    private static final String HISTORY_KEY= "HistoryBadgeCount";
+    private static final String HISTORY_KEY= "HistoryNotificationList";
 
     private Context mContext;
     private SharedPreferences sharedPreferences = null;
