@@ -31,6 +31,16 @@ export default class PushController extends Component {
 
     this.notificationListener = FCM.on(FCMEvent.Notification, notif => {
       console.log("Notification", notif);
+      
+      FCM.presentLocalNotification({
+        vibrate: 500,
+        title: notif.fcm.title,
+        body: notif.fcm.body,
+        priority: "high",
+        show_in_foreground: true,
+        picture: 'https://firebase.google.com/_static/af7ae4b3fc/images/firebase/lockup.png'
+      });
+      
       if(notif.local_notification){
         return;
       }
