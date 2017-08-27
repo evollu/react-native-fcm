@@ -171,12 +171,24 @@ Notes:
 
 ### Pod approach:
 
-Make sure you have Cocoapods version > 1.0
+Make sure you have [Cocoapods](https://cocoapods.org/) version > 1.0
+
+Configure the project:
+```
+cd ios && pod init
+```
+
+(In case of syntax errors, `open YOURApp.xcodeproj/project.pbxproj` and fix them.)
+
+Edit the newly created `Podfile`:
+```diff
+  # Pods for YOURAPP
++ pod 'FirebaseMessaging'
+```
 
 Install the `Firebase/Messaging` pod:
 ```
-cd ios && pod init
-pod install Firebase/Messaging
+pod install
 ```
 NOTE: you don't need to enable `use_frameworks!`. if you have to have `use_frameworks!` make sure you don't have `inherit! :search_paths`
 
