@@ -356,6 +356,7 @@ class App extends Component {
             tag: 'some_tag',                                    // Android only
             group: "group",                                     // Android only
             picture: "https://google.png",                      // Android only bigPicture style
+            ongoing: true,                                      // Android only
             my_custom_data:'my_custom_field_value',             // extra data you want to throw
             lights: true,                                       // Android only, LED blinking (default false)
             show_in_foreground                                  // notification when app is in foreground (local & remote)
