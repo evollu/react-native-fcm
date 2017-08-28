@@ -61,7 +61,8 @@ declare module "react-native-fcm" {
         group?: string;
         picture?: string;
         my_custom_data?: string;
-        lights?: boolean
+        ongoing?: boolean;
+        lights?: boolean;
     }
 
     export interface ScheduleLocalNotification extends LocalNotification{
