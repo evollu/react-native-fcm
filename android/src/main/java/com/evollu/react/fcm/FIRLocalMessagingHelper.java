@@ -85,7 +85,7 @@ public class FIRLocalMessagingHelper {
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setExtras(bundle.getBundle("data"));
             
-            if (bundle.containsKey("ongoing") || bundle.getBoolean("ongoing")) {
+            if (bundle.containsKey("ongoing") && bundle.getBoolean("ongoing")) {
                 notification.setOngoing(bundle.getBoolean("ongoing"));
             }
 
