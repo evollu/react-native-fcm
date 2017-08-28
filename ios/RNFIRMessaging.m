@@ -250,6 +250,7 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
 RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     if (RCTRunningInAppExtension()) {
+        resolve(nil);
         return;
     }
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_9_x_Max) {
@@ -262,6 +263,7 @@ RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(R
             [UIUserNotificationSettings settingsForTypes:(NSUInteger)allNotificationTypes categories:nil];
             [app registerUserNotificationSettings:notificationSettings];
         }
+        resolve(nil);
     } else {
         // iOS 10 or later
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
