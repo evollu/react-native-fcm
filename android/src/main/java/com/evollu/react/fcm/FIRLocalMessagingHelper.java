@@ -83,6 +83,10 @@ public class FIRLocalMessagingHelper {
                     .setGroup(bundle.getString("group"))
                     .setVibrate(new long[]{0, DEFAULT_VIBRATION})
                     .setExtras(bundle.getBundle("data"));
+            
+            if (bundle.containsKey("ongoing") && bundle.getBoolean("ongoing")) {
+                notification.setOngoing(bundle.getBoolean("ongoing"));
+            }
 
             //priority
             String priority = bundle.getString("priority", "");
