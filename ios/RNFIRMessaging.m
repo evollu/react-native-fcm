@@ -45,9 +45,11 @@ RCT_ENUM_CONVERTER(NSCalendarUnit,
     content.body =[RCTConvert NSString:details[@"body"]];
     NSString* sound = [RCTConvert NSString:details[@"sound"]];
     if(sound != nil){
-        content.sound = [UNNotificationSound soundNamed:sound];
-    }else{
-        content.sound = [UNNotificationSound defaultSound];
+        if ([sound isEqual:@"default"]) {
+            content.sound = [UNNotificationSound defaultSound];
+        } else {
+            content.sound = [UNNotificationSound soundNamed:sound];
+        }
     }
     content.categoryIdentifier = [RCTConvert NSString:details[@"click_action"]];
     content.userInfo = details;
