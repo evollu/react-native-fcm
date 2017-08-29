@@ -65,7 +65,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void requestPermissions(Object params){
+    public void requestPermissions(ReadableMap params){
     }
 
     @ReactMethod
