@@ -19,7 +19,7 @@
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can:
-- for **Android**: download `google-services.json` file and place it in `android/app` directory 
+- for **Android**: download `google-services.json` file and place it in `android/app` directory
 - for **iOS**: download `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
 
 Make sure you have certificates setup by following
@@ -220,7 +220,7 @@ Edit `AppDelegate.m`:
 
     return YES;
  }
- 
+
 +
 + - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 + {
@@ -300,10 +300,10 @@ class App extends Component {
               //app is open/resumed because user clicked banner
             }
             await someAsyncCall();
-            
+
             if(Platform.OS ==='ios'){
               //optional
-              //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link. 
+              //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link.
               //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
               //notif._notificationType is available for iOS platfrom
               switch(notif._notificationType){
@@ -385,14 +385,14 @@ class App extends Component {
           my_custom_data_1: 'my_custom_field_value_1',
           my_custom_data_2: 'my_custom_field_value_2'
         });
-        
+
         FCM.deleteInstanceId()
             .then( () => {
               //Deleted instance id successfully
               //This will reset Instance ID and revokes all tokens.
             })
             .catch(error => {
-              //Error while deleting instance id 
+              //Error while deleting instance id
             });
     }
 }
@@ -424,6 +424,26 @@ Example of payload that is sent to FCM server:
 ```
 
 Check local notification guide below for configuration.
+
+**IMPORTANT**: When using the `admin.messaging` API, you need to `JSON.stringify` the `custom_notification` value:
+
+```
+let tokens = [...];
+let payload = {
+  data: {
+    custom_notification: JSON.stringify({
+      body: 'Message body',
+      title: 'Message title'
+      ...
+    })
+  }
+};
+let options = { priority: "high" };
+
+admin
+  .messaging()
+  .sendToDevice(tokens, payload, options);
+```
 
 ### Behaviour when sending `notification` and `data` payload through GCM
 - When user clicks notification to **launch** the application, you can get that notification by calling `FCM.getInitialNotification`. (NOTE: reloading javascript or resuming from background won't change the value)
