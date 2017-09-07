@@ -1,4 +1,5 @@
 import FirebaseConstants from "./FirebaseConstants";
+import { Platform } from "react-native";
 
 const API_URL = "https://fcm.googleapis.com/fcm/send";
 
@@ -20,6 +21,21 @@ class FirebaseClient {
     		"click_action": "fcm.ACTION.HELLO"
     	},
     	"priority": 10
+    }
+    
+    if(Platform.OS === 'android'){
+      body = {
+        "to": token,
+      "data":{
+        "custom_notification": {
+    		  "title": "Simple FCM Client",
+    		  "body": "This is a notification with only NOTIFICATION.",
+    		  "sound": "default",
+    		  "click_action": "fcm.ACTION.HELLO"
+        }
+    	},
+    	"priority": 10
+      }
     }
 
     this._send(JSON.stringify(body), "notification");
