@@ -292,7 +292,7 @@ class App extends Component {
             // store fcm token in your server
         });
         
-        // NOTE: if you want to handle notifications when app is closed, don't put it in component lifecycle because components won't be initialized.
+        // NOTE: if you want to handle notifications when app is closed, put another handler outside of component lifecycle because components won't be initialized.
         this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
             // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
             if(notif.local_notification){
