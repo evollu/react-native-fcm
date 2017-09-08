@@ -65,7 +65,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void requestPermissions(){
+    public void requestPermissions(ReadableMap params){
     }
 
     @ReactMethod
@@ -89,7 +89,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             promise.reject(null,e.getMessage());
         }
     }
-    
+
     @ReactMethod
     public void presentLocalNotification(ReadableMap details) {
         Bundle bundle = Arguments.toBundle(details);
