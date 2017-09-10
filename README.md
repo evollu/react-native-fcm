@@ -285,7 +285,7 @@ import {Platform} from 'react-native';
 import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 
 // this shall be called regardless of app state: running, background or not running. Won't be called when app is killed by user in iOS
-FCM.on(FCMEvent.Notification, async (notif) => {
+FCM.on(FCMEvent.Notification, (notif) => {
     // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
     if(notif.local_notification){
       //this is a local notification
@@ -293,7 +293,6 @@ FCM.on(FCMEvent.Notification, async (notif) => {
     if(notif.opened_from_tray){
       //app is open/resumed because user clicked banner
     }
-    await someAsyncCall();
 
     if(Platform.OS ==='ios'){
       //optional
@@ -326,7 +325,7 @@ class App extends Component {
             // store fcm token in your server
         });
         
-        this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
+        this.notificationListener = FCM.on(FCMEvent.Notification, (notif) => {
             // do some component related stuff
         });
     }
