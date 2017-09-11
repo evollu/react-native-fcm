@@ -293,7 +293,7 @@ FCM.on(FCMEvent.Notification, async (notif) => {
     if(notif.opened_from_tray){
       //app is open/resumed because user clicked banner
     }
-    await someAsyncCall();
+    // await someAsyncCall();
 
     if(Platform.OS ==='ios'){
       //optional
