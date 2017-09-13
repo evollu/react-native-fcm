@@ -320,7 +320,7 @@ FCM.on(FCMEvent.RefreshToken, (token) => {
         
 class App extends Component {
     componentDidMount() {
-        FCM.requestPermissions(); // for iOS
+        FCM.requestPermissions().then(()=>console.log('granted')).catch(()=>console.log('user rejected')); // for iOS
         FCM.getFCMToken().then(token => {
             console.log(token)
             // store fcm token in your server
