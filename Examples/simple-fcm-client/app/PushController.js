@@ -11,8 +11,13 @@ export default class PushController extends Component {
     super(props);
   }
 
-  componentDidMount() {
-    FCM.requestPermissions();
+  async componentDidMount() {
+
+    try{
+      let result = await FCM.requestPermissions({badge: false, sound: true, alert: true});
+    } catch(e){
+      console.error(e);
+    }
 
     FCM.getFCMToken().then(token => {
       console.log("TOKEN (getFCMToken)", token);

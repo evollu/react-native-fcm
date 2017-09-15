@@ -23,6 +23,7 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		3A6D62911E2044AB00D0D2C7 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6D62901E2044AB00D0D2C7 /* libz.tbd */; };
+		3AC87E631F6C190900194883 /* bell.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3AC87E621F6C190900194883 /* bell.mp3 */; };
 		4339BFE81DAEE9D100F53B62 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4339BFE71DAEE9D100F53B62 /* GoogleService-Info.plist */; };
 		5FE70723D2AE04BF2D98342D /* libPods-SimpleFcmClientTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E8C044191FA88F1BCCF08BD /* libPods-SimpleFcmClientTests.a */; };
 		6976C617E52062E3EE272128 /* libPods-SimpleFcmClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A959965489E40CE19F2B06B4 /* libPods-SimpleFcmClient.a */; };
@@ -259,6 +260,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		3A6D628E1E20449400D0D2C7 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		3A6D62901E2044AB00D0D2C7 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		3AC87E621F6C190900194883 /* bell.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bell.mp3; sourceTree = "<group>"; };
 		4339BFE31DAEBB4800F53B62 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		4339BFE61DAED4D900F53B62 /* SimpleFcmClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SimpleFcmClient.entitlements; path = SimpleFcmClient/SimpleFcmClient.entitlements; sourceTree = "<group>"; };
 		4339BFE71DAEE9D100F53B62 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				3AC87E621F6C190900194883 /* bell.mp3 */,
 			);
 			name = SimpleFcmClient;
 			sourceTree = "<group>";
@@ -858,6 +861,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				3AC87E631F6C190900194883 /* bell.mp3 in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				4339BFE81DAEE9D100F53B62 /* GoogleService-Info.plist in Resources */,
 			);

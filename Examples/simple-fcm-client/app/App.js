@@ -42,6 +42,7 @@ export default class App extends Component {
       title: 'Hello',
       body: 'Test Notification',
       priority: "high",
+      sound: "bell.mp3",
       show_in_foreground: true,
       picture: 'https://firebase.google.com/_static/af7ae4b3fc/images/firebase/lockup.png'
     });
