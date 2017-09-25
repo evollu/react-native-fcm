@@ -97,16 +97,12 @@ Edit `AndroidManifest.xml`:
       <action android:name="android.intent.action.MAIN" />
       <category android:name="android.intent.category.LAUNCHER" />
     </intent-filter>
-+   <intent-filter>
-+     <action android:name="fcm.ACTION.HELLO" />
-+     <category android:name="android.intent.category.DEFAULT" />
-+   </intent-filter>
   </activity>
 ```
 
 Notes:
 - `launchMode="singleTop"` is to reuse MainActivity
-- replace `"fcm.ACTION.HELLO"` by the `click_action` you want to match
+- you if want to handle `click_action` you need to add custom intent-filter, check native android documentation
 
 
 If you are using RN < 0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
