@@ -323,8 +323,11 @@ class App extends Component {
         });
         
         this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
-            // do some component related stuff
+            // optional, do some component related stuff
         });
+        
+        // sometimes android kills activity when app goes to background, and when resume it broadcasts notification before JS is run. You can use FCM.getInitialNotification() to capture those missed events.
+        FCM.getInitialNotification().then(notif=>console.log(notif));
     }
 
     componentWillUnmount() {
@@ -336,7 +339,6 @@ class App extends Component {
 
         FCM.subscribeToTopic('/topics/foo-bar');
         FCM.unsubscribeFromTopic('/topics/foo-bar');
-        FCM.getInitialNotification().then(notif=>console.log(notif));
         FCM.presentLocalNotification({
             id: "UNIQ_ID_STRING",                               // (optional for instant notification)
             title: "My Notification Title",                     // as FCM payload
