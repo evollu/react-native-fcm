@@ -76,7 +76,7 @@ declare module "react-native-fcm" {
     }
 
     export class FCM {
-        static requestPermissions(): void;
+        static requestPermissions(): Promise<void>;
         static getFCMToken(): Promise<string>;
         static on(event: "FCMTokenRefreshed", handler: (token: string) => void): Subscription;
         static on(event: "FCMNotificationReceived", handler: (notification: Notification) => void): Subscription;
