@@ -316,7 +316,10 @@ FCM.on(FCMEvent.RefreshToken, (token) => {
         
 class App extends Component {
     componentDidMount() {
-        FCM.requestPermissions().then(()=>console.log('granted')).catch(()=>console.log('user rejected')); // for iOS
+        // iOS: show permission prompt for the first call. later just check permission in user settings
+        // Android: check permission in user settings
+        FCM.requestPermissions().then(()=>console.log('granted')).catch(()=>console.log('notification permission rejected'));
+        
         FCM.getFCMToken().then(token => {
             console.log(token)
             // store fcm token in your server
