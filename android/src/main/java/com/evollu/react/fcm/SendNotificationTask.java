@@ -1,7 +1,6 @@
 package com.evollu.react.fcm;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.io.IOException;
@@ -62,16 +62,16 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             }
 
             NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
-                    .setContentTitle(title)
-                    .setContentText(bundle.getString("body"))
-                    .setTicker(bundle.getString("ticker"))
-                    .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-                    .setAutoCancel(bundle.getBoolean("auto_cancel", true))
-                    .setNumber(bundle.getInt("number"))
-                    .setSubText(bundle.getString("sub_text"))
-                    .setGroup(bundle.getString("group"))
-                    .setVibrate(new long[]{0, DEFAULT_VIBRATION})
-                    .setExtras(bundle.getBundle("data"));
+            .setContentTitle(title)
+            .setContentText(bundle.getString("body"))
+            .setTicker(bundle.getString("ticker"))
+            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+            .setAutoCancel(bundle.getBoolean("auto_cancel", true))
+            .setNumber(bundle.getInt("number"))
+            .setSubText(bundle.getString("sub_text"))
+            .setGroup(bundle.getString("group"))
+            .setVibrate(new long[]{0, DEFAULT_VIBRATION})
+            .setExtras(bundle.getBundle("data"));
 
             if (bundle.containsKey("ongoing") && bundle.getBoolean("ongoing")) {
                 notification.setOngoing(bundle.getBoolean("ongoing"));
@@ -198,10 +198,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
                 int notificationID = bundle.containsKey("id") ? bundle.getString("id", "").hashCode() : (int) System.currentTimeMillis();
                 PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-
-                NotificationManager notificationManager =
-                        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                                                                        PendingIntent.FLAG_UPDATE_CURRENT);
 
                 notification.setContentIntent(pendingIntent);
 
@@ -209,9 +206,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
                 if (bundle.containsKey("tag")) {
                     String tag = bundle.getString("tag");
-                    notificationManager.notify(tag, notificationID, info);
+                    NotificationManagerCompat.from(mContext).notify(tag, notificationID, info);
                 } else {
-                    notificationManager.notify(notificationID, info);
+                    NotificationManagerCompat.from(mContext).notify(notificationID, info);
                 }
             }
             //clear out one time scheduled notification once fired
