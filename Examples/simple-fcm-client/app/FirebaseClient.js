@@ -87,6 +87,7 @@ class FirebaseClient {
 			if(!response.success){
 				Alert.alert('Failed to send notification, check error log')
 			}
+			console.log(response);
 		} catch (err) {
 			Alert.alert(err && err.message)
 		}
