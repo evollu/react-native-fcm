@@ -58,12 +58,16 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @ReactMethod
     public void getInitialNotification(Promise promise){
         Activity activity = getCurrentActivity();
-        Intent intent = activity.getIntent();
-        if(activity == null || (intent.getAction() != null && intent.getAction().equals("android.intent.action.MAIN"))){
+        if(activity == null){
             promise.resolve(null);
             return;
         }
-        promise.resolve(parseIntent(activity.getIntent()));
+        Intent intent = activity.getIntent();
+        if(intent.getAction() != null && intent.getAction().equals("android.intent.action.MAIN")){
+            promise.resolve(null);
+            return;
+        }
+        promise.resolve(parseIntent(intent));
     }
     
     @ReactMethod
