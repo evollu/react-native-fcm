@@ -1,11 +1,9 @@
-I'm not checking this repo every day since it is fairly stable now. If you have found a bug or need immediate attention please [AT]me
+Before openning an issue
+1. Reproduce it with the example project in this repo.
+2. If you can't receive iOS notification, make sure you can receive notification using quickstart-ios project provided by Firebase team
 
-Please include following information for better support
+When openning an issue, please include following information for better support
 
-What version of RN and react-native-fcm are you running?
-What device are you using? (e.g iOS9 emulator, Android 6 device)?
-Is your app running in foreground, background or not running?
-
-Advanced:
-Have you tried adding break point in native handlers to see if message gets delivered?
-can share a project with issue?
+1. What version of RN and react-native-fcm are you running?
+2. What device are you using? (e.g iOS9 emulator, Android 6 device)?
+3. Is your app running in foreground, background or not running?
