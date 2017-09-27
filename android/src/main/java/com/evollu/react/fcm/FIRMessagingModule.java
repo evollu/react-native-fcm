@@ -58,7 +58,8 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @ReactMethod
     public void getInitialNotification(Promise promise){
         Activity activity = getCurrentActivity();
-        if(activity == null || activity.getIntent().getAction().equals("android.intent.action.MAIN")){
+        Intent intent = activity.getIntent();
+        if(activity == null || (intent.getAction() != null && intent.getAction().equals("android.intent.action.MAIN"))){
             promise.resolve(null);
             return;
         }
@@ -304,7 +305,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @Override
     public void onNewIntent(Intent intent){
         // don't call notification if it is started from icon
-        if(intent.getAction().equals("android.intent.action.MAIN")){
+        if(intent.getAction() != null && intent.getAction().equals("android.intent.action.MAIN")){
             return;
         }
         sendEvent("FCMNotificationReceived", parseIntent(intent));
