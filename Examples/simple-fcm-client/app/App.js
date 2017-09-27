@@ -89,6 +89,10 @@ export default class App extends Component {
           {this.state.tokenCopyFeedback}
         </Text>
 
+        <Text style={styles.feedback}>
+          Remote notif won't be available to iOS emulators
+        </Text>
+
         <TouchableOpacity onPress={() => firebaseClient.sendNotification(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Notification</Text>
         </TouchableOpacity>
