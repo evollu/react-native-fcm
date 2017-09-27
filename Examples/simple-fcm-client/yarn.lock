@@ -3635,11 +3635,9 @@ react-devtools-core@2.3.1:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-native-fcm@^9.3.0, react-native-fcm@^9.4.0:
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-fcm/-/react-native-fcm-9.4.0.tgz#a9736413d7e8a15896d30299cd14eeb5f3903b83"
-  dependencies:
-    react-native-fcm "^9.3.0"
+react-native-fcm@^9.6.0:
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-fcm/-/react-native-fcm-9.6.0.tgz#3aced1ce84d20d21c18e7e04c0471521c815ee9e"
 
 react-native@^0.47.2:
   version "0.47.2"
