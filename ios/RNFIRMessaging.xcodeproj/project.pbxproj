@@ -224,7 +224,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../react-native/React/**",
-					"$(SRCROOT)/../../../ios/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
