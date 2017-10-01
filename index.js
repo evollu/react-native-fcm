@@ -1,6 +1,6 @@
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
 
-const EventEmitter = new NativeEventEmitter(NativeModules.RNFIRMessaging);
+const EventEmitter = new NativeEventEmitter(NativeModules.RNFIRMessaging || {});
 
 export const FCMEvent = {
   RefreshToken: 'FCMTokenRefreshed',
