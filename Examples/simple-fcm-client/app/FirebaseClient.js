@@ -30,7 +30,7 @@ class FirebaseClient {
     		  "title": "Simple FCM Client",
     		  "body": "This is a notification with only NOTIFICATION.",
     		  "sound": "default",
-    		  "click_action": "fcm.ACTION.HELLO"
+		"priority": "hight"
         }
     	},
     	"priority": 10
