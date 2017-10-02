@@ -12,30 +12,33 @@ class FirebaseClient {
   }
 
   sendNotification(token) {
-    let body = {
-    	"to": token,
-      "notification":{
-    		"title": "Simple FCM Client",
-    		"body": "This is a notification with only NOTIFICATION.",
-    		"sound": "default"
-    	},
-    	"priority": 10
-    }
+    let body;
 
     if(Platform.OS === 'android'){
       body = {
         "to": token,
-      "data":{
-        "custom_notification": {
-    		  "title": "Simple FCM Client",
-    		  "body": "This is a notification with only NOTIFICATION.",
-    		  "sound": "default",
-		"priority": "high"
-        }
-    	},
-    	"priority": 10
+      	"data":{
+					"custom_notification": {
+						"title": "Simple FCM Client",
+						"body": "This is a notification with only NOTIFICATION.",
+						"sound": "default",
+						"priority": "high",
+						"show_in_foreground": true
+        	}
+    		},
+    		"priority": 10
       }
-    }
+    } else {
+			body = {
+				"to": token,
+				"notification":{
+					"title": "Simple FCM Client",
+					"body": "This is a notification with only NOTIFICATION.",
+					"sound": "default"
+				},
+				"priority": 10
+			}
+		}
 
     this._send(JSON.stringify(body), "notification");
   }
