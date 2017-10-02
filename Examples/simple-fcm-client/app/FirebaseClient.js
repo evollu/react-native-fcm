@@ -83,11 +83,15 @@ class FirebaseClient {
 
 		try {
 			let response = await fetch(API_URL, { method: "POST", headers, body });
-			response = await response.json();
-			if(!response.success){
+			console.log(response);
+			try{
+				response = await response.json();
+				if(!response.success){
+					Alert.alert('Failed to send notification, check error log')
+				}
+			} catch (err){
 				Alert.alert('Failed to send notification, check error log')
 			}
-			console.log(response);
 		} catch (err) {
 			Alert.alert(err && err.message)
 		}
