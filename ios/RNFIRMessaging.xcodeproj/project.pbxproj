@@ -218,12 +218,13 @@
 				CLANG_STATIC_ANALYZER_MODE = deep;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/../../../ios/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../react-native/React/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
