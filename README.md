@@ -1,7 +1,7 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## NOTES:
-- current latest version: v9.x
+- current latest version: v10.x
 - for iOS SDK < 4, use react-native-fcm@6.2.3 (v6.x is still compatible with Firebase SDK v4)
 - for RN < 0.40.0, use react-native-fcm@2.5.6
 - for RN < 0.33.0, use react-native-fcm@1.1.0
@@ -367,7 +367,6 @@ class App extends Component {
             sub_text: "This is a subText",                      // Android only
             color: "red",                                       // Android only
             vibrate: 300,                                       // Android only default: 300, no vibration if you pass null
-            tag: 'some_tag',                                    // Android only
             group: "group",                                     // Android only
             picture: "https://google.png",                      // Android only bigPicture style
             ongoing: true,                                      // Android only
