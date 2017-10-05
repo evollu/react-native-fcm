@@ -191,6 +191,7 @@ NOTE: you don't need to enable `use_frameworks!`. if you have to have `use_frame
 
 1. Download the Firebase SDK framework from [Integrate without CocoaPods](https://firebase.google.com/docs/ios/setup#frameworks).
 - Import libraries, add Capabilities (background running and push notification), upload APNS and etc etc etc...
+2. Put frameworks under `ios/Pods` folder
 2. Follow the `README` to link frameworks (Analytics+Messaging)
 
 ### Shared steps
