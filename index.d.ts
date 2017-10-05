@@ -53,11 +53,10 @@ declare module "react-native-fcm" {
         priority?: string;
         show_in_foreground?: boolean;
         click_action?: string;
-        badge?: number; 
+        badge?: number;
         number?: number;
         ticker?: string;
         auto_cancel?: boolean;
-        tag?: string;
         group?: string;
         picture?: string;
         my_custom_data?: string;
