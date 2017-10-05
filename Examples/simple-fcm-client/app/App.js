@@ -45,7 +45,8 @@ export default class App extends Component {
       priority: "high",
       sound: "bell.mp3",
       large_icon: "https://image.freepik.com/free-icon/small-boy-cartoon_318-38077.jpg",
-      show_in_foreground: true
+      show_in_foreground: true,
+      number: 10
     });
   }
 
