@@ -268,6 +268,7 @@ Edit AndroidManifest.xml
 + <uses-permission android:name="android.permission.VIBRATE" />
 
   <application
++    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/>
 +      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
 +      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
 +          <intent-filter>
