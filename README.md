@@ -101,7 +101,7 @@ Edit `AndroidManifest.xml`:
 ```
 
 Notes:
-- `launchMode="singleTop"` is to reuse MainActivity
+- `launchMode="singleTop"` is to reuse MainActivity, you can use `singleTask` or `singleInstance` as well depend on your need. [this link explains the behavior well](https://blog.mindorks.com/android-activity-launchmode-explained-cbc6cf996802)
 - you if want to handle `click_action` you need to add custom intent-filter, check native android documentation
 
 
