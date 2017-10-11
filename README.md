@@ -268,6 +268,7 @@ Edit AndroidManifest.xml
 + <uses-permission android:name="android.permission.VIBRATE" />
 
   <application
++    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/>
 +      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
 +      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
 +          <intent-filter>
@@ -339,7 +340,10 @@ class App extends Component {
         
         // initial notification contains the notification that launchs the app. If user launchs app by clicking banner, the banner notification info will be here rather than through FCM.on event
         // sometimes Android kills activity when app goes to background, and when resume it broadcasts notification before JS is run. You can use FCM.getInitialNotification() to capture those missed events.
-        FCM.getInitialNotification().then(notif=>console.log(notif));
+        // initial notification will be triggered all the time even when open app by icon so send some action identifier when you send notification
+        FCM.getInitialNotification().then(notif=>{
+           console.log(notif)
+        });
     }
 
     componentWillUnmount() {
