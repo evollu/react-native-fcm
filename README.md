@@ -296,7 +296,8 @@ FCM.on(FCMEvent.Notification, async (notif) => {
       //this is a local notification
     }
     if(notif.opened_from_tray){
-      //app is open/resumed because user clicked banner
+      //iOS: app is open/resumed because user clicked banner
+      //Android: app is open/resumed because user clicked banner or tapped app icon
     }
     // await someAsyncCall();
 
