@@ -1,5 +1,4 @@
-there is a known issue with Firebase SDK with iOS 11
-https://github.com/firebase/quickstart-ios/issues/327#issuecomment-331782299
+there is a known issue with Firebase SDK with iOS 11 (search https://github.com/firebase/quickstart-ios issue number 327)
 fix is `pod 'FirebaseInstanceID', "2.0.0"`
 
 Before openning an issue
