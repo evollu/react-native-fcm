@@ -141,6 +141,10 @@ RCT_EXPORT_MODULE();
     return @[FCMNotificationReceived, FCMTokenRefreshed, FCMDirectChannelConnectionChanged];
 }
 
++ (BOOL)requiresMainQueueSetup {
+  return YES;
+}
+
 + (void)didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull RCTRemoteNotificationCallback)completionHandler {
     NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: userInfo];
     [data setValue:@"remote_notification" forKey:@"_notificationType"];
