@@ -372,7 +372,7 @@ class App extends Component {
             big_text: "Show when notification is expanded",     // Android only
             sub_text: "This is a subText",                      // Android only
             color: "red",                                       // Android only
-            vibrate: 300,                                       // Android only default: 300, no vibration if you pass null
+            vibrate: 300,                                       // Android only default: 300, no vibration if you pass 0
             group: "group",                                     // Android only
             picture: "https://google.png",                      // Android only bigPicture style
             ongoing: true,                                      // Android only
