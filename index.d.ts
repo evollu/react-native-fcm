@@ -34,6 +34,14 @@ declare module "react-native-fcm" {
             body: string;
             icon: string;
         };
+        fcm: {
+            action?: string;
+            tag?: string;
+            icon?: string;
+            color?: string;
+            body: string;
+            title?: string;
+        };
         local_notification?: boolean;
         _notificationType: string;
         finish(type?: string): void;
