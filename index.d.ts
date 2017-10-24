@@ -25,7 +25,7 @@ declare module "react-native-fcm" {
         const Local = "local_notification";
     }
 
-  export interface Notification {
+    export interface Notification {
         collapse_key: string;
         opened_from_tray: boolean;
         from: string;
@@ -34,9 +34,18 @@ declare module "react-native-fcm" {
             body: string;
             icon: string;
         };
+        fcm: {
+            action?: string;
+            tag?: string;
+            icon?: string;
+            color?: string;
+            body: string;
+            title?: string;
+        };
         local_notification?: boolean;
         _notificationType: string;
         finish(type?: string): void;
+        [key: string]: any;
     }
 
     export interface LocalNotification {
@@ -59,12 +68,12 @@ declare module "react-native-fcm" {
         auto_cancel?: boolean;
         group?: string;
         picture?: string;
-        my_custom_data?: string;
         ongoing?: boolean;
         lights?: boolean;
+        [key: string]: any;
     }
 
-    export interface ScheduleLocalNotification extends LocalNotification{
+    export interface ScheduleLocalNotification extends LocalNotification {
         id: string;
         fire_date: number;
         repeat_interval?: "week" | "day" | "hour"
