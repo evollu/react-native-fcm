@@ -57,6 +57,32 @@ public class MessagingService extends FirebaseMessagingService {
             }
         });
     }
+    
+    public void handleIntent(Intent intent)
+    {
+        try
+        {
+            if (intent.getExtras() != null)
+            {
+                RemoteMessage.Builder builder = new RemoteMessage.Builder("RNFIRMessaging");
+
+                for (String key : intent.getExtras().keySet())
+                {
+                    builder.addData(key, intent.getExtras().get(key).toString());
+                }
+
+                onMessageReceived(builder.build());
+            }
+            else
+            {
+                super.handleIntent(intent);
+            }
+        }
+        catch (Exception e)
+        {
+            super.handleIntent(intent);
+        }
+    }
 
     public void handleBadge(RemoteMessage remoteMessage) {
         BadgeHelper badgeHelper = new BadgeHelper(this);
