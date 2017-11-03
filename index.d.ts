@@ -100,7 +100,7 @@ declare module "react-native-fcm" {
         static removeDeliveredNotification(id: string): void;
 
         static cancelAllLocalNotifications(): void;
-        static cancelLocalNotification(id: string): string;
+        static cancelLocalNotification(id: string, fireDate?: number): string;
 
         static setBadgeNumber(badge: number): void;
         static getBadgeNumber(): Promise<number>;

@@ -42,6 +42,21 @@ public class FIRLocalMessagingHelper {
         return (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
     }
 
+    /**
+     * Generate unique ID for each schedueled notification based on notificationId and fireDate
+     * to schedueled different notification with same notificationId
+     */
+    private int pendingIntentRequestCode(String notificationId, Double fireDate) {
+        int fireDateHashcode = 0;
+        if (fireDate != null) {
+            fireDateHashcode = Double.valueOf(Math.round(fireDate)).hashCode();
+        }
+        int notificationIdHashcode = notificationId.hashCode();
+        int id = fireDateHashcode + notificationIdHashcode;
+
+        return id;
+    }
+
     public void sendNotification(Bundle bundle) {
         new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle).execute();
     }
@@ -64,9 +79,11 @@ public class FIRLocalMessagingHelper {
             return;
         }
 
+        int pendingIntentId = this.pendingIntentRequestCode(notificationId, bundle.getDouble("fire_date"));
+
         Intent notificationIntent = new Intent(mContext, FIRLocalMessagingPublisher.class);
         notificationIntent.putExtras(bundle);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, notificationId.hashCode(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Long interval = null;
         switch (bundle.getString("repeat_interval", "")) {
@@ -96,15 +113,15 @@ public class FIRLocalMessagingHelper {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         try {
             JSONObject json = BundleJSONConverter.convertToJSON(bundle);
-            editor.putString(notificationId, json.toString());
+            editor.putString(Integer.toString(pendingIntentId), json.toString());
             editor.apply();
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void cancelLocalNotification(String notificationId) {
-        cancelAlarm(notificationId);
+    public void cancelLocalNotification(String notificationId, Double fireDate) {
+        cancelAlarm(notificationId, fireDate);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(notificationId);
         editor.apply();
@@ -114,7 +131,7 @@ public class FIRLocalMessagingHelper {
         java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
-            cancelAlarm(entry.getKey());
+            cancelAlarm(entry.getKey(), null);
         }
         editor.clear();
         editor.apply();
@@ -130,9 +147,11 @@ public class FIRLocalMessagingHelper {
         notificationManager.cancelAll();
     }
 
-    public void cancelAlarm(String notificationId) {
+    public void cancelAlarm(String notificationId, Double fireDate) {
+        int pendingIntentId = this.pendingIntentRequestCode(notificationId, fireDate);
+
         Intent notificationIntent = new Intent(mContext, FIRLocalMessagingPublisher.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, notificationId.hashCode(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         getAlarmManager().cancel(pendingIntent);
     }
 
