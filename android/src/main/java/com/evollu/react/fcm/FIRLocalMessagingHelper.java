@@ -122,8 +122,10 @@ public class FIRLocalMessagingHelper {
 
     public void cancelLocalNotification(String notificationId, Double fireDate) {
         cancelAlarm(notificationId, fireDate);
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(notificationId);
+        int pendingIntentId = this.pendingIntentRequestCode(notificationId, fireDate);
+        editor.remove(Integer.toString(pendingIntentId));
         editor.apply();
     }
 
