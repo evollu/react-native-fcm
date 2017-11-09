@@ -65,6 +65,69 @@ export default class App extends Component {
     });
   }
 
+  sendRemoteNotification(token) {
+    let body;
+
+    if(Platform.OS === 'android'){
+      body = {
+        "to": token,
+      	"data":{
+					"custom_notification": {
+						"title": "Simple FCM Client",
+						"body": "This is a notification with only NOTIFICATION.",
+						"sound": "default",
+						"priority": "high",
+						"show_in_foreground": true
+        	}
+    		},
+    		"priority": 10
+      }
+    } else {
+			body = {
+				"to": token,
+				"notification":{
+					"title": "Simple FCM Client",
+					"body": "This is a notification with only NOTIFICATION.",
+					"sound": "default"
+				},
+				"priority": 10
+			}
+		}
+
+    firebaseClient.send(JSON.stringify(body), "notification");
+  }
+
+  sendRemoteData(token) {
+    let body = {
+    	"to": token,
+      "data":{
+    		"title": "Simple FCM Client",
+    		"body": "This is a notification with only DATA.",
+    		"sound": "default"
+    	},
+    	"priority": "normal"
+    }
+
+    firebaseClient.send(JSON.stringify(body), "data");
+  }
+
+  sendRemoteNotificationWithData(token) {
+    let body = {
+      "to": token,
+      "notification":{
+    		"title": "Simple FCM Client",
+    		"body": "This is a notification with NOTIFICATION and DATA (NOTIF).",
+				"sound": "default"
+    	},
+    	"data":{
+    		"hello": "there"
+    	},
+    	"priority": "high"
+    }
+
+    firebaseClient.send(JSON.stringify(body), "notification-data");
+  }
+
   render() {
     let { token, tokenCopyFeedback } = this.state;
 
@@ -94,16 +157,16 @@ export default class App extends Component {
           Remote notif won't be available to iOS emulators
         </Text>
 
-        <TouchableOpacity onPress={() => firebaseClient.sendNotification(token)} style={styles.button}>
-          <Text style={styles.buttonText}>Send Notification</Text>
+        <TouchableOpacity onPress={() => firebaseClient.sendRemoteNotification(token)} style={styles.button}>
+          <Text style={styles.buttonText}>Send Remote Notification</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => firebaseClient.sendData(token)} style={styles.button}>
-          <Text style={styles.buttonText}>Send Data</Text>
+        <TouchableOpacity onPress={() => firebaseClient.sendRemoteData(token)} style={styles.button}>
+          <Text style={styles.buttonText}>Send Remote Data</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => firebaseClient.sendNotificationWithData(token)} style={styles.button}>
-          <Text style={styles.buttonText}>Send Notification With Data</Text>
+        <TouchableOpacity onPress={() => firebaseClient.sendRemoteNotificationWithData(token)} style={styles.button}>
+          <Text style={styles.buttonText}>Send Remote Notification With Data</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => this.showLocalNotification()} style={styles.button}>

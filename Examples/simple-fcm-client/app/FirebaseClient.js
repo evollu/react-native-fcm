@@ -11,70 +11,7 @@ class FirebaseClient {
     this.sendNotificationWithData = this.sendNotificationWithData.bind(this);
   }
 
-  sendNotification(token) {
-    let body;
-
-    if(Platform.OS === 'android'){
-      body = {
-        "to": token,
-      	"data":{
-					"custom_notification": {
-						"title": "Simple FCM Client",
-						"body": "This is a notification with only NOTIFICATION.",
-						"sound": "default",
-						"priority": "high",
-						"show_in_foreground": true
-        	}
-    		},
-    		"priority": 10
-      }
-    } else {
-			body = {
-				"to": token,
-				"notification":{
-					"title": "Simple FCM Client",
-					"body": "This is a notification with only NOTIFICATION.",
-					"sound": "default"
-				},
-				"priority": 10
-			}
-		}
-
-    this._send(JSON.stringify(body), "notification");
-  }
-
-  sendData(token) {
-    let body = {
-    	"to": token,
-      "data":{
-    		"title": "Simple FCM Client",
-    		"body": "This is a notification with only DATA.",
-    		"sound": "default"
-    	},
-    	"priority": "normal"
-    }
-
-    this._send(JSON.stringify(body), "data");
-  }
-
-  sendNotificationWithData(token) {
-    let body = {
-      "to": token,
-      "notification":{
-    		"title": "Simple FCM Client",
-    		"body": "This is a notification with NOTIFICATION and DATA (NOTIF).",
-				"sound": "default"
-    	},
-    	"data":{
-    		"hello": "there"
-    	},
-    	"priority": "high"
-    }
-
-    this._send(JSON.stringify(body), "notification-data");
-  }
-
-  async _send(body, type) {
+  async send(body, type) {
 		if(FirebaseClient.KEY === 'YOUR_API_KEY'){
 			Alert.alert('Set your API_KEY in app/FirebaseConstants.js')
 			return;
