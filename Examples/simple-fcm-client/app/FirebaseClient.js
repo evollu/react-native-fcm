@@ -1,15 +1,9 @@
 import FirebaseConstants from "./FirebaseConstants";
-import { Platform, Alert } from "react-native";
+import { Alert } from "react-native";
 
 const API_URL = "https://fcm.googleapis.com/fcm/send";
 
 class FirebaseClient {
-
-  constructor() {
-    this.sendData = this.sendData.bind(this);
-    this.sendNotification = this.sendNotification.bind(this);
-    this.sendNotificationWithData = this.sendNotificationWithData.bind(this);
-  }
 
   async send(body, type) {
 		if(FirebaseClient.KEY === 'YOUR_API_KEY'){

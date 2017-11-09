@@ -10,7 +10,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Clipboard
+  Clipboard,
+  Platform
 } from 'react-native';
 
 import FCM from "react-native-fcm";
@@ -157,15 +158,15 @@ export default class App extends Component {
           Remote notif won't be available to iOS emulators
         </Text>
 
-        <TouchableOpacity onPress={() => firebaseClient.sendRemoteNotification(token)} style={styles.button}>
+        <TouchableOpacity onPress={() => this.sendRemoteNotification(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Remote Notification</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => firebaseClient.sendRemoteData(token)} style={styles.button}>
+        <TouchableOpacity onPress={() => this.sendRemoteData(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Remote Data</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => firebaseClient.sendRemoteNotificationWithData(token)} style={styles.button}>
+        <TouchableOpacity onPress={() => this.sendRemoteNotificationWithData(token)} style={styles.button}>
           <Text style={styles.buttonText}>Send Remote Notification With Data</Text>
         </TouchableOpacity>
 
