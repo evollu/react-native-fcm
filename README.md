@@ -27,6 +27,10 @@ https://firebase.google.com/docs/cloud-messaging/ios/certs
 
 ## Android Configuration
 
+- As `react-native link` sometimes has glitches, make sure you have this line added
+
+https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/android/app/src/main/java/com/google/firebase/quickstart/fcm/MainApplication.java#L28
+
 - Edit `android/build.gradle`:
 ```diff
   dependencies {
