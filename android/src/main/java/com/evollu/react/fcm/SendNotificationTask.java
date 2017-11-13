@@ -60,8 +60,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 ApplicationInfo appInfo = mContext.getApplicationInfo();
                 title = mContext.getPackageManager().getApplicationLabel(appInfo).toString();
             }
-            
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
+
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, bundle.getString("channel_id"))
             .setContentTitle(title)
             .setContentText(bundle.getString("body"))
             .setTicker(bundle.getString("ticker"))
