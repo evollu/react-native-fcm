@@ -1,6 +1,3 @@
-there is a known issue with Firebase SDK with iOS 11 (search https://github.com/firebase/quickstart-ios issue number 327)
-fix is `pod 'FirebaseInstanceID', "2.0.0"`
-
 Before openning an issue
 1. Reproduce it with the example project in this repo.
 2. If you can't receive iOS notification, make sure you can receive notification using quickstart-ios project provided by Firebase team
