@@ -155,7 +155,7 @@ export default class App extends Component {
         </Text>
 
         <Text style={styles.feedback}>
-          Remote notif won't be available to iOS emulators
+          `Remote notif won't be available to iOS emulators`
         </Text>
 
         <TouchableOpacity onPress={() => this.sendRemoteNotification(token)} style={styles.button}>
@@ -195,22 +195,22 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF",
   },
   welcome: {
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
   },
   instructions: {
-    textAlign: 'center',
-    color: '#333333',
+    textAlign: "center",
+    color: "#333333",
     marginBottom: 2,
   },
   feedback: {
-    textAlign: 'center',
+    textAlign: "center",
     color: '#996633',
     marginBottom: 3,
   },
