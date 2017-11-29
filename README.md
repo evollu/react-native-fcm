@@ -346,7 +346,7 @@ class App extends Component {
         // initial notification contains the notification that launchs the app. If user launchs app by clicking banner, the banner notification info will be here rather than through FCM.on event
         // sometimes Android kills activity when app goes to background, and when resume it broadcasts notification before JS is run. You can use FCM.getInitialNotification() to capture those missed events.
         // initial notification will be triggered all the time even when open app by icon so send some action identifier when you send notification
-        FCM.getInitialNotification().then(notif=>{
+        FCM.getInitialNotification().then(notif => {
            console.log(notif)
         });
     }
