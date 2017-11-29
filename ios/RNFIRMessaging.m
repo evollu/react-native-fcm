@@ -82,9 +82,11 @@ RCT_ENUM_CONVERTER(NSCalendarUnit,
         }
         case NSCalendarUnitMonth:{
             unitFlags = NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+            break;
         }
         case NSCalendarUnitYear:{
             unitFlags = NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+            break;
         }
         default:
             unitFlags = NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
