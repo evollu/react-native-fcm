@@ -1097,7 +1097,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.myidentifi.engage.qa;
+				PRODUCT_BUNDLE_IDENTIFIER = com.myidentifi.fcm;
 				PRODUCT_NAME = SimpleFcmClient;
 				USER_HEADER_SEARCH_PATHS = ./SimpleFcmClient/;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1131,7 +1131,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.myidentifi.engage.qa;
+				PRODUCT_BUNDLE_IDENTIFIER = com.myidentifi.fcm;
 				PRODUCT_NAME = SimpleFcmClient;
 				USER_HEADER_SEARCH_PATHS = ./SimpleFcmClient/;
 				VERSIONING_SYSTEM = "apple-generic";
