@@ -16,7 +16,7 @@ import {
 
 import FCM from "react-native-fcm";
 
-import PushController from "./PushController";
+require("./Listeners");
 import firebaseClient from  "./FirebaseClient";
 
 export default class App extends Component {
@@ -29,12 +29,29 @@ export default class App extends Component {
     }
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     FCM.getInitialNotification().then(notif => {
       this.setState({
         initNotif: notif
       })
     });
+
+    try{
+      let result = await FCM.requestPermissions({badge: false, sound: true, alert: true});
+    } catch(e){
+      console.error(e);
+    }
+
+    FCM.getFCMToken().then(token => {
+      console.log("TOKEN (getFCMToken)", token);
+      this.setState({token: token || ""})
+    });
+
+    if(Platform.OS === 'ios'){
+      FCM.getAPNSToken().then(token => {
+        console.log("APNS TOKEN (getFCMToken)", token);
+      });
+    }
   }
 
   showLocalNotification() {
@@ -134,9 +151,6 @@ export default class App extends Component {
 
     return (
       <View style={styles.container}>
-        <PushController
-          onChangeToken={token => this.setState({token: token || ""})}
-        />
         <Text style={styles.welcome}>
           Welcome to Simple Fcm Client!
         </Text>
