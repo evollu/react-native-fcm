@@ -2,6 +2,7 @@ package com.evollu.react.fcm;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -29,6 +30,6 @@ public class InstanceIdService extends FirebaseInstanceIdService {
         Bundle bundle = new Bundle();
         bundle.putString("token", refreshedToken);
         i.putExtras(bundle);
-        sendBroadcast(i);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
     }
 }

@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -191,7 +192,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 Log.d(TAG, "broadcast intent if it is a scheduled notification");
                 Intent i = new Intent("com.evollu.react.fcm.ReceiveLocalNotification");
                 i.putExtras(bundle);
-                mContext.sendOrderedBroadcast(i, null);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(i);
             }
             
             if(!mIsForeground || bundle.getBoolean("show_in_foreground")){

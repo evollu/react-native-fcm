@@ -25,6 +25,7 @@ import com.google.firebase.messaging.RemoteMessage.Notification;
 import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import android.content.Context;
@@ -38,7 +39,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
     private FIRLocalMessagingHelper mFIRLocalMessagingHelper;
     private BadgeHelper mBadgeHelper;
-    
+
     public FIRMessagingModule(ReactApplicationContext reactContext) {
         super(reactContext);
         mFIRLocalMessagingHelper = new FIRLocalMessagingHelper((Application) reactContext.getApplicationContext());
@@ -49,12 +50,12 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         registerMessageHandler();
         registerLocalMessageHandler();
     }
-    
+
     @Override
     public String getName() {
         return "RNFIRMessaging";
     }
-    
+
     @ReactMethod
     public void getInitialNotification(Promise promise){
         Activity activity = getCurrentActivity();
@@ -64,7 +65,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         }
         promise.resolve(parseIntent(activity.getIntent()));
     }
-    
+
     @ReactMethod
     public void requestPermissions(Promise promise){
         if(NotificationManagerCompat.from(getReactApplicationContext()).areNotificationsEnabled()){
@@ -73,7 +74,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             promise.reject(null, "Notification disabled");
         }
     }
-    
+
     @ReactMethod
     public void getFCMToken(Promise promise) {
         try {
@@ -84,7 +85,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             promise.reject(null,e.getMessage());
         }
     }
-    
+
     @ReactMethod
     public void deleteInstanceId(Promise promise){
         try {
@@ -95,19 +96,19 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             promise.reject(null,e.getMessage());
         }
     }
-    
+
     @ReactMethod
     public void presentLocalNotification(ReadableMap details) {
         Bundle bundle = Arguments.toBundle(details);
         mFIRLocalMessagingHelper.sendNotification(bundle);
     }
-    
+
     @ReactMethod
     public void scheduleLocalNotification(ReadableMap details) {
         Bundle bundle = Arguments.toBundle(details);
         mFIRLocalMessagingHelper.sendNotificationScheduled(bundle);
     }
-    
+
     @ReactMethod
     public void cancelLocalNotification(String notificationID) {
         mFIRLocalMessagingHelper.cancelLocalNotification(notificationID);
@@ -116,27 +117,27 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     public void cancelAllLocalNotifications() {
         mFIRLocalMessagingHelper.cancelAllLocalNotifications();
     }
-    
+
     @ReactMethod
     public void removeDeliveredNotification(String notificationID) {
         mFIRLocalMessagingHelper.removeDeliveredNotification(notificationID);
     }
-    
+
     @ReactMethod
     public void removeAllDeliveredNotifications(){
         mFIRLocalMessagingHelper.removeAllDeliveredNotifications();
     }
-    
+
     @ReactMethod
     public void subscribeToTopic(String topic){
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
     }
-    
+
     @ReactMethod
     public void unsubscribeFromTopic(String topic){
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
     }
-    
+
     @ReactMethod
     public void getScheduledLocalNotifications(Promise promise){
         ArrayList<Bundle> bundles = mFIRLocalMessagingHelper.getScheduledLocalNotifications();
@@ -146,26 +147,26 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         }
         promise.resolve(array);
     }
-    
+
     @ReactMethod
     public void setBadgeNumber(int badgeNumber) {
         mBadgeHelper.setBadgeCount(badgeNumber);
     }
-    
+
     @ReactMethod
     public void getBadgeNumber(Promise promise) {
         promise.resolve(mBadgeHelper.getBadgeCount());
     }
-    
+
     private void sendEvent(String eventName, Object params) {
         getReactApplicationContext()
         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
         .emit(eventName, params);
     }
-    
+
     private void registerTokenRefreshHandler() {
         IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.FCMRefreshToken");
-        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
+        LocalBroadcastManager.getInstance(getReactApplicationContext()).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getReactApplicationContext().hasActiveCatalystInstance()) {
@@ -175,13 +176,13 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             }
         }, intentFilter);
     }
-    
+
     @ReactMethod
     public void send(String senderId, ReadableMap payload) throws Exception {
         FirebaseMessaging fm = FirebaseMessaging.getInstance();
         RemoteMessage.Builder message = new RemoteMessage.Builder(senderId + "@gcm.googleapis.com")
         .setMessageId(UUID.randomUUID().toString());
-        
+
         ReadableMapKeySetIterator iterator = payload.keySetIterator();
         while (iterator.hasNextKey()) {
             String key = iterator.nextKey();
@@ -190,7 +191,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         }
         fm.send(message.build());
     }
-    
+
     private String getStringFromReadableMap(ReadableMap map, String key) throws Exception {
         switch (map.getType(key)) {
             case String:
@@ -207,18 +208,18 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                 throw new Exception("Unknown data type: " + map.getType(key).name() + " for message key " + key );
         }
     }
-    
+
     private void registerMessageHandler() {
         IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.ReceiveNotification");
-        
-        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
+
+        LocalBroadcastManager.getInstance(getReactApplicationContext()).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getReactApplicationContext().hasActiveCatalystInstance()) {
                     RemoteMessage message = intent.getParcelableExtra("data");
                     WritableMap params = Arguments.createMap();
                     WritableMap fcmData = Arguments.createMap();
-                    
+
                     if (message.getNotification() != null) {
                         Notification notification = message.getNotification();
                         fcmData.putString("title", notification.getTitle());
@@ -233,7 +234,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                     params.putString("from", message.getFrom());
                     params.putString("google.message_id", message.getMessageId());
                     params.putDouble("google.sent_time", message.getSentTime());
-                    
+
                     if(message.getData() != null){
                         Map<String, String> data = message.getData();
                         Set<String> keysIterator = data.keySet();
@@ -242,16 +243,16 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                         }
                     }
                     sendEvent("FCMNotificationReceived", params);
-                    
+
                 }
             }
         }, intentFilter);
     }
-    
+
     private void registerLocalMessageHandler() {
         IntentFilter intentFilter = new IntentFilter("com.evollu.react.fcm.ReceiveLocalNotification");
-        
-        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
+
+        LocalBroadcastManager.getInstance(getReactApplicationContext()).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getReactApplicationContext().hasActiveCatalystInstance()) {
@@ -260,7 +261,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             }
         }, intentFilter);
     }
-    
+
     private WritableMap parseIntent(Intent intent){
         WritableMap params;
         Bundle extras = intent.getExtras();
@@ -277,30 +278,30 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         WritableMap fcm = Arguments.createMap();
         fcm.putString("action", intent.getAction());
         params.putMap("fcm", fcm);
-        
+
         params.putInt("opened_from_tray", 1);
         return params;
     }
-    
+
     @Override
     public void onHostResume() {
         mFIRLocalMessagingHelper.setApplicationForeground(true);
     }
-    
+
     @Override
     public void onHostPause() {
         mFIRLocalMessagingHelper.setApplicationForeground(false);
     }
-    
+
     @Override
     public void onHostDestroy() {
-        
+
     }
-    
+
     @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
     }
-    
+
     @Override
     public void onNewIntent(Intent intent){
         sendEvent("FCMNotificationReceived", parseIntent(intent));

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
@@ -41,12 +42,12 @@ public class MessagingService extends FirebaseMessagingService {
                 ReactContext context = mReactInstanceManager.getCurrentReactContext();
                 // If it's constructed, send a notification
                 if (context != null) {
-                    context.sendOrderedBroadcast(message, null);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(message);
                 } else {
                     // Otherwise wait for construction, then send the notification
                     mReactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
                         public void onReactContextInitialized(ReactContext context) {
-                            context.sendOrderedBroadcast(message, null);
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(message);
                         }
                     });
                     if (!mReactInstanceManager.hasStartedCreatingInitialContext()) {
