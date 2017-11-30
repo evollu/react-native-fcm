@@ -16,8 +16,10 @@ import {
 
 import FCM from "react-native-fcm";
 
-require("./Listeners");
+import {registerKilledListener, registerAppListener} from "./Listeners";
 import firebaseClient from  "./FirebaseClient";
+
+registerKilledListener();
 
 export default class App extends Component {
   constructor(props) {
@@ -30,6 +32,7 @@ export default class App extends Component {
   }
 
   async componentDidMount(){
+    registerAppListener();
     FCM.getInitialNotification().then(notif => {
       this.setState({
         initNotif: notif
