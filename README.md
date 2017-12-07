@@ -307,7 +307,7 @@ FCM.on(FCMEvent.Notification, async (notif) => {
 
     if(Platform.OS ==='ios'){
       //optional
-      //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link.
+      //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application.
       //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
       //notif._notificationType is available for iOS platfrom
       switch(notif._notificationType){
