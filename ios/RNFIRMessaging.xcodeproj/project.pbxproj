@@ -218,16 +218,18 @@
 				CLANG_STATIC_ANALYZER_MODE = deep;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/../../../ios/Pods/**",
 					"$(PROJECT_DIR)/../../../ios/Frameworks/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/FirebaseCore/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/FirebaseMessaging/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/FirebaseInstanceID/**",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../react-native/React/**",
-					"$(PROJECT_DIR)/../../../ios/Pods/**",
 					"$(PROJECT_DIR)/../../../ios/Frameworks/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/Firebase/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -244,15 +246,17 @@
 				CLANG_STATIC_ANALYZER_MODE = deep;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/../../../ios/Pods/**",
 					"$(PROJECT_DIR)/../../../ios/Frameworks/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/FirebaseCore/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/FirebaseMessaging/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/FirebaseInstanceID/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../react-native/React/**",
-					"$(PROJECT_DIR)/../../../ios/Pods/**",
 					"$(PROJECT_DIR)/../../../ios/Frameworks/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/Firebase/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
