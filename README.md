@@ -200,6 +200,8 @@ NOTE: you don't need to enable `use_frameworks!`. if you have to have `use_frame
 
 ### Shared steps
 
+Go to project settings -> Build Settings -> Header Search Paths and add `$(SRCROOT)/../node_modules/react-native-fcm/ios` as a value.  
+
 Edit `AppDelegate.h`:
 ```diff
 + @import UserNotifications;
