@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -156,6 +157,19 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @ReactMethod
     public void getBadgeNumber(Promise promise) {
         promise.resolve(mBadgeHelper.getBadgeCount());
+    }
+
+    @ReactMethod
+    public void getFCMHistory(Callback callback){
+        HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
+        String historyList = historyHelper.getHistory();
+        callback.invoke(historyList);
+    }
+
+    @ReactMethod
+    public void clearFCMHistory(){
+        HistoryHelper historyHelper = new HistoryHelper(getReactApplicationContext());
+        historyHelper.clearHistory();
     }
 
     private void sendEvent(String eventName, Object params) {

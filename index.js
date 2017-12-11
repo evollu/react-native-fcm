@@ -174,4 +174,28 @@ FCM.send = (senderId, payload) => {
   RNFIRMessaging.send(senderId, payload);
 };
 
+FCM.getFCMHistory = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      if(Platform.OS == "android"){
+        RNFIRMessaging.getFCMHistory(historyListString => {
+        let historyList = JSON.parse(historyListString);
+
+        resolve(historyList);        
+        });
+      }else{
+        resolve(JSON.parse("[]"));
+      }      
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+FCM.clearFCMHistory = () => {
+  if(Platform.OS=="android"){
+    RNFIRMessaging.clearFCMHistory();
+  }  
+};
+
 export default FCM;

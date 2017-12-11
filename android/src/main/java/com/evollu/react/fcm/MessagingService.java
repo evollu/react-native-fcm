@@ -86,6 +86,9 @@ public class MessagingService extends FirebaseMessagingService {
         String customNotification = data.get("custom_notification");
         if(customNotification != null){
             try {
+                HistoryHelper historyHelper = new HistoryHelper(this);
+                historyHelper.addToHistory(customNotification);
+                
                 Bundle bundle = BundleJSONConverter.convertToBundle(new JSONObject(customNotification));
                 FIRLocalMessagingHelper helper = new FIRLocalMessagingHelper(this.getApplication());
                 helper.sendNotification(bundle);
