@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "16.0.0-alpha.12",
     "react-native": "^0.47.2",
-    "react-native-fcm": "^9.6.2"
+    "react-native-fcm": "../../"
   },
   "jest": {
     "preset": "jest-react-native"

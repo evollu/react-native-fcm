@@ -44,3 +44,6 @@ android/keystores/debug.keystore
 ios/GoogleService-Info.plist
 android/app/google-services.json
 app/FirebaseConstants.js
+
+#Pods
+ios/Pods
