@@ -10,6 +10,8 @@
 
 - An example working project is available at: https://github.com/evollu/react-native-fcm/tree/master/Examples/simple-fcm-client
 
+- DO NOT change Android targetSdkVersion >= 26. The notification won't show up because of notification channel requirement. [Help is needed](https://github.com/evollu/react-native-fcm/issues/698)
+
 ## Installation
 
 - Run `npm install react-native-fcm --save`
