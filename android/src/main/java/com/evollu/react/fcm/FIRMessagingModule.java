@@ -1,6 +1,8 @@
 package com.evollu.react.fcm;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -23,6 +25,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.messaging.RemoteMessage.Notification;
 
 import android.app.Application;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -35,6 +38,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import com.google.firebase.FirebaseApp;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class FIRMessagingModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
     private final static String TAG = FIRMessagingModule.class.getCanonicalName();
@@ -74,6 +79,47 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         } else {
             promise.reject(null, "Notification disabled");
         }
+    }
+
+    @ReactMethod
+    public void createNotificationChannel(ReadableMap details, Promise promise){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mngr = (NotificationManager) getReactApplicationContext().getSystemService(NOTIFICATION_SERVICE);
+            String id = details.getString("id");
+            String name = details.getString("name");
+            String priority = details.getString("priority");
+            int importance;
+            switch(priority) {
+                case "min":
+                    importance = NotificationManager.IMPORTANCE_MIN;
+                    break;
+                case "low":
+                    importance = NotificationManager.IMPORTANCE_LOW;
+                    break;
+                case "high":
+                    importance = NotificationManager.IMPORTANCE_HIGH;
+                    break;
+                case "max":
+                    importance = NotificationManager.IMPORTANCE_MAX;
+                    break;
+                default:
+                    importance = NotificationManager.IMPORTANCE_DEFAULT;
+            }
+            if (mngr.getNotificationChannel(id) != null) {
+                promise.resolve(null);
+            }
+            //
+            NotificationChannel channel = new NotificationChannel(
+                    id,
+                    name,
+                    importance);
+            // Configure the notification channel.
+            if(details.hasKey("description")){
+                channel.setDescription(details.getString("description"));
+            }
+            mngr.createNotificationChannel(channel);
+        }
+        promise.resolve(null);
     }
 
     @ReactMethod

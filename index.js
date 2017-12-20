@@ -90,6 +90,12 @@ FCM.requestPermissions = () => {
   return RNFIRMessaging.requestPermissions();
 };
 
+FCM.createNotificationChannel = (channel) => {
+  if (Platform.OS === 'android') {
+    return RNFIRMessaging.createNotificationChannel();
+  }
+}
+
 FCM.presentLocalNotification = (details) => {
   details.id = details.id || new Date().getTime().toString();
   details.local_notification = true;
