@@ -404,8 +404,8 @@ class App extends Component {
         FCM.cancelAllLocalNotifications()
         FCM.cancelLocalNotification("UNIQ_ID_STRING")
 
-        FCM.setBadgeNumber(1);                                       // iOS only and there's no way to set it in Android, yet.
-        FCM.getBadgeNumber().then(number=>console.log(number));     // iOS only and there's no way to get it in Android, yet.
+        FCM.setBadgeNumber(1);                                       // iOS and supporting android.
+        FCM.getBadgeNumber().then(number=>console.log(number));     // iOS and supporting android.
         FCM.send('984XXXXXXXXX', {
           my_custom_data_1: 'my_custom_field_value_1',
           my_custom_data_2: 'my_custom_field_value_2'
