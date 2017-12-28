@@ -43,6 +43,7 @@ https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-clien
 - Edit `android/app/build.gradle`. Add at the bottom of the file:
 ```diff
   apply plugin: "com.android.application"
+  ...
 + apply plugin: 'com.google.gms.google-services'
 ```
 
