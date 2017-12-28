@@ -226,6 +226,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
 					"$(SRCROOT)/../../react-native/React/**",
 					"$(PROJECT_DIR)/../../../ios/Frameworks/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
@@ -253,6 +254,7 @@
 					"$(PROJECT_DIR)/../../../ios/Pods/FirebaseInstanceID/**",
 				);
 				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
 					"$(SRCROOT)/../../react-native/React/**",
 					"$(PROJECT_DIR)/../../../ios/Frameworks/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
