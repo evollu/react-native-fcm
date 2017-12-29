@@ -15,7 +15,7 @@
 ## Installation
 
 - Run `npm install react-native-fcm --save`
-- Run `react-native link react-native-fcm` (RN 0.29.1+, otherwise `rnpm link react-native-fcm`)
+- Run `react-native link react-native-fcm` (RN 0.29.1+, otherwise `rnpm link react-native-fcm`). Or you can do [manual linking](https://facebook.github.io/react-native/docs/linking-libraries-ios.html#manual-linking) which is more reliable
 
 ## Configure Firebase Console
 ### FCM config file
