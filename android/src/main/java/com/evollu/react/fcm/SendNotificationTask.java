@@ -70,9 +70,12 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             .setAutoCancel(bundle.getBoolean("auto_cancel", true))
             .setNumber((int)bundle.getDouble("number"))
             .setSubText(bundle.getString("sub_text"))
-            .setGroup(bundle.getString("group"))
             .setVibrate(new long[]{0, DEFAULT_VIBRATION})
             .setExtras(bundle.getBundle("data"));
+
+            if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                notification.setGroup(bundle.getString("group"));
+            }
             
             if (bundle.containsKey("ongoing") && bundle.getBoolean("ongoing")) {
                 notification.setOngoing(bundle.getBoolean("ongoing"));
