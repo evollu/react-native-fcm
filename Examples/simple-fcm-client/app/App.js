@@ -83,7 +83,8 @@ export default class App extends Component {
       priority: "high",
       large_icon: "https://image.freepik.com/free-icon/small-boy-cartoon_318-38077.jpg",
       show_in_foreground: true,
-      picture: 'https://firebase.google.com/_static/af7ae4b3fc/images/firebase/lockup.png'
+      picture: 'https://firebase.google.com/_static/af7ae4b3fc/images/firebase/lockup.png',
+      wake_screen: true
     });
   }
 
