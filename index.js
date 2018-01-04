@@ -92,7 +92,7 @@ FCM.requestPermissions = () => {
 
 FCM.createNotificationChannel = (channel) => {
   if (Platform.OS === 'android') {
-    return RNFIRMessaging.createNotificationChannel();
+    return RNFIRMessaging.createNotificationChannel(channel);
   }
 }
 
