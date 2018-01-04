@@ -107,6 +107,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             }
             if (mngr.getNotificationChannel(id) != null) {
                 promise.resolve(null);
+                return;
             }
             //
             NotificationChannel channel = new NotificationChannel(
