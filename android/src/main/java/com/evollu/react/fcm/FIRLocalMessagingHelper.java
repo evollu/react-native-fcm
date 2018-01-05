@@ -58,7 +58,7 @@ public class FIRLocalMessagingHelper {
             return;
         }
 
-        Long fireDate = Math.round(bundle.getDouble("fire_date"));
+        Long fireDate = Math.round(bundle.getDouble("fire_date", bundle.getLong("fire_date")));
         if (fireDate == 0) {
             Log.e(TAG, "failed to schedule notification because fire date is missing");
             return;
