@@ -16,7 +16,8 @@ If you have to upgrade, you can use sdk-26 branch and post feedback on [here](ht
 ## Installation
 
 - Run `npm install react-native-fcm --save`
-- Run `react-native link react-native-fcm` (RN 0.29.1+, otherwise `rnpm link react-native-fcm`). Or you can do [manual linking](https://facebook.github.io/react-native/docs/linking-libraries-ios.html#manual-linking) which is more reliable
+- [Link libraries](https://facebook.github.io/react-native/docs/linking-libraries-ios.html)
+  Note: the auto link doesn't work with xcworkspace so CocoaPods user needs to do manual linking
 
 ## Configure Firebase Console
 ### FCM config file
