@@ -187,7 +187,7 @@ cd ios && pod init
 Edit the newly created `Podfile`:
 ```diff
   # Pods for YOURAPP
-+ pod 'FirebaseMessaging'
++ pod 'Firebase/Messaging'
 ```
 
 Install the `Firebase/Messaging` pod:
