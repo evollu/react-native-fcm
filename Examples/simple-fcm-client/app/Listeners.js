@@ -42,6 +42,8 @@ export function registerAppListener(){
                 break;
               case NotificationType.WillPresent:
                 notif.finish(WillPresentNotificationResult.All) //other types available: WillPresentNotificationResult.None
+                // this type of notificaiton will be called only when you are in foreground.
+                // if it is a remote notification, don't do any app logic here. Another notification callback will be triggered with type NotificationType.Remote
                 break;
             }
     }
