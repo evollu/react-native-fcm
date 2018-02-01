@@ -230,6 +230,7 @@
 					"$(PROJECT_DIR)/../../../ios/Frameworks/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
 					"$(PROJECT_DIR)/../../../ios/Pods/Firebase/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/Headers/Public/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -257,6 +258,7 @@
 					"$(PROJECT_DIR)/../../../ios/Frameworks/**",
 					"$(SRCROOT)/../../../node_modules/react-native-firestack/ios/**",
 					"$(PROJECT_DIR)/../../../ios/Pods/Firebase/**",
+					"$(PROJECT_DIR)/../../../ios/Pods/Headers/Public/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
