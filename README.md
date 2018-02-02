@@ -407,7 +407,7 @@ class App extends Component {
 
         //these removes future local notifications
         FCM.cancelAllLocalNotifications()
-        FCM.cancelLocalNotification("UNIQ_ID_STRING")
+        FCM.cancelLocalNotification("UNIQ_ID_STRING", 1509699703628) // Second parameter is the firedate; only required if notification is scheduled and not yet delivered; firedate only on Android required
 
         FCM.setBadgeNumber(1);                                       // iOS and supporting android.
         FCM.getBadgeNumber().then(number=>console.log(number));     // iOS and supporting android.
