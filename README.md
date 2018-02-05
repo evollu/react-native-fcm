@@ -56,6 +56,8 @@ https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-clien
     ...
     android:theme="@style/AppTheme">
 
++    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/>
+
 +   <service android:name="com.evollu.react.fcm.MessagingService" android:enabled="true" android:exported="true">
 +     <intent-filter>
 +       <action android:name="com.google.firebase.MESSAGING_EVENT"/>
@@ -187,7 +189,7 @@ cd ios && pod init
 Edit the newly created `Podfile`:
 ```diff
   # Pods for YOURAPP
-+ pod 'FirebaseMessaging'
++ pod 'Firebase/Messaging'
 ```
 
 Install the `Firebase/Messaging` pod:
@@ -277,7 +279,6 @@ Edit AndroidManifest.xml
 + <uses-permission android:name="android.permission.VIBRATE" />
 
   <application
-+    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/>
 +      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
 +      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
 +          <intent-filter>
