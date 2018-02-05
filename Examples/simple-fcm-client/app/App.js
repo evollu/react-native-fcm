@@ -32,6 +32,12 @@ export default class App extends Component {
   }
 
   async componentDidMount(){
+    FCM.createNotificationChannel({
+      id: 'default',
+      name: 'Default',
+      description: 'used for example',
+      priority: 'high'
+    })
     registerAppListener();
     FCM.getInitialNotification().then(notif => {
       this.setState({
@@ -61,6 +67,7 @@ export default class App extends Component {
     FCM.presentLocalNotification({
       vibrate: 500,
       title: 'Hello',
+      channel: 'default',
       body: 'Test Notification',
       big_text: 'i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large',
       priority: "high",
