@@ -195,7 +195,9 @@ FCM.send = (senderId, payload) => {
 };
 
 FCM.setNotificationCategories = (categories) => {
-  RNFIRMessaging.setNotificationCategories(categories);
+  if (Platform.OS === 'ios') {
+    RNFIRMessaging.setNotificationCategories(categories);
+  }
 }
 
 export default FCM;
