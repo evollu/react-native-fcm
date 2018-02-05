@@ -312,6 +312,10 @@ FCM.on(FCMEvent.Notification, async (notif) => {
     // await someAsyncCall();
 
     if(Platform.OS ==='ios'){
+      if (notif._actionIdentifier === 'com.myapp.MyCategory.Confirm') {
+        // handle notification action here
+        // the text from user is in notif._userText if type of the action is NotificationActionType.TextInput
+      }
       //optional
       //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application.
       //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
@@ -372,7 +376,7 @@ class App extends Component {
             body: "My Notification Message",                    // as FCM payload (required)
             sound: "default",                                   // as FCM payload
             priority: "high",                                   // as FCM payload
-            click_action: "ACTION",                             // as FCM payload
+            click_action: "com.myapp.MyCategory",               // as FCM payload - this is used as category identifier on iOS.
             badge: 10,                                          // as FCM payload IOS only, set 0 to clear badges
             number: 10,                                         // Android only
             ticker: "My Notification Ticker",                   // Android only
@@ -415,6 +419,28 @@ class App extends Component {
           my_custom_data_1: 'my_custom_field_value_1',
           my_custom_data_2: 'my_custom_field_value_2'
         });
+
+        // Call this somewhere at initialization to register types of your actionable notifications. See https://goo.gl/UanU9p.
+        FCM.setNotificationCategories([
+          {
+            id: 'com.myapp.MyCategory',
+            actions: [
+              { 
+                type: NotificationActionType.Default, // or NotificationActionType.TextInput
+                id: 'com.myapp.MyCategory.Confirm',
+                title: 'Confirm', // Use with NotificationActionType.Default
+                textInputButtonTitle: 'Send', // Use with NotificationActionType.TextInput
+                textInputPlaceholder: 'Message', // Use with NotificationActionType.TextInput
+                // Available options: NotificationActionOption.None, NotificationActionOption.AuthenticationRequired, NotificationActionOption.Destructive and NotificationActionOption.Foreground.
+                options: NotificationActionOption.AuthenticationRequired, // single or array
+              },
+            ],
+            intentIdentifiers: [],
+            // Available options: NotificationCategoryOption.None, NotificationCategoryOption.CustomDismissAction and NotificationCategoryOption.AllowInCarPlay.
+            // On iOS >= 11.0 there is also NotificationCategoryOption.PreviewsShowTitle and NotificationCategoryOption.PreviewsShowSubtitle.
+            options: [NotificationCategoryOption.CustomDismissAction, NotificationCategoryOption.PreviewsShowTitle], // single or array
+          },
+        ]);
 
         FCM.deleteInstanceId()
             .then( () => {
@@ -542,6 +568,26 @@ FCM.send('984XXXXXXXXX', {
 ```
 
 The `Data Object` is message data comprising as many key-value pairs of the message's payload as are needed (ensure that the value of each pair in the data object is a `string`). Your `Sender ID` is a unique numerical value generated when you created your Firebase project, it is available in the `Cloud Messaging` tab of the Firebase console `Settings` pane. The sender ID is used to identify each app server that can send messages to the client app.
+
+### Sending remote notifications with category on iOS
+If you want to send notification which will have actions as you defined in app it's important to correctly set it's `category` (`click_action`) property. It's also good to set `"content-available" : 1` so app will gets enough time to handle actions in background.
+
+So the fcm payload should look like this:
+```javascript
+{
+   "to": "some_device_token",
+   "content_available": true,
+   "notification": {
+       "title": "Alarm",
+       "subtitle": "First Alarm",
+       "body": "First Alarm",
+       "click_action": "com.myapp.MyCategory" // The id of notification category which you defined with FCM.setNotificationCategories
+   },
+   "data": {
+       "extra": "juice"
+   }
+ }
+ ```
 
 ## Q & A
 
