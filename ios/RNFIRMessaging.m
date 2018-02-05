@@ -217,26 +217,7 @@ RCT_MULTI_ENUM_CONVERTER(UNNotificationCategoryOptions, (@{
 
 @end
 
-@interface RNFIRMessagingHelper : NSObject
-
-@property (nonatomic, retain) NSDictionary *lastNotificationResponse;
-
-+ (nonnull instancetype) sharedInstance;
-
-@end
-
-@implementation RNFIRMessagingHelper
-
-+ (nonnull instancetype)sharedInstance {
-    static RNFIRMessagingHelper *sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [self new];
-    });
-    return sharedInstance;
-}
-
-@end
+static NSDictionary *initialNotificationActionResponse;
 
 @interface RNFIRMessaging ()
 @property (nonatomic, strong) NSMutableDictionary *notificationCallbacks;
@@ -282,8 +263,14 @@ RCT_EXPORT_MODULE();
     }
     
     NSDictionary *userInfo = @{@"data": data, @"completionHandler": completionHandler};
-    [RNFIRMessagingHelper sharedInstance].lastNotificationResponse = userInfo;
-    
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (data[@"_actionIdentifier"] && ![data[@"_actionIdentifier"] isEqualToString:UNNotificationDefaultActionIdentifier]) {
+            initialNotificationActionResponse = userInfo;
+        }
+    });
+
     [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:userInfo];
 }
 
@@ -325,9 +312,11 @@ RCT_EXPORT_MODULE();
     return self;
 }
 
--(void)startObserving {
-    if([RNFIRMessagingHelper sharedInstance].lastNotificationResponse) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:[RNFIRMessagingHelper sharedInstance].lastNotificationResponse];
+-(void) addListener:(NSString *)eventName {
+    [super addListener:eventName];
+    
+    if([eventName isEqualToString:FCMNotificationReceived] && initialNotificationActionResponse) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:[initialNotificationActionResponse copy]];
     }
 }
 
@@ -350,6 +339,8 @@ RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve rejecte
         resolve([self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy]);
     }
 }
+
+
 
 RCT_EXPORT_METHOD(getAPNSToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -627,8 +618,10 @@ RCT_EXPORT_METHOD(finishNotificationResponse: (NSString *)completionHandlerId){
     }
 
     [self sendEventWithName:FCMNotificationReceived body:data];
-    
-    [RNFIRMessagingHelper sharedInstance].lastNotificationResponse = nil;
+
+    if (initialNotificationActionResponse) {
+        initialNotificationActionResponse = nil;
+    }
 }
 
 - (void)sendDataMessageFailure:(NSNotification *)notification
