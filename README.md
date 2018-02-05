@@ -376,7 +376,7 @@ class App extends Component {
             body: "My Notification Message",                    // as FCM payload (required)
             sound: "default",                                   // as FCM payload
             priority: "high",                                   // as FCM payload
-            click_action: "ACTION",                             // as FCM payload
+            click_action: "com.myapp.MyCategory",               // as FCM payload - this is used as category identifier on iOS.
             badge: 10,                                          // as FCM payload IOS only, set 0 to clear badges
             number: 10,                                         // Android only
             ticker: "My Notification Ticker",                   // Android only
@@ -568,6 +568,26 @@ FCM.send('984XXXXXXXXX', {
 ```
 
 The `Data Object` is message data comprising as many key-value pairs of the message's payload as are needed (ensure that the value of each pair in the data object is a `string`). Your `Sender ID` is a unique numerical value generated when you created your Firebase project, it is available in the `Cloud Messaging` tab of the Firebase console `Settings` pane. The sender ID is used to identify each app server that can send messages to the client app.
+
+### Sending remote notifications with category on iOS
+If you want to send notification which will have actions as you defined in app it's important to correctly set it's `category` (`click_action`) property. It's also good to set `"content-available" : 1` so app will gets enough time to handle actions in background.
+
+So the fcm payload should look like this:
+```javascript
+{
+   "to": "some_device_token",
+   "content_available": true,
+   "notification": {
+       "title": "Alarm",
+       "subtitle": "First Alarm",
+       "body": "First Alarm",
+       "click_action": "com.myapp.MyCategory" // The id of notification category which you defined with FCM.setNotificationCategories
+   },
+   "data": {
+       "extra": "juice"
+   }
+ }
+ ```
 
 ## Q & A
 
