@@ -312,6 +312,10 @@ FCM.on(FCMEvent.Notification, async (notif) => {
     // await someAsyncCall();
 
     if(Platform.OS ==='ios'){
+      if (notif._actionIdentifier === 'com.myapp.MyCategory.Confirm') {
+        // handle notification action here
+        // the text from user is in notif._userText if type of the action is NotificationActionType.TextInput
+      }
       //optional
       //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application.
       //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
@@ -415,6 +419,28 @@ class App extends Component {
           my_custom_data_1: 'my_custom_field_value_1',
           my_custom_data_2: 'my_custom_field_value_2'
         });
+
+        // Call this somewhere at initialization to register types of your actionable notifications. See https://goo.gl/UanU9p.
+        FCM.setNotificationCategories([
+          {
+            id: 'com.myapp.MyCategory',
+            actions: [
+              { 
+                type: NotificationActionType.Default, // or NotificationActionType.TextInput
+                id: 'com.myapp.MyCategory.Confirm',
+                title: 'Confirm', // Use with NotificationActionType.Default
+                textInputButtonTitle: 'Send', // Use with NotificationActionType.TextInput
+                textInputPlaceholder: 'Message', // Use with NotificationActionType.TextInput
+                // Available options: NotificationActionOption.None, NotificationActionOption.AuthenticationRequired, NotificationActionOption.Destructive and NotificationActionOption.Foreground.
+                options: NotificationActionOption.AuthenticationRequired, // single or array
+              },
+            ],
+            intentIdentifiers: [],
+            // Available options: NotificationCategoryOption.None, NotificationCategoryOption.CustomDismissAction and NotificationCategoryOption.AllowInCarPlay.
+            // On iOS >= 11.0 there is also NotificationCategoryOption.PreviewsShowTitle and NotificationCategoryOption.PreviewsShowSubtitle.
+            options: [NotificationCategoryOption.CustomDismissAction, NotificationCategoryOption.PreviewsShowTitle], // single or array
+          },
+        ]);
 
         FCM.deleteInstanceId()
             .then( () => {
