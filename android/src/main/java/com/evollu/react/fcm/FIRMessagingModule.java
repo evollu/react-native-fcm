@@ -100,7 +100,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void deleteFCMToken(Promise promise) {
+    public void deleteEntityFCMToken(Promise promise) {
         try {
             String senderId = FirebaseApp.getInstance().getOptions().getGcmSenderId();
             FirebaseInstanceId.getInstance().deleteToken(senderId, "FCM");
