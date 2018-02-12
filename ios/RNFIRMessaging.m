@@ -332,15 +332,21 @@ RCT_EXPORT_METHOD(isDirectChannelEstablished:(RCTPromiseResolveBlock)resolve rej
 
 RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    UILocalNotification *localUserInfo = self.bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
-    if (localUserInfo) {
-        resolve([[localUserInfo userInfo] copy]);
-    } else {
-        resolve([self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy]);
-    }
+  NSDictionary* initialNotif;
+  NSDictionary *localUserInfo = [[self.bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey] userInfo] mutableCopy];
+  NSDictionary *remoteUserInfo = [self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] mutableCopy];
+  if(localUserInfo){
+    initialNotif = localUserInfo;
+  } else if (remoteUserInfo) {
+    initialNotif = remoteUserInfo;
+  }
+  if (initialNotif) {
+    [initialNotif setValue:@YES forKey:@"opened_from_tray"];
+    resolve(initialNotif);
+  } else {
+    resolve(nil);
+  }
 }
-
-
 
 RCT_EXPORT_METHOD(getAPNSToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
