@@ -183,7 +183,7 @@ export default class App extends Component {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => this.showLocalNotificationWithAction(token)} style={styles.button}>
-          <Text style={styles.buttonText}>Show Local Notification with Action</Text>
+          <Text style={styles.buttonText}>Show Local Notification with Action (iOS)</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => this.scheduleLocalNotification()} style={styles.button}>

@@ -26,6 +26,9 @@ export function registerAppListener(){
       if(notif._actionIdentifier === 'com.myidentifi.fcm.text.reply'){
         alert("User replied: "+notif._userText);
       }
+      if(notif._actionIdentifier === 'com.myidentifi.fcm.text.dismiss'){
+        alert("User clicked Dismiss");
+      }
     }
 
     if(Platform.OS ==='ios'){
@@ -74,6 +77,12 @@ FCM.setNotificationCategories([
         textInputPlaceholder: 'Say something',
         intentIdentifiers: [],
         options: NotificationActionOption.AuthenticationRequired
+      },
+      {
+        type: NotificationActionType.Default,
+        id: 'com.myidentifi.fcm.text.dismiss',
+        title: 'Dismiss',
+        intentIdentifiers: []
       }
     ],
     options: [NotificationCategoryOption.CustomDismissAction, NotificationCategoryOption.PreviewsShowTitle]
