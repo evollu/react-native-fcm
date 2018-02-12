@@ -1,6 +1,6 @@
 import { Platform, AsyncStorage } from 'react-native';
 
-import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from "react-native-fcm";
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType, NotificationActionType, NotificationActionOption, NotificationCategoryOption} from "react-native-fcm";
 
 AsyncStorage.getItem('lastNotification').then(data=>{
   if(data){
@@ -21,11 +21,11 @@ export function registerKilledListener(){
 export function registerAppListener(){
   FCM.on(FCMEvent.Notification, notif => {
     console.log("Notification", notif);
-    if(notif.local_notification){
-      return;
-    }
+
     if(notif.opened_from_tray){
-      return;
+      if(notif._actionIdentifier === 'com.myidentifi.fcm.text.reply'){
+        alert("User replied: "+notif._userText);
+      }
     }
 
     if(Platform.OS ==='ios'){
@@ -61,3 +61,21 @@ export function registerAppListener(){
     FCM.isDirectChannelEstablished().then(d => console.log(d));
   }, 1000);
 }
+
+FCM.setNotificationCategories([
+  {
+    id: 'com.myidentifi.fcm.text',
+    actions: [
+      {
+        type: NotificationActionType.TextInput,
+        id: 'com.myidentifi.fcm.text.reply',
+        title: 'Reply',
+        textInputButtonTitle: 'Send',
+        textInputPlaceholder: 'Say something',
+        intentIdentifiers: [],
+        options: NotificationActionOption.AuthenticationRequired
+      }
+    ],
+    options: [NotificationCategoryOption.CustomDismissAction, NotificationCategoryOption.PreviewsShowTitle]
+  }
+])

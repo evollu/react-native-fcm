@@ -134,21 +134,14 @@ export default class App extends Component {
     firebaseClient.send(JSON.stringify(body), "data");
   }
 
-  sendRemoteNotificationWithData(token) {
-    let body = {
-      "to": token,
-      "notification":{
-    		"title": "Simple FCM Client",
-    		"body": "This is a notification with NOTIFICATION and DATA (NOTIF).",
-				"sound": "default"
-    	},
-    	"data":{
-    		"hello": "there"
-    	},
-    	"priority": "high"
-    }
-
-    firebaseClient.send(JSON.stringify(body), "notification-data");
+  showLocalNotificationWithAction() {
+    FCM.presentLocalNotification({
+      title: 'Test Notification with action',
+      body: 'Force touch to reply',
+      priority: "high",
+      show_in_foreground: true,
+      click_action: "com.myidentifi.fcm.text"
+    });
   }
 
   render() {
@@ -185,12 +178,12 @@ export default class App extends Component {
           <Text style={styles.buttonText}>Send Remote Data</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => this.sendRemoteNotificationWithData(token)} style={styles.button}>
-          <Text style={styles.buttonText}>Send Remote Notification With Data</Text>
+        <TouchableOpacity onPress={() => this.showLocalNotification()} style={styles.button}>
+          <Text style={styles.buttonText}>Show Local Notification</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => this.showLocalNotification()} style={styles.button}>
-          <Text style={styles.buttonText}>Send Local Notification</Text>
+        <TouchableOpacity onPress={() => this.showLocalNotificationWithAction(token)} style={styles.button}>
+          <Text style={styles.buttonText}>Show Local Notification with Action</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => this.scheduleLocalNotification()} style={styles.button}>
