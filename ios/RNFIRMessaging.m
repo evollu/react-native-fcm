@@ -313,7 +313,9 @@ RCT_EXPORT_MODULE();
 }
 
 -(void) addListener:(NSString *)eventName {
+  if([super respondsToSelector:@selector(addListener:)]){
     [super addListener:eventName];
+  }
 
     if([eventName isEqualToString:FCMNotificationReceived] && initialNotificationActionResponse) {
         [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:[initialNotificationActionResponse copy]];
