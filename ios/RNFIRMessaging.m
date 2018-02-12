@@ -193,9 +193,9 @@ RCT_MULTI_ENUM_CONVERTER(UNNotificationActionOptions, (@{
     UNNotificationCategoryOptions options = [RCTConvert UNNotificationCategoryOptions: details[@"options"]];
 
     if (hiddenPreviewsBodyPlaceholder) {
-        if (@available(iOS 11.0, *)) {
+#if defined(__IPHONE_11_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
             return [UNNotificationCategory categoryWithIdentifier:identifier actions:actions intentIdentifiers:intentIdentifiers hiddenPreviewsBodyPlaceholder:hiddenPreviewsBodyPlaceholder options:options];
-        }
+#endif
     }
 
     return [UNNotificationCategory categoryWithIdentifier:identifier actions:actions intentIdentifiers:intentIdentifiers options:options];
