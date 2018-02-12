@@ -140,7 +140,7 @@ typedef NS_ENUM(NSUInteger, UNNotificationActionType) {
 
 + (UNNotificationAction *) UNNotificationAction:(id)json {
     NSDictionary<NSString *, id> *details = [self NSDictionary:json];
-    
+
     NSString *identifier = [RCTConvert NSString: details[@"id"]];
     NSString *title = [RCTConvert NSString: details[@"title"]];
     UNNotificationActionOptions options = [RCTConvert UNNotificationActionOptions: details[@"options"]];
@@ -152,11 +152,11 @@ typedef NS_ENUM(NSUInteger, UNNotificationActionType) {
 
         return [UNTextInputNotificationAction actionWithIdentifier:identifier title:title options:options textInputButtonTitle:textInputButtonTitle textInputPlaceholder:textInputPlaceholder];
     }
-    
+
     return [UNNotificationAction actionWithIdentifier:identifier
                                                 title:title
                                               options:options];
-    
+
 }
 
 RCT_ENUM_CONVERTER(UNNotificationActionType, (@{
@@ -180,9 +180,9 @@ RCT_MULTI_ENUM_CONVERTER(UNNotificationActionOptions, (@{
 
 + (UNNotificationCategory *) UNNotificationCategory:(id)json {
     NSDictionary<NSString *, id> *details = [self NSDictionary:json];
-    
+
     NSString *identifier = [RCTConvert NSString: details[@"id"]];
-    
+
     NSMutableArray *actions = [[NSMutableArray alloc] init];
     for (NSDictionary *actionDict in details[@"actions"]) {
         [actions addObject:[RCTConvert UNNotificationAction:actionDict]];
@@ -261,7 +261,7 @@ RCT_EXPORT_MODULE();
     if ([response isKindOfClass:UNTextInputNotificationResponse.class]) {
         [data setValue:[(UNTextInputNotificationResponse *)response userText] forKey:@"_userText"];
     }
-    
+
     NSDictionary *userInfo = @{@"data": data, @"completionHandler": completionHandler};
 
     static dispatch_once_t onceToken;
@@ -314,7 +314,7 @@ RCT_EXPORT_MODULE();
 
 -(void) addListener:(NSString *)eventName {
     [super addListener:eventName];
-    
+
     if([eventName isEqualToString:FCMNotificationReceived] && initialNotificationActionResponse) {
         [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:[initialNotificationActionResponse copy]];
     }
@@ -358,16 +358,47 @@ RCT_EXPORT_METHOD(getFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
     resolve([FIRMessaging messaging].FCMToken);
 }
 
+RCT_EXPORT_METHOD(getEntityFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    FIROptions *options = FIROptions.defaultOptions;
+    NSString *entity = options.GCMSenderID;
+    NSData * deviceToken = [FIRMessaging messaging].APNSToken;
+
+    [[FIRInstanceID instanceID]tokenWithAuthorizedEntity:entity scope:kFIRInstanceIDScopeFirebaseMessaging options:@{@"apns_token": deviceToken} handler:^(NSString * _Nullable token, NSError * _Nullable error) {
+
+        if (error != nil) {
+            reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
+        } else {
+            resolve(token);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(deleteEntityFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    FIROptions *options = FIROptions.defaultOptions;;
+    NSString *entity = options.GCMSenderID;
+
+    [[FIRInstanceID instanceID]deleteTokenWithAuthorizedEntity:entity scope:kFIRInstanceIDScopeFirebaseMessaging handler:^(NSError * _Nullable error) {
+
+        if (error != nil) {
+            reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
+        } else {
+            resolve(nil);
+        }
+    }];
+}
+
 RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  [[FIRInstanceID instanceID]deleteIDWithHandler:^(NSError * _Nullable error) {
-    
-    if (error != nil) {
-      reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
-    } else {
-      resolve(nil);
-    }
-  }];
+    [[FIRInstanceID instanceID]deleteIDWithHandler:^(NSError * _Nullable error) {
+
+        if (error != nil) {
+            reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
+        } else {
+            resolve(nil);
+        }
+    }];
 }
 
 - (void)messaging:(nonnull FIRMessaging *)messaging didRefreshRegistrationToken:(nonnull NSString *)fcmToken {

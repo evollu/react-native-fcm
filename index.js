@@ -68,6 +68,14 @@ FCM.getFCMToken = () => {
   return RNFIRMessaging.getFCMToken();
 };
 
+FCM.getEntityFCMToken = () => {
+  return RNFIRMessaging.getEntityFCMToken();
+}
+
+FCM.deleteEntityFCMToken = () => {
+  return RNFIRMessaging.deleteEntityFCMToken();
+}
+
 FCM.deleteInstanceId = () =>{
   return RNFIRMessaging.deleteInstanceId();
 };

@@ -87,6 +87,31 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
+    public void getEntityFCMToken(Promise promise) {
+        try {
+            String senderId = FirebaseApp.getInstance().getOptions().getGcmSenderId();
+            String token = FirebaseInstanceId.getInstance().getToken(senderId, "FCM");
+            Log.d(TAG, "Firebase token: " + token);
+            promise.resolve(token);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            promise.reject(null,e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void deleteEntityFCMToken(Promise promise) {
+        try {
+            String senderId = FirebaseApp.getInstance().getOptions().getGcmSenderId();
+            FirebaseInstanceId.getInstance().deleteToken(senderId, "FCM");
+            promise.resolve(null);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            promise.reject(null,e.getMessage());
+        }
+    }
+
+    @ReactMethod
     public void deleteInstanceId(Promise promise){
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();
@@ -307,4 +332,3 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         sendEvent("FCMNotificationReceived", parseIntent(intent));
     }
 }
-
