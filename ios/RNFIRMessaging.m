@@ -364,8 +364,7 @@ RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve rejecte
     [initialNotif setValue:@YES forKey:@"opened_from_tray"];
     resolve(initialNotif);
   } else {
-    
-    resolve([self.bridge.launchOptions[UIApplicationLaunchOptionsUserActivityTypeKey] copy]);
+    resolve(nil);
   }
 }
 
@@ -385,6 +384,37 @@ RCT_EXPORT_METHOD(getAPNSToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTProm
 RCT_EXPORT_METHOD(getFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     resolve([FIRMessaging messaging].FCMToken);
+}
+
+RCT_EXPORT_METHOD(getEntityFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    FIROptions *options = FIROptions.defaultOptions;
+    NSString *entity = options.GCMSenderID;
+    NSData * deviceToken = [FIRMessaging messaging].APNSToken;
+
+    [[FIRInstanceID instanceID]tokenWithAuthorizedEntity:entity scope:kFIRInstanceIDScopeFirebaseMessaging options:@{@"apns_token": deviceToken} handler:^(NSString * _Nullable token, NSError * _Nullable error) {
+
+        if (error != nil) {
+            reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
+        } else {
+            resolve(token);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(deleteEntityFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    FIROptions *options = FIROptions.defaultOptions;;
+    NSString *entity = options.GCMSenderID;
+
+    [[FIRInstanceID instanceID]deleteTokenWithAuthorizedEntity:entity scope:kFIRInstanceIDScopeFirebaseMessaging handler:^(NSError * _Nullable error) {
+
+        if (error != nil) {
+            reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
+        } else {
+            resolve(nil);
+        }
+    }];
 }
 
 RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
