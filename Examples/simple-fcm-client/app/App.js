@@ -153,15 +153,6 @@ export default class App extends Component {
           Welcome to Simple Fcm Client!
         </Text>
 
-        <Text>
-          Init notif: {JSON.stringify(this.state.initNotif)}
-
-        </Text>
-
-        <Text selectable={true} onPress={() => this.setClipboardContent(this.state.token)} style={styles.instructions}>
-          Token: {this.state.token}
-        </Text>
-
         <Text style={styles.feedback}>
           {this.state.tokenCopyFeedback}
         </Text>
@@ -189,6 +180,15 @@ export default class App extends Component {
         <TouchableOpacity onPress={() => this.scheduleLocalNotification()} style={styles.button}>
           <Text style={styles.buttonText}>Schedule Notification in 5s</Text>
         </TouchableOpacity>
+
+        <Text>
+          Init notif: {JSON.stringify(this.state.initNotif)}
+        </Text>
+
+        <Text selectable={true} onPress={() => this.setClipboardContent(this.state.token)} style={styles.instructions}>
+          Token: {this.state.token}
+        </Text>
+
       </View>
     );
   }

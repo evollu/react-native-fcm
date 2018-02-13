@@ -1,4 +1,4 @@
-import { Platform, AsyncStorage } from 'react-native';
+import { Platform, AsyncStorage, AppState } from 'react-native';
 
 import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType, NotificationActionType, NotificationActionOption, NotificationCategoryOption} from "react-native-fcm";
 
@@ -10,10 +10,33 @@ AsyncStorage.getItem('lastNotification').then(data=>{
   }
 })
 
+AsyncStorage.getItem('lastMessage').then(data=>{
+  if(data){
+    // if notification arrives when app is killed, it should still be logged here
+    console.log('last message', JSON.parse(data));
+    AsyncStorage.removeItem('lastMessage');
+  }
+})
+
 export function registerKilledListener(){
   // these callback will be triggered even when app is killed
   FCM.on(FCMEvent.Notification, notif => {
     AsyncStorage.setItem('lastNotification', JSON.stringify(notif));
+    if(notif.opened_from_tray){
+      if(notif._actionIdentifier === 'com.myidentifi.fcm.text.reply'){
+        if(AppState.currentState !== 'background'){
+          alert('User replied '+ JSON.stringify(notif._userText));
+        } else {
+          AsyncStorage.setItem('lastMessage', JSON.stringify(notif._userText));
+        }
+      }
+      if(notif._actionIdentifier === 'com.myidentifi.fcm.text.view'){
+        alert("User clicked View in App");
+      }
+      if(notif._actionIdentifier === 'com.myidentifi.fcm.text.dismiss'){
+        alert("User clicked Dismiss");
+      }
+    }
   });
 }
 
@@ -22,13 +45,15 @@ export function registerAppListener(){
   FCM.on(FCMEvent.Notification, notif => {
     console.log("Notification", notif);
 
+    if(Platform.OS ==='ios' && notif._notificationType === NotificationType.WillPresent && !notif.local_notification){
+      // this notification is only to decide if you want to show the notification when user if in forground.
+      // usually you can ignore it. just decide to show or not.
+      notif.finish(WillPresentNotificationResult.All)
+      return;
+    }
+
     if(notif.opened_from_tray){
-      if(notif._actionIdentifier === 'com.myidentifi.fcm.text.reply'){
-        alert("User replied: "+notif._userText);
-      }
-      if(notif._actionIdentifier === 'com.myidentifi.fcm.text.dismiss'){
-        alert("User clicked Dismiss");
-      }
+
     }
 
     if(Platform.OS ==='ios'){
@@ -72,7 +97,7 @@ FCM.setNotificationCategories([
       {
         type: NotificationActionType.TextInput,
         id: 'com.myidentifi.fcm.text.reply',
-        title: 'Reply',
+        title: 'Quick Reply',
         textInputButtonTitle: 'Send',
         textInputPlaceholder: 'Say something',
         intentIdentifiers: [],
@@ -80,9 +105,17 @@ FCM.setNotificationCategories([
       },
       {
         type: NotificationActionType.Default,
+        id: 'com.myidentifi.fcm.text.view',
+        title: 'View in App',
+        intentIdentifiers: [],
+        options: NotificationActionOption.Foreground
+      },
+      {
+        type: NotificationActionType.Default,
         id: 'com.myidentifi.fcm.text.dismiss',
         title: 'Dismiss',
-        intentIdentifiers: []
+        intentIdentifiers: [],
+        options: NotificationActionOption.Destructive
       }
     ],
     options: [NotificationCategoryOption.CustomDismissAction, NotificationCategoryOption.PreviewsShowTitle]
