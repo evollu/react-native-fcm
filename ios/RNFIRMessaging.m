@@ -217,6 +217,10 @@ RCT_MULTI_ENUM_CONVERTER(UNNotificationCategoryOptions, (@{
 
 @end
 
+@interface RCTEventEmitter ()
+- (void) addListener:(NSString *)eventName;
+@end
+
 @interface RNFIRMessaging ()
 @property (nonatomic, strong) NSMutableDictionary *notificationCallbacks;
 @end
@@ -318,6 +322,12 @@ RCT_EXPORT_MODULE();
         [[FIRMessaging messaging] setDelegate:self];
     });
   
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    if(!jsHandlerRegistered){
+      [self sendPendingNotifications];
+    }
+  });
+  
     return self;
 }
 
@@ -325,18 +335,22 @@ RCT_EXPORT_MODULE();
   [super addListener:eventName];
 
   if([eventName isEqualToString:FCMNotificationReceived]) {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-      jsHandlerRegistered = true;
-      
-      for (NSDictionary* data in pendingNotifications) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:data];
-      }
-      
-      [pendingNotifications removeAllObjects];
-      
-    });
+    [self sendPendingNotifications];
   }
+}
+
+-(void) sendPendingNotifications {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    jsHandlerRegistered = true;
+    
+    for (NSDictionary* data in pendingNotifications) {
+      [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:data];
+    }
+    
+    [pendingNotifications removeAllObjects];
+    
+  });
 }
 
 RCT_EXPORT_METHOD(enableDirectChannel)
