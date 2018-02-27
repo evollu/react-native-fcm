@@ -14,6 +14,8 @@ import {
   Platform
 } from 'react-native';
 
+import { StackNavigator } from 'react-navigation';
+
 import FCM from "react-native-fcm";
 
 import {registerKilledListener, registerAppListener} from "./Listeners";
@@ -21,7 +23,7 @@ import firebaseClient from  "./FirebaseClient";
 
 registerKilledListener();
 
-export default class App extends Component {
+class MainPage extends Component {
   constructor(props) {
     super(props);
 
@@ -32,7 +34,7 @@ export default class App extends Component {
   }
 
   async componentDidMount(){
-    registerAppListener();
+    registerAppListener(this.props.navigation);
     FCM.getInitialNotification().then(notif => {
       this.setState({
         initNotif: notif
@@ -61,13 +63,14 @@ export default class App extends Component {
     FCM.presentLocalNotification({
       vibrate: 500,
       title: 'Hello',
-      body: 'Test Notification',
-      big_text: 'i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large, i am large',
+      body: 'Click me to detail page,',
+      big_text: 'Large Text Large Text Large Text Large Text Large Text Large Text Large Text Large Text Large Text Large Text Large Text Large Text Large Text Large Text ',
       priority: "high",
       sound: "bell.mp3",
       large_icon: "https://image.freepik.com/free-icon/small-boy-cartoon_318-38077.jpg",
       show_in_foreground: true,
       group: 'test',
+      targetScreen: 'detail',
       number: 10
     });
   }
@@ -203,6 +206,25 @@ export default class App extends Component {
     this.setState({tokenCopyFeedback: ""});
   }
 }
+
+class DetailPage extends Component {
+  render(){
+    return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Detail page</Text>
+    </View>
+  }
+}
+
+export default StackNavigator({
+  Main: {
+    screen: MainPage,
+  },
+  Detail: {
+    screen: DetailPage
+  }
+}, {
+  initialRouteName: 'Main',
+});
 
 const styles = StyleSheet.create({
   container: {

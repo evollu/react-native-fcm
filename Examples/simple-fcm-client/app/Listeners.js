@@ -41,7 +41,7 @@ export function registerKilledListener(){
 }
 
 // these callback will be triggered only when app is foreground or background
-export function registerAppListener(){
+export function registerAppListener(navigation){
   FCM.on(FCMEvent.Notification, notif => {
     console.log("Notification", notif);
 
@@ -53,7 +53,11 @@ export function registerAppListener(){
     }
 
     if(notif.opened_from_tray){
-
+      if(notif.targetScreen === 'detail'){
+        setTimeout(()=>{
+          navigation.navigate('Detail')
+        }, 500)
+      }
     }
 
     if(Platform.OS ==='ios'){
