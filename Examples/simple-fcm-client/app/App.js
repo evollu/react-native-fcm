@@ -39,6 +39,11 @@ class MainPage extends Component {
       this.setState({
         initNotif: notif
       })
+      if(notif.targetScreen === 'detail'){
+        setTimeout(()=>{
+          this.props.navigation.navigate('Detail')
+        }, 500)
+      }
     });
 
     try{
@@ -102,10 +107,11 @@ class MainPage extends Component {
       	"data":{
 					"custom_notification": {
 						"title": "Simple FCM Client",
-						"body": "This is a notification with only NOTIFICATION.",
+						"body": "Click me to go to detail",
 						"sound": "default",
 						"priority": "high",
-						"show_in_foreground": true
+            "show_in_foreground": true,
+            targetScreen: 'detail'
         	}
     		},
     		"priority": 10
@@ -115,9 +121,12 @@ class MainPage extends Component {
 				"to": token,
 				"notification":{
 					"title": "Simple FCM Client",
-					"body": "This is a notification with only NOTIFICATION.",
+					"body": "Click me to go to detail",
 					"sound": "default"
-				},
+        },
+        data: {
+          targetScreen: 'detail'
+        },
 				"priority": 10
 			}
 		}
