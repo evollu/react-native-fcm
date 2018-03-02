@@ -743,7 +743,7 @@ fetch('https://fcm.googleapis.com/fcm/send', {
             "title": "test title",
             "color":"#00ACD4",
             "priority":"high",
-            "icon":"ic_launcher",
+            "icon":"ic_notif",
             "group": "GROUP",
             "sound": "default",
             "id": "id",
