@@ -692,3 +692,65 @@ Issues and pull requests are welcome. Let's make this thing better!
 
 #### Credits
 Local notification implementation is inspired by react-native-push-notification by zo0r
+
+## Sending remote notification
+
+How to send a push notification from your server? You should `POST` to this endpoint:
+
+    https://fcm.googleapis.com/fcm/send
+    
+You need to set the headers of `Content-Type` to `application/json` and `Authorization` to `key=******` where you replace `******` with the "Legacy server key" from here the Firebase dashbaord. Get this information by first going to:
+
+1. https://console.firebase.google.com/
+2. Click on "Gear" icon and click "Project Settingss". Screenshot: https://screenshotscdn.firefoxusercontent.com/images/35b93de8-44e1-49af-89d7-140b74c267c7.png
+3. Click on "Cloud Message" tab and find "Legacy server key" here. Screenshot: https://screenshotscdn.firefoxusercontent.com/images/c52ec383-783d-47d3-a1e6-75249fb6f3fb.png
+
+The body should be json like this:
+
+```
+{
+  "to":"FCM_DEVICE_TOKEN_GOES_HERE",
+  "data": {
+    "custom_notification": {
+      "body": "test body",
+      "title": "test title",
+      "color":"#00ACD4",
+      "priority":"high",
+      "icon":"ic_launcher",
+      "group": "GROUP",
+      "sound": "default",
+      "id": "id",
+      "show_in_foreground": true
+    }
+  }
+}
+```
+
+Example:
+
+```
+fetch('https://fcm.googleapis.com/fcm/send', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+        'Authorization': 'key=EFefklefwef9efwefkejfwf'
+    },
+    body: JSON.stringify({
+        "to":"kajfsdf:efawefwe_fsdfdsf-asfawefwefwf_asdfsdfasd-asdfasdfsd9A_asdfsdf_asdf",
+        "data": {
+            "custom_notification": {
+            "body": "test body",
+            "title": "test title",
+            "color":"#00ACD4",
+            "priority":"high",
+            "icon":"ic_notif",
+            "group": "GROUP",
+            "sound": "default",
+            "id": "id",
+            "show_in_foreground": true
+            }
+        }
+    })
+})
+```
+
