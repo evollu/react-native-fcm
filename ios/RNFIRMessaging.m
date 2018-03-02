@@ -406,6 +406,10 @@ RCT_EXPORT_METHOD(getEntityFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RC
     NSString *entity = options.GCMSenderID;
     NSData * deviceToken = [FIRMessaging messaging].APNSToken;
 
+    if (deviceToken == nil) {
+        resolve(nil);
+    }
+
     [[FIRInstanceID instanceID]tokenWithAuthorizedEntity:entity scope:kFIRInstanceIDScopeFirebaseMessaging options:@{@"apns_token": deviceToken} handler:^(NSString * _Nullable token, NSError * _Nullable error) {
 
         if (error != nil) {
