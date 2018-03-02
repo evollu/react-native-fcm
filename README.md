@@ -693,7 +693,7 @@ Issues and pull requests are welcome. Let's make this thing better!
 #### Credits
 Local notification implementation is inspired by react-native-push-notification by zo0r
 
-## Endpoint
+## Sending remote notification
 
 How to send a push notification from your server? You should `POST` to this endpoint:
 
