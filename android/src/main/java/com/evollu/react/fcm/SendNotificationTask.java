@@ -217,14 +217,14 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                     for (int a = 0; a < actions.length; a++) {
                         String actionValue = actions[a].trim();
                         Intent actionIntent = new Intent(mContext, intentClass);
-                        actionIntent.setAction("com.evollu.react.fcm." + actions[a] + "_ACTION");
+                        actionIntent.setAction("com.evollu.react.fcm." + actionValue + "_ACTIVE");
                         actionIntent.putExtras(bundle);
-                        actionIntent.putExtra("_actionIdentifier", actions[a]);
+                        actionIntent.putExtra("_actionIdentifier", actionValue);
                         actionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         PendingIntent pendingActionIntent = PendingIntent.getActivity(mContext, notificationID, actionIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        notification.addAction(1, actions[a], pendingActionIntent);
+                        notification.addAction(1, actionValue, pendingActionIntent);
                     }
                 }
                 
