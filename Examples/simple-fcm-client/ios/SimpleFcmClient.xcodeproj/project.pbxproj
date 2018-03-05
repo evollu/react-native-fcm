@@ -1163,6 +1163,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+				);
 				INFOPLIST_FILE = SimpleFcmClientTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1174,6 +1178,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimpleFcmClient.app/SimpleFcmClient";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks";
 			};
 			name = Debug;
 		};
@@ -1188,6 +1193,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+				);
 				INFOPLIST_FILE = SimpleFcmClientTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1199,6 +1208,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimpleFcmClient.app/SimpleFcmClient";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks";
 			};
 			name = Release;
 		};
@@ -1234,7 +1244,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.myidentifi.fcm;
 				PRODUCT_NAME = SimpleFcmClient;
-				USER_HEADER_SEARCH_PATHS = ./SimpleFcmClient/;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks $(PROJECT_DIR)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1270,7 +1280,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.myidentifi.fcm;
 				PRODUCT_NAME = SimpleFcmClient;
-				USER_HEADER_SEARCH_PATHS = ./SimpleFcmClient/;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks $(PROJECT_DIR)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
