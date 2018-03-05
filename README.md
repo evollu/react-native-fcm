@@ -198,13 +198,16 @@ Install the `Firebase/Messaging` pod:
 pod install
 ```
 NOTE: you don't need to enable `use_frameworks!`. if you have to have `use_frameworks!` make sure you don't have `inherit! :search_paths`
+NOTE: there is a working example in `master` branch
 
 ### Non Cocoapod approach
 
-1. Download the Firebase SDK framework from [Integrate without CocoaPods](https://firebase.google.com/docs/ios/setup#frameworks).
+1. Follow the instruction on [Integrate without CocoaPods](https://firebase.google.com/docs/ios/setup#frameworks).
 - Import libraries, add Capabilities (background running and push notification), upload APNS and etc etc etc...
-2. Put frameworks under `ios/Frameworks` folder
-2. Follow the `README` to link frameworks (Analytics+Messaging)
+2. Put frameworks under `ios/Frameworks` folder, also put `firebase.h` and `module.modulemap` there
+3. Modify `User Header Search Paths` and add `$(PROJECT_DIR)/Frameworks`
+<img width="796" alt="screen shot 2018-03-05 at 2 17 03 pm" src="https://user-images.githubusercontent.com/9213224/36994792-263f05c4-2080-11e8-9d46-9b11ef49962a.png">
+NOTE: There is a working example in `no-pod` branch
 
 ### Shared steps
 
