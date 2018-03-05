@@ -211,6 +211,22 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                                                                         PendingIntent.FLAG_UPDATE_CURRENT);
                 
                 notification.setContentIntent(pendingIntent);
+
+                if (bundle.containsKey("android_actions")) {
+                    String[] actions = bundle.getString("android_actions").split(",");
+                    for (int a = 0; a < actions.length; a++) {
+                        String actionValue = actions[a].trim();
+                        Intent actionIntent = new Intent(mContext, intentClass);
+                        actionIntent.setAction("com.evollu.react.fcm." + actionValue + "_ACTION");
+                        actionIntent.putExtras(bundle);
+                        actionIntent.putExtra("_actionIdentifier", actionValue);
+                        actionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        PendingIntent pendingActionIntent = PendingIntent.getActivity(mContext, notificationID, actionIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        notification.addAction(1, actionValue, pendingActionIntent);
+                    }
+                }
                 
                 Notification info = notification.build();
                 
