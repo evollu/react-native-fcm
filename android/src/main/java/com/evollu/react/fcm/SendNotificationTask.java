@@ -217,7 +217,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                     for (int a = 0; a < actions.length; a++) {
                         String actionValue = actions[a].trim();
                         Intent actionIntent = new Intent(mContext, intentClass);
-                        actionIntent.setAction("com.evollu.react.fcm." + actionValue + "_ACTIVE");
+                        actionIntent.setAction("com.evollu.react.fcm." + actionValue + "_ACTION");
                         actionIntent.putExtras(bundle);
                         actionIntent.putExtra("_actionIdentifier", actionValue);
                         actionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
