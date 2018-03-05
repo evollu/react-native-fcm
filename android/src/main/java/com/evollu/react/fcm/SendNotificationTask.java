@@ -212,8 +212,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 
                 notification.setContentIntent(pendingIntent);
 
-                if (bundle.containsKey("actions")) {
-                    String[] actions = bundle.getString("actions").split(",");
+                if (bundle.containsKey("android_actions")) {
+                    String[] actions = bundle.getString("android_actions").split(",");
                     for (int a = 0; a < actions.length; a++) {
                         String actionValue = actions[a].trim();
                         Intent actionIntent = new Intent(mContext, intentClass);
