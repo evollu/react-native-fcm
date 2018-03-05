@@ -279,7 +279,7 @@ Edit AndroidManifest.xml
 + <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 + <uses-permission android:name="android.permission.VIBRATE" />
 
-  <application
+  <application>
 +      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
 +      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
 +          <intent-filter>
