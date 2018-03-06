@@ -16,7 +16,7 @@ import {
 
 import { StackNavigator } from 'react-navigation';
 
-import FCM from "react-native-fcm";
+import FCM, {NotificationActionType} from "react-native-fcm";
 
 import {registerKilledListener, registerAppListener} from "./Listeners";
 import firebaseClient from  "./FirebaseClient";
@@ -39,7 +39,7 @@ class MainPage extends Component {
       this.setState({
         initNotif: notif
       })
-      if(notif.targetScreen === 'detail'){
+      if(notif && notif.targetScreen === 'detail'){
         setTimeout(()=>{
           this.props.navigation.navigate('Detail')
         }, 500)
@@ -154,7 +154,14 @@ class MainPage extends Component {
       body: 'Force touch to reply',
       priority: "high",
       show_in_foreground: true,
-      click_action: "com.myidentifi.fcm.text"
+      click_action: "com.myidentifi.fcm.text", // for ios
+      android_actions: JSON.stringify([{
+        id: "view",
+        title: 'view'
+      },{
+        id: "dismiss",
+        title: 'dismiss'
+      }]) // for android, take syntax similar to ios's. only buttons are supported
     });
   }
 
@@ -188,7 +195,7 @@ class MainPage extends Component {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => this.showLocalNotificationWithAction(token)} style={styles.button}>
-          <Text style={styles.buttonText}>Show Local Notification with Action (iOS)</Text>
+          <Text style={styles.buttonText}>Show Local Notification with Action</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => this.scheduleLocalNotification()} style={styles.button}>
