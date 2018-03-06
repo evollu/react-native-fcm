@@ -21,6 +21,11 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
+
+import org.json.JSONArray;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -213,20 +218,21 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 notification.setContentIntent(pendingIntent);
 
                 if (bundle.containsKey("android_actions")) {
-                    List<String> actions = bundle.getStringArrayList("android_actions");
-                    bundle.remove("android_actions");
+                    WritableArray actions = ReactNativeJson.convertJsonToArray(new JSONArray(bundle.getString("android_actions")));
                     for (int a = 0; a < actions.size(); a++) {
-                        String actionValue = actions.get(a).trim();
+                        ReadableMap action = actions.getMap(a);
+                        String actionTitle = action.getString("title");
+                        String actionId = action.getString("id");
                         Intent actionIntent = new Intent();
                         actionIntent.setClassName(mContext, intentClassName);
-                        actionIntent.setAction("com.evollu.react.fcm." + actionValue + "_ACTION");
+                        actionIntent.setAction("com.evollu.react.fcm." + actionId + "_ACTION");
                         actionIntent.putExtras(bundle);
-                        actionIntent.putExtra("_actionIdentifier", actionValue);
+                        actionIntent.putExtra("_actionIdentifier", actionId);
                         actionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         PendingIntent pendingActionIntent = PendingIntent.getActivity(mContext, notificationID, actionIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        notification.addAction(1, actionValue, pendingActionIntent);
+                        notification.addAction(1, actionTitle, pendingActionIntent);
                     }
                 }
                 
