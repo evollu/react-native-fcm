@@ -61,6 +61,9 @@ export function registerAppListener(navigation){
           navigation.navigate('Detail')
         }, 500)
       }
+      setTimeout(()=>{
+        alert(`User tapped notification\n${JSON.stringify(notif)}`)
+      }, 500)
     }
 
     if(Platform.OS ==='ios'){

@@ -66,7 +66,7 @@ class MainPage extends Component {
 
   showLocalNotification() {
     FCM.presentLocalNotification({
-      id: "UNIQ_ID_STRING",                               // (optional for instant notification)
+      id: new Date().valueOf().toString(),                // (optional for instant notification)
       title: "Test Notification with action",             // as FCM payload
       body: "Force touch to reply",                       // as FCM payload (required)
       sound: "bell.mp3",                                  // "default" or filename
