@@ -455,6 +455,22 @@ class App extends Component {
             .catch(error => {
               //Error while deleting instance id
             });
+
+        // Use this functions instead of FCM.getFCMToken if you want revokes access of token
+        FCM.getEntityFCMToken()
+            .then(token => {
+              // Returns a token that authorizes an FCM Entity by Instance ID
+              // Store fcm token in your server
+            })
+        FCM.deleteEntityFCMToken()
+            .then( () => {
+              // Deleted token successfully
+              // Revokes access to a scope (action) for an entity previously authorized by getToken() with Instance ID
+              // This will reset token
+            })
+            .catch(error => {
+              // Error while deleting token
+            });
     }
 }
 ```
