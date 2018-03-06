@@ -213,10 +213,12 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 notification.setContentIntent(pendingIntent);
 
                 if (bundle.containsKey("android_actions")) {
-                    String[] actions = bundle.getString("android_actions").split(",");
-                    for (int a = 0; a < actions.length; a++) {
-                        String actionValue = actions[a].trim();
-                        Intent actionIntent = new Intent(mContext, intentClass);
+                    List<String> actions = bundle.getStringArrayList("android_actions");
+                    bundle.remove("android_actions");
+                    for (int a = 0; a < actions.size(); a++) {
+                        String actionValue = actions.get(a).trim();
+                        Intent actionIntent = new Intent();
+                        actionIntent.setClassName(mContext, intentClassName);
                         actionIntent.setAction("com.evollu.react.fcm." + actionValue + "_ACTION");
                         actionIntent.putExtras(bundle);
                         actionIntent.putExtra("_actionIdentifier", actionValue);
