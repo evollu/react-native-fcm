@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   View,
   Clipboard,
-  Platform
+  Platform,
+  ScrollView
 } from 'react-native';
 
 import { StackNavigator } from 'react-navigation';
@@ -182,6 +183,7 @@ class MainPage extends Component {
 
     return (
       <View style={styles.container}>
+      <ScrollView style={{paddingHorizontal: 20}}>
         <Text style={styles.welcome}>
           Welcome to Simple Fcm Client!
         </Text>
@@ -214,14 +216,20 @@ class MainPage extends Component {
           <Text style={styles.buttonText}>Schedule Notification in 5s</Text>
         </TouchableOpacity>
 
+        <Text style={styles.instructions}>
+          Init notif:
+        </Text>
         <Text>
-          Init notif: {JSON.stringify(this.state.initNotif)}
+          {JSON.stringify(this.state.initNotif)}
         </Text>
 
-        <Text selectable={true} onPress={() => this.setClipboardContent(this.state.token)} style={styles.instructions}>
-          Token: {this.state.token}
+        <Text style={styles.instructions}>
+          Token:
         </Text>
-
+        <Text selectable={true} onPress={() => this.setClipboardContent(this.state.token)}>
+          {this.state.token}
+        </Text>
+        </ScrollView>
       </View>
     );
   }
@@ -281,8 +289,8 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "teal",
     paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginVertical: 15,
+    paddingVertical: 15,
+    marginVertical: 10,
     borderRadius: 10
   },
   buttonText: {
