@@ -92,6 +92,19 @@ https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-clien
   include ':app'
 ```
 
+- Edit `MainActivity.java`. This fixes [a bug](https://stackoverflow.com/questions/14853327/intent-not-restored-correctly-after-activity-is-killed-if-clear-top-and-single-t/18307360#18307360)
+```diff
++ import android.content.Intent;
+...
+public class MainActivity extends ReactActivity {
++ @Override
++    public void onNewIntent(Intent intent) {
++        super.onNewIntent(intent);
++        setIntent(intent);
++    }
+}
+```
+
 ### Config for notification and `click_action` in Android
 
 To allow android to respond to `click_action`, you need to define Activities and filter on specific intent. Since all javascript is running in MainActivity, you can have MainActivity to handle actions:
