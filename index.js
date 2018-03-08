@@ -179,7 +179,7 @@ FCM.on = (event, callback) => {
       try {
         await callback(data);
       } catch (err) {
-        console.error('Notification handler err', err);
+        console.error('Notification handler err:\n'+err.stack);
         throw err;
       }
       if (!data._finishCalled) {
