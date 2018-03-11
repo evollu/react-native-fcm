@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 
 import static com.facebook.react.common.ReactConstants.TAG;
 
@@ -53,11 +54,13 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             String intentClassName = getMainActivityClassName();
             if (intentClassName == null) {
                 return null;
-            }
+            }           
             
-            if (bundle.getString("body") == null) {
+            String body = bundle.getString("body");
+            if (body == null) {
                 return null;
             }
+			body = URLDecoder.decode( body, "UTF-8" );
             
             Resources res = mContext.getResources();
             String packageName = mContext.getPackageName();
@@ -67,10 +70,11 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 ApplicationInfo appInfo = mContext.getApplicationInfo();
                 title = mContext.getPackageManager().getApplicationLabel(appInfo).toString();
             }
+			title = URLDecoder.decode( title, "UTF-8" );
             
             NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
             .setContentTitle(title)
-            .setContentText(bundle.getString("body"))
+            .setContentText(body)
             .setTicker(bundle.getString("ticker"))
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setAutoCancel(bundle.getBoolean("auto_cancel", true))
@@ -131,7 +135,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             
             //big text
             String bigText = bundle.getString("big_text");
-            if(bigText != null){
+            if(bigText != null){				
+				bigText = URLDecoder.decode( bigText, "UTF-8" );                
                 notification.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
             }
             
@@ -152,7 +157,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                     }
                 }
                 bigPicture.setBigContentTitle(title);
-                bigPicture.setSummaryText(bundle.getString("body"));
+                bigPicture.setSummaryText(body);
                 
                 notification.setStyle(bigPicture);
             }
