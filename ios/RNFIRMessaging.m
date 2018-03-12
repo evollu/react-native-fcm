@@ -131,11 +131,104 @@ RCT_ENUM_CONVERTER(UNNotificationPresentationOptions, (@{
 
 @end
 
+@implementation RCTConvert (UNNotificationAction)
+
+typedef NS_ENUM(NSUInteger, UNNotificationActionType) {
+    UNNotificationActionTypeDefault,
+    UNNotificationActionTypeTextInput
+};
+
++ (UNNotificationAction *) UNNotificationAction:(id)json {
+    NSDictionary<NSString *, id> *details = [self NSDictionary:json];
+    
+    NSString *identifier = [RCTConvert NSString: details[@"id"]];
+    NSString *title = [RCTConvert NSString: details[@"title"]];
+    UNNotificationActionOptions options = [RCTConvert UNNotificationActionOptions: details[@"options"]];
+    UNNotificationActionType type = [RCTConvert UNNotificationActionType:details[@"type"]];
+
+    if (type == UNNotificationActionTypeTextInput) {
+        NSString *textInputButtonTitle = [RCTConvert NSString: details[@"textInputButtonTitle"]];
+        NSString *textInputPlaceholder = [RCTConvert NSString: details[@"textInputPlaceholder"]];
+
+        return [UNTextInputNotificationAction actionWithIdentifier:identifier title:title options:options textInputButtonTitle:textInputButtonTitle textInputPlaceholder:textInputPlaceholder];
+    }
+    
+    return [UNNotificationAction actionWithIdentifier:identifier
+                                                title:title
+                                              options:options];
+    
+}
+
+RCT_ENUM_CONVERTER(UNNotificationActionType, (@{
+                                                @"UNNotificationActionTypeDefault": @(UNNotificationActionTypeDefault),
+                                                @"UNNotificationActionTypeTextInput": @(UNNotificationActionTypeTextInput),
+                                                }), UNNotificationActionTypeDefault, integerValue)
+
+
+RCT_MULTI_ENUM_CONVERTER(UNNotificationActionOptions, (@{
+                                                         @"UNNotificationActionOptionAuthenticationRequired": @(UNNotificationActionOptionAuthenticationRequired),
+                                                         @"UNNotificationActionOptionDestructive": @(UNNotificationActionOptionDestructive),
+                                                         @"UNNotificationActionOptionForeground": @(UNNotificationActionOptionForeground),
+                                                         @"UNNotificationActionOptionNone": @(UNNotificationActionOptionNone),
+                                                         }), UNNotificationActionOptionNone, integerValue)
+
+
+@end
+
+@implementation RCTConvert (UNNotificationCategory)
+
+
++ (UNNotificationCategory *) UNNotificationCategory:(id)json {
+    NSDictionary<NSString *, id> *details = [self NSDictionary:json];
+    
+    NSString *identifier = [RCTConvert NSString: details[@"id"]];
+    
+    NSMutableArray *actions = [[NSMutableArray alloc] init];
+    for (NSDictionary *actionDict in details[@"actions"]) {
+        [actions addObject:[RCTConvert UNNotificationAction:actionDict]];
+    }
+
+    NSArray<NSString *> *intentIdentifiers = [RCTConvert NSStringArray:details[@"intentIdentifiers"]];
+    NSString *hiddenPreviewsBodyPlaceholder = [RCTConvert NSString:details[@"hiddenPreviewsBodyPlaceholder"]];
+    UNNotificationCategoryOptions options = [RCTConvert UNNotificationCategoryOptions: details[@"options"]];
+
+    if (hiddenPreviewsBodyPlaceholder) {
+#if defined(__IPHONE_11_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
+          return [UNNotificationCategory categoryWithIdentifier:identifier actions:actions intentIdentifiers:intentIdentifiers hiddenPreviewsBodyPlaceholder:hiddenPreviewsBodyPlaceholder options:options];
+#endif
+    }
+
+    return [UNNotificationCategory categoryWithIdentifier:identifier actions:actions intentIdentifiers:intentIdentifiers options:options];
+}
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+
+RCT_MULTI_ENUM_CONVERTER(UNNotificationCategoryOptions, (@{
+                                                           @"UNNotificationCategoryOptionNone": @(UNNotificationCategoryOptionNone),
+                                                           @"UNNotificationCategoryOptionCustomDismissAction": @(UNNotificationCategoryOptionCustomDismissAction),
+                                                           @"UNNotificationCategoryOptionAllowInCarPlay": @(UNNotificationCategoryOptionAllowInCarPlay),
+                                                           @"UNNotificationCategoryOptionHiddenPreviewsShowTitle": @(UNNotificationCategoryOptionHiddenPreviewsShowTitle),
+                                                           @"UNNotificationCategoryOptionHiddenPreviewsShowSubtitle": @(UNNotificationCategoryOptionHiddenPreviewsShowSubtitle),
+                                                           }), UNNotificationCategoryOptionNone, integerValue)
+
+#pragma clang diagnostic pop
+
+
+@end
+
+@interface RCTEventEmitter ()
+- (void) addListener:(NSString *)eventName;
+@end
+
 @interface RNFIRMessaging ()
 @property (nonatomic, strong) NSMutableDictionary *notificationCallbacks;
 @end
 
 @implementation RNFIRMessaging
+
+static bool jsHandlerRegistered;
+static NSMutableArray* pendingNotifications;
 
 RCT_EXPORT_MODULE();
 
@@ -144,21 +237,21 @@ RCT_EXPORT_MODULE();
 }
 
 + (BOOL)requiresMainQueueSetup {
-  return YES;
+    return YES;
 }
 
 + (void)didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull RCTRemoteNotificationCallback)completionHandler {
     NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: userInfo];
     [data setValue:@"remote_notification" forKey:@"_notificationType"];
     [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
+    [self sendNotificationEventWhenAvailable:@{@"data": data, @"completionHandler": completionHandler}];
 }
 
 + (void)didReceiveLocalNotification:(UILocalNotification *)notification {
     NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: notification.userInfo];
     [data setValue:@"local_notification" forKey:@"_notificationType"];
     [data setValue:@(RCTSharedApplication().applicationState == UIApplicationStateInactive) forKey:@"opened_from_tray"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data}];
+    [self sendNotificationEventWhenAvailable:@{@"data": data}];
 }
 
 + (void)didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(nonnull RCTNotificationResponseCallback)completionHandler
@@ -169,14 +262,34 @@ RCT_EXPORT_MODULE();
     if (response.actionIdentifier) {
         [data setValue:response.actionIdentifier forKey:@"_actionIdentifier"];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
+
+    if ([response isKindOfClass:UNTextInputNotificationResponse.class]) {
+        [data setValue:[(UNTextInputNotificationResponse *)response userText] forKey:@"_userText"];
+    }
+    
+    NSDictionary *userInfo = @{@"data": data, @"completionHandler": completionHandler};
+    [self sendNotificationEventWhenAvailable:userInfo];
+  
 }
 
 + (void)willPresentNotification:(UNNotification *)notification withCompletionHandler:(nonnull RCTWillPresentNotificationCallback)completionHandler
 {
     NSMutableDictionary* data = [[NSMutableDictionary alloc] initWithDictionary: notification.request.content.userInfo];
     [data setValue:@"will_present_notification" forKey:@"_notificationType"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:@{@"data": data, @"completionHandler": completionHandler}];
+    [self sendNotificationEventWhenAvailable:@{@"data": data, @"completionHandler": completionHandler}];
+}
+
++ (void)sendNotificationEventWhenAvailable:(NSDictionary*)data
+{
+  if(!jsHandlerRegistered){
+    // JS hasn't registered callback yet. hold on that
+    if(!pendingNotifications){
+      pendingNotifications = [NSMutableArray array];
+    }
+    [pendingNotifications addObject:data];
+  } else {
+    [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:data];
+  }
 }
 
 - (void)dealloc
@@ -186,10 +299,11 @@ RCT_EXPORT_MODULE();
 
 - (instancetype)init {
     self = [super init];
+  
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleNotificationReceived:)
-                                                 name:FCMNotificationReceived
-                                               object:nil];
+                                           selector:@selector(handleNotificationReceived:)
+                                               name:FCMNotificationReceived
+                                             object:nil];
 
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(sendDataMessageFailure:)
@@ -207,7 +321,36 @@ RCT_EXPORT_MODULE();
     dispatch_async(dispatch_get_main_queue(), ^{
         [[FIRMessaging messaging] setDelegate:self];
     });
+  
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    if(!jsHandlerRegistered){
+      [self sendPendingNotifications];
+    }
+  });
+  
     return self;
+}
+
+-(void) addListener:(NSString *)eventName {
+  [super addListener:eventName];
+
+  if([eventName isEqualToString:FCMNotificationReceived]) {
+    [self sendPendingNotifications];
+  }
+}
+
+-(void) sendPendingNotifications {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    jsHandlerRegistered = true;
+    
+    for (NSDictionary* data in pendingNotifications) {
+      [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:data];
+    }
+    
+    [pendingNotifications removeAllObjects];
+    
+  });
 }
 
 RCT_EXPORT_METHOD(enableDirectChannel)
@@ -222,13 +365,24 @@ RCT_EXPORT_METHOD(isDirectChannelEstablished:(RCTPromiseResolveBlock)resolve rej
 
 RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    UILocalNotification *localUserInfo = self.bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
-    if (localUserInfo) {
-        resolve([[localUserInfo userInfo] copy]);
-    } else {
-        resolve([self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy]);
-    }
+  NSDictionary* initialNotif;
+  NSDictionary *localUserInfo = [[self.bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey] userInfo] mutableCopy];
+  
+  NSDictionary *remoteUserInfo = [self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] mutableCopy];
+  if(localUserInfo){
+    initialNotif = localUserInfo;
+  } else if (remoteUserInfo) {
+    initialNotif = remoteUserInfo;
+  }
+  if (initialNotif) {
+    [initialNotif setValue:@YES forKey:@"opened_from_tray"];
+    resolve(initialNotif);
+  } else {
+    resolve(nil);
+  }
 }
+
+
 
 RCT_EXPORT_METHOD(getAPNSToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -244,6 +398,42 @@ RCT_EXPORT_METHOD(getAPNSToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTProm
 RCT_EXPORT_METHOD(getFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     resolve([FIRMessaging messaging].FCMToken);
+}
+
+RCT_EXPORT_METHOD(getEntityFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    FIROptions *options = FIROptions.defaultOptions;
+    NSString *entity = options.GCMSenderID;
+    NSData * deviceToken = [FIRMessaging messaging].APNSToken;
+
+    if (deviceToken == nil) {
+        resolve(nil);
+        return;
+    }
+
+    [[FIRInstanceID instanceID]tokenWithAuthorizedEntity:entity scope:kFIRInstanceIDScopeFirebaseMessaging options:@{@"apns_token": deviceToken} handler:^(NSString * _Nullable token, NSError * _Nullable error) {
+
+        if (error != nil) {
+            reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
+        } else {
+            resolve(token);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(deleteEntityFCMToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    FIROptions *options = FIROptions.defaultOptions;;
+    NSString *entity = options.GCMSenderID;
+
+    [[FIRInstanceID instanceID]deleteTokenWithAuthorizedEntity:entity scope:kFIRInstanceIDScopeFirebaseMessaging handler:^(NSError * _Nullable error) {
+
+        if (error != nil) {
+            reject([NSString stringWithFormat:@"%ld",error.code],error.localizedDescription,nil);
+        } else {
+            resolve(nil);
+        }
+    }];
 }
 
 RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
@@ -416,6 +606,20 @@ RCT_EXPORT_METHOD(getScheduledLocalNotifications:(RCTPromiseResolveBlock)resolve
     }
 }
 
+RCT_EXPORT_METHOD(setNotificationCategories:(NSArray *)categories)
+{
+    if([UNUserNotificationCenter currentNotificationCenter] != nil) {
+        NSMutableSet *categoriesSet = [[NSMutableSet alloc] init];
+
+        for(NSDictionary *categoryDict in categories) {
+            UNNotificationCategory *category = [RCTConvert UNNotificationCategory:categoryDict];
+            [categoriesSet addObject:category];
+        }
+
+        [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:categoriesSet];
+    }
+}
+
 RCT_EXPORT_METHOD(setBadgeNumber: (NSInteger) number)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -490,9 +694,7 @@ RCT_EXPORT_METHOD(finishNotificationResponse: (NSString *)completionHandlerId){
         self.notificationCallbacks[completionHandlerId] = completionHandler;
         data[@"_completionHandlerId"] = completionHandlerId;
     }
-
     [self sendEventWithName:FCMNotificationReceived body:data];
-
 }
 
 - (void)sendDataMessageFailure:(NSNotification *)notification
