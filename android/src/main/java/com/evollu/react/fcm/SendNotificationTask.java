@@ -232,7 +232,16 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         PendingIntent pendingActionIntent = PendingIntent.getActivity(mContext, notificationID, actionIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        notification.addAction(1, actionTitle, pendingActionIntent);
+                        int iconId = 0;
+                        if(action.hasKey("icon")) {
+                            String iconName = action.getString("icon");
+                            iconId = res.getIdentifier(iconName, "mipmap", packageName);
+                            if (iconId == 0) {
+                                iconId = res.getIdentifier(iconName, "drawable", packageName);
+                            }
+                        }
+
+                        notification.addAction(iconId, actionTitle, pendingActionIntent);
                     }
                 }
                 
