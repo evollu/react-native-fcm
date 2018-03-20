@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -22,5 +22,6 @@ dependencies {
     compile 'com.google.firebase:firebase-core:+'
     compile 'com.google.firebase:firebase-messaging:+'
     compile 'me.leolin:ShortcutBadger:1.1.17@aar'
+    compile "com.android.support:support-core-utils:26.1.0"
 }
 
