@@ -131,6 +131,9 @@ android {
 }
 
 dependencies {
+    compile(project(':react-native-maps')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-base'
+    }
     compile project(':react-native-fcm')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:26.1.0"

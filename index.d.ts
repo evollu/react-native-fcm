@@ -25,6 +25,26 @@ declare module "react-native-fcm" {
         const Local = "local_notification";
     }
 
+    export enum NotificationCategoryOption {
+        CustomDismissAction = 'UNNotificationCategoryOptionCustomDismissAction',
+        AllowInCarPlay = 'UNNotificationCategoryOptionAllowInCarPlay',
+        PreviewsShowTitle = 'UNNotificationCategoryOptionHiddenPreviewsShowTitle',
+        PreviewsShowSubtitle = 'UNNotificationCategoryOptionHiddenPreviewsShowSubtitle',
+        None = 'UNNotificationCategoryOptionNone'
+    }
+
+    export enum NotificationActionOption {
+        AuthenticationRequired = 'UNNotificationActionOptionAuthenticationRequired',
+        Destructive = 'UNNotificationActionOptionDestructive',
+        Foreground = 'UNNotificationActionOptionForeground',
+        None = 'UNNotificationActionOptionNone'
+    }
+
+    export enum NotificationActionType {
+        Default = 'UNNotificationActionTypeDefault',
+        TextInput = 'UNNotificationActionTypeTextInput',
+    }
+
     export interface Notification {
         collapse_key: string;
         opened_from_tray: boolean;
@@ -44,6 +64,8 @@ declare module "react-native-fcm" {
         };
         local_notification?: boolean;
         _notificationType: string;
+        _actionIdentifier?: string;
+        _userText?: string;
         finish(type?: string): void;
         [key: string]: any;
     }
@@ -83,6 +105,23 @@ declare module "react-native-fcm" {
         remove(): void;
     }
 
+    export interface NotificationAction {
+        type: NotificationActionType;
+        id: string;
+        title?: string;
+        textInputButtonTitle?: string;
+        textInputPlaceholder?: string;
+        options: NotificationActionOption | NotificationActionOption[];
+    }
+
+    export interface NotificationCategory {
+        id: string;
+        actions: NotificationAction[];
+        intentIdentifiers: string[];
+        hiddenPreviewsBodyPlaceholder?: string;
+        options?: NotificationCategoryOption | NotificationCategoryOption[];
+    }
+
     export class FCM {
         static requestPermissions(): Promise<void>;
         static getFCMToken(): Promise<string>;
@@ -109,6 +148,8 @@ declare module "react-native-fcm" {
         static enableDirectChannel(): void
         static isDirectChannelEstablished(): Promise<boolean>
         static getAPNSToken(): Promise<string>
+
+        static setNotificationCategories(categories: NotificationCategory[]): void;
     }
 
     export default FCM;
