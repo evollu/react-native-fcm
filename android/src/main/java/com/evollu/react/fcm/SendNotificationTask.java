@@ -232,7 +232,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         PendingIntent pendingActionIntent = PendingIntent.getActivity(mContext, notificationID, actionIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        notification.addAction(1, actionTitle, pendingActionIntent);
+                        notification.addAction(0, actionTitle, pendingActionIntent);
                     }
                 }
                 
