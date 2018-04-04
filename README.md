@@ -318,7 +318,7 @@ NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenti
 ### Build custom push notification for Android
 Firebase android misses important feature of android notification like `group`, `priority` and etc. As a work around you can send data message (no `notification` payload at all) and this repo will build a local notification for you. If you pass `custom_notification` in the payload, the repo will treat the content as a local notification config and shows immediately.
 
-NOTE: By using this work around, you will have to send different types of payload for iOS and Android devices because custom_notification isn't supported on iOS
+NOTE: By using this work around, you will have to send different types of payload for iOS and Android devices because **custom_notification isn't supported on iOS**
 
 WARNING: `custom_notification` **cannot** be used together with `notification` attribute. use `data` **ALONE**
 
@@ -341,6 +341,9 @@ Example of payload that is sent to FCM server:
   }
 }
 ```
+
+Example of payload that is sent through firebase console:
+<img width="753" alt="screen shot 2018-04-04 at 1 18 09 pm" src="https://user-images.githubusercontent.com/9213224/38323255-bbbfdd66-380a-11e8-95c2-bf32ced959b8.png">
 
 Check local notification guide below for configuration.
 
