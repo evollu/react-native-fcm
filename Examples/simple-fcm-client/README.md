@@ -9,6 +9,7 @@
 - Change the _Bundle Identifier_ in Xcode project settings
 - Select your _Team_ for both targets (`SimpleFcmClient` and `SimpleFcmClientTests`)
 - Update your API_KEY [here](https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/app/FirebaseConstants.js#L3)
+- run `pod install` under `ios` folder
 
 ## Android
 
