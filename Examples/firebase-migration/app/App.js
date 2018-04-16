@@ -143,7 +143,10 @@ class MainPage extends Component {
 					"custom_notification": {
 						"title": "Simple FCM Client",
 						"body": "Click me to go to detail",
-            data: {targetScreen: 'detail'}
+            data: {
+              targetScreen: 'detail',
+              now: new Date().toISOString()
+            }
         	}
     		},
     		"priority": 10
@@ -157,7 +160,8 @@ class MainPage extends Component {
 					"sound": "default"
         },
         data: {
-          targetScreen: 'detail'
+          targetScreen: 'detail',
+          now: new Date().toISOString()
         },
 				"priority": 10
 			}
