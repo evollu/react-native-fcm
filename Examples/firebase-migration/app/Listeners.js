@@ -15,8 +15,8 @@ function displayNotificationFromCustomData(message: RemoteMessage){
   }
 }
 
-export function registerKilledListener(message: RemoteMessage){
-  AsyncStorage.setItem('lastNotification', JSON.stringify(message.data));
+export async function registerKilledListener(message: RemoteMessage){
+  await AsyncStorage.setItem('lastNotification', JSON.stringify(message.data));
   displayNotificationFromCustomData();
 }
 

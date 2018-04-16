@@ -98,8 +98,7 @@ class MainPage extends Component {
     .setBody("Force touch to reply")
     .setSound("bell.mp3")
     .setData({
-      key1: 'value1',
-      key2: 'value2'
+      now: new Date().toISOString()
     });
     notification.ios.badge = 10
     notification.android.setAutoCancel(true);
@@ -125,8 +124,7 @@ class MainPage extends Component {
     .setBody("Force touch to reply")
     .setSound("bell.mp3")
     .setData({
-      key1: 'value1',
-      key2: 'value2'
+      now: new Date().toISOString()
     });
     notification.android.setChannelId("test-channel")
     notification.android.setPriority(firebase.notifications.Android.Priority.High)
