@@ -73,6 +73,16 @@ class MainPage extends Component {
     // topic example
     firebase.messaging().subscribeToTopic('sometopic');
     firebase.messaging().unsubscribeFromTopic('sometopic');
+
+    AsyncStorage.getItem('lastNotification').then(data=>{
+      if(data){
+        // if notification arrives when app is killed, it should still be logged here
+        this.setState({
+          offlineNotif: JSON.parse(data)
+        });
+        AsyncStorage.removeItem('lastNotification');
+      }
+    })
   }
 
   componentWillUnmount(){
@@ -192,7 +202,14 @@ class MainPage extends Component {
           Init notif:
         </Text>
         <Text>
-          {JSON.stringify(this.state.initNotif && this.state.initNotif.data)}
+          {JSON.stringify(this.state.initNotif)}
+        </Text>
+
+        <Text style={styles.instructions}>
+          Notif when app was closed:
+        </Text>
+        <Text>
+          {JSON.stringify(this.state.offlineNotif)}
         </Text>
 
         <Text style={styles.instructions}>
