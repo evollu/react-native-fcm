@@ -19,10 +19,8 @@ import { StackNavigator } from 'react-navigation';
 
 import firebase from 'react-native-firebase';
 
-import {registerKilledListener, registerAppListener} from "./Listeners";
+import {registerAppListener} from "./Listeners";
 import firebaseClient from  "./FirebaseClient";
-
-registerKilledListener();
 
 class MainPage extends Component {
   constructor(props) {
@@ -35,6 +33,13 @@ class MainPage extends Component {
   }
 
   async componentDidMount(){
+    // Build a channel
+    const channel = new firebase.notifications.Android.Channel('test-channel', 'Test Channel', firebase.notifications.Android.Importance.Max)
+    .setDescription('My apps test channel');
+
+    // Create the channel
+    firebase.notifications().android.createChannel(channel);
+
     registerAppListener(this.props.navigation);
     firebase.notifications().getInitialNotification()
       .then((notificationOpen: NotificationOpen) => {
@@ -55,7 +60,7 @@ class MainPage extends Component {
     if (!await firebase.messaging().hasPermission()) {
       try {
         await firebase.messaging().requestPermission();
-      } catch {
+      } catch(e) {
         alert("Failed to grant permission")
       }
     }
@@ -70,70 +75,54 @@ class MainPage extends Component {
     firebase.messaging().unsubscribeFromTopic('sometopic');
   }
 
-  componentWillMount(){
+  componentWillUnmount(){
     this.onTokenRefreshListener();
     this.notificationOpenedListener();
     this.messageListener();
   }
 
   showLocalNotification() {
-    if(Platform.OS === 'ios'){
-      const notification = new firebase.notifications.Notification()
-          .setNotificationId(new Date().valueOf().toString())
-          .setTitle( "Test Notification with action")
-          .setBody("Force touch to reply")
-          .setSound("bell.mp3")
-          .setCategory()
-          .setBadge(10)
-          .setData({
-            key1: 'value1',
-            key2: 'value2',
-          });
-    }
-
-    FCM.presentLocalNotification({
-      id: new Date().valueOf().toString(),                // (optional for instant notification)
-      title: "Test Notification with action",             // as FCM payload
-      body: "Force touch to reply",                       // as FCM payload (required)
-      sound: "bell.mp3",                                  // "default" or filename
-      priority: "high",                                   // as FCM payload
-      click_action: "com.myapp.MyCategory",               // as FCM payload - this is used as category identifier on iOS.
-      badge: 10,                                          // as FCM payload IOS only, set 0 to clear badges
-      number: 10,                                         // Android only
-      ticker: "My Notification Ticker",                   // Android only
-      auto_cancel: true,                                  // Android only (default true)
-      large_icon: "https://image.freepik.com/free-icon/small-boy-cartoon_318-38077.jpg",                           // Android only
-      icon: "ic_launcher",                                // as FCM payload, you can relace this with custom icon you put in mipmap
-      big_text: "Show when notification is expanded",     // Android only
-      sub_text: "This is a subText",                      // Android only
-      color: "red",                                       // Android only
-      vibrate: 300,                                       // Android only default: 300, no vibration if you pass 0
-      wake_screen: true,                                  // Android only, wake up screen when notification arrives
-      group: "group",                                     // Android only
-      picture: "https://google.png",                      // Android only bigPicture style
-      ongoing: true,                                      // Android only
-      my_custom_data:'my_custom_field_value',             // extra data you want to throw
-      lights: true,                                       // Android only, LED blinking (default false)
-      show_in_foreground: true                           // notification when app is in foreground (local & remote)
+    let notification = new firebase.notifications.Notification();
+    notification = notification.setNotificationId(new Date().valueOf().toString())
+    .setTitle( "Test Notification with action")
+    .setBody("Force touch to reply")
+    .setSound("bell.mp3")
+    .setData({
+      key1: 'value1',
+      key2: 'value2'
     });
+    notification.ios.badge = 10
+    notification.android.setAutoCancel(true);
+
+    notification.android.setBigPicture("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png", "https://image.freepik.com/free-icon/small-boy-cartoon_318-38077.jpg", "content title", "summary text")
+    notification.android.setColor("red")
+    notification.android.setColorized(true)
+    notification.android.setOngoing(true)
+    notification.android.setPriority(firebase.notifications.Android.Priority.High)
+    notification.android.setSmallIcon("ic_launcher")
+    notification.android.setVibrate([300])
+    notification.android.addAction(new firebase.notifications.Android.Action("view", "ic_launcher", "VIEW"))
+    notification.android.addAction(new firebase.notifications.Android.Action("dismiss", "ic_launcher", "DISMISS"))
+    notification.android.setChannelId("test-channel")
+
+    firebase.notifications().displayNotification(notification)
   }
 
   scheduleLocalNotification() {
-    FCM.scheduleLocalNotification({
-      id: 'testnotif',
-      fire_date: new Date().getTime()+5000,
-      vibrate: 500,
-      title: 'Hello',
-      body: 'Test Scheduled Notification',
-      sub_text: 'sub text',
-      priority: "high",
-      large_icon: "https://image.freepik.com/free-icon/small-boy-cartoon_318-38077.jpg",
-      show_in_foreground: true,
-      picture: 'https://firebase.google.com/_static/af7ae4b3fc/images/firebase/lockup.png',
-      wake_screen: true,
-      extra1: {a: 1},
-      extra2: 1
+    let notification = new firebase.notifications.Notification();
+    notification = notification.setNotificationId(new Date().valueOf().toString())
+    .setTitle( "Test Notification with action")
+    .setBody("Force touch to reply")
+    .setSound("bell.mp3")
+    .setData({
+      key1: 'value1',
+      key2: 'value2'
     });
+    notification.android.setChannelId("test-channel")
+    notification.android.setPriority(firebase.notifications.Android.Priority.High)
+    notification.android.setSmallIcon("ic_launcher")
+
+    firebase.notifications().scheduleNotification(notification, { fireDate: new Date().getTime() + 5000 })
   }
 
   sendRemoteNotification(token) {
@@ -146,10 +135,7 @@ class MainPage extends Component {
 					"custom_notification": {
 						"title": "Simple FCM Client",
 						"body": "Click me to go to detail",
-						"sound": "default",
-						"priority": "high",
-            "show_in_foreground": true,
-            targetScreen: 'detail'
+            data: {targetScreen: 'detail'}
         	}
     		},
     		"priority": 10
@@ -170,37 +156,6 @@ class MainPage extends Component {
 		}
 
     firebaseClient.send(JSON.stringify(body), "notification");
-  }
-
-  sendRemoteData(token) {
-    let body = {
-    	"to": token,
-      "data":{
-    		"title": "Simple FCM Client",
-    		"body": "This is a notification with only DATA.",
-    		"sound": "default"
-    	},
-    	"priority": "normal"
-    }
-
-    firebaseClient.send(JSON.stringify(body), "data");
-  }
-
-  showLocalNotificationWithAction() {
-    // FCM.presentLocalNotification({
-    //   title: 'Test Notification with action',
-    //   body: 'Force touch to reply',
-    //   priority: "high",
-    //   show_in_foreground: true,
-    //   click_action: "com.myidentifi.fcm.text", // for ios
-    //   android_actions: JSON.stringify([{
-    //     id: "view",
-    //     title: 'view'
-    //   },{
-    //     id: "dismiss",
-    //     title: 'dismiss'
-    //   }]) // for android, take syntax similar to ios's. only buttons are supported
-    // });
   }
 
   render() {
@@ -225,16 +180,8 @@ class MainPage extends Component {
           <Text style={styles.buttonText}>Send Remote Notification</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => this.sendRemoteData(token)} style={styles.button}>
-          <Text style={styles.buttonText}>Send Remote Data</Text>
-        </TouchableOpacity>
-
         <TouchableOpacity onPress={() => this.showLocalNotification()} style={styles.button}>
           <Text style={styles.buttonText}>Show Local Notification</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => this.showLocalNotificationWithAction(token)} style={styles.button}>
-          <Text style={styles.buttonText}>Show Local Notification with Action</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => this.scheduleLocalNotification()} style={styles.button}>
@@ -245,7 +192,7 @@ class MainPage extends Component {
           Init notif:
         </Text>
         <Text>
-          {JSON.stringify(this.state.initNotif)}
+          {JSON.stringify(this.state.initNotif && this.state.initNotif.data)}
         </Text>
 
         <Text style={styles.instructions}>

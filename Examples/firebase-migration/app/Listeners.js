@@ -16,16 +16,19 @@ export function registerKilledListener(message: RemoteMessage){
 
 // these callback will be triggered only when app is foreground or background
 export function registerAppListener(navigation){
+  this.notificationListener = firebase.notifications().onNotification(notification => {
+    firebase.notifications().displayNotification(notification);
+  })
   this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
     const notif: Notification = notificationOpen.notification;
 
-    if(notif.targetScreen === 'detail'){
+    if(notif.data.targetScreen === 'detail'){
       setTimeout(()=>{
         navigation.navigate('Detail')
       }, 500)
     }
     setTimeout(()=>{
-      alert(`User tapped notification\n${JSON.stringify(notif)}`)
+      alert(`User tapped notification\n${notif.notificationId}`)
     }, 500)
   });
 
@@ -34,7 +37,16 @@ export function registerAppListener(navigation){
   });
 
   this.messageListener = firebase.messaging().onMessage((message: RemoteMessage) => {
-    // Process your message as required
+    if(message.data && message.data.custom_notification){
+      let notification = new firebase.notifications.Notification();
+        notification = notification.setNotificationId(new Date().valueOf().toString())
+        .setTitle(message.title)
+        .setBody(message.body)
+        .setData(message.data)
+        .setSound("bell.mp3")
+        notification.android.setChannelId("test-channel")
+      firebase.notifications().displayNotification(notification);
+    }
   });
 
 }

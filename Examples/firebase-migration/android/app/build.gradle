@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: "com.google.gms.google-services"
 
 import com.android.build.OutputFile
 
@@ -84,13 +83,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.google.firebase.quickstart.fcm"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         ndk {
@@ -131,12 +130,14 @@ dependencies {
         transitive = false
     }
     compile(project(':react-native-maps')) {
-        exclude group: 'com.google.android.gms', module: 'play-services-base'
-        // This resolution make compiler ignoring play-service-base's version requirement in react-native-maps
-        // so that it only read from react-native-fcm
-        // you can also lock the version in this gradle file and ignore all module declaration
-        // or you can use ResolutionStragety
+        transitive = false
     }
+    implementation "com.google.android.gms:play-services-base:12.0.1"
+    implementation "com.google.firebase:firebase-core:12.0.1"
+    implementation "com.google.firebase:firebase-messaging:12.0.1"
+    implementation "com.google.android.gms:play-services-maps:12.0.1"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
@@ -147,3 +148,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
   from configurations.compile
   into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'
