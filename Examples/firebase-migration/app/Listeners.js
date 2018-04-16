@@ -10,8 +10,22 @@ AsyncStorage.getItem('lastNotification').then(data=>{
   }
 })
 
+function displayNotificationFromCustomData(message: RemoteMessage){
+  if(message.data && message.data.custom_notification){
+    let notification = new firebase.notifications.Notification();
+      notification = notification.setNotificationId(new Date().valueOf().toString())
+      .setTitle(message.title)
+      .setBody(message.body)
+      .setData(message.data)
+      .setSound("bell.mp3")
+      notification.android.setChannelId("test-channel")
+    firebase.notifications().displayNotification(notification);
+  }
+}
+
 export function registerKilledListener(message: RemoteMessage){
   AsyncStorage.setItem('lastNotification', JSON.stringify(message));
+  displayNotificationFromCustomData();
 }
 
 // these callback will be triggered only when app is foreground or background
@@ -37,16 +51,7 @@ export function registerAppListener(navigation){
   });
 
   this.messageListener = firebase.messaging().onMessage((message: RemoteMessage) => {
-    if(message.data && message.data.custom_notification){
-      let notification = new firebase.notifications.Notification();
-        notification = notification.setNotificationId(new Date().valueOf().toString())
-        .setTitle(message.title)
-        .setBody(message.body)
-        .setData(message.data)
-        .setSound("bell.mp3")
-        notification.android.setChannelId("test-channel")
-      firebase.notifications().displayNotification(notification);
-    }
+    displayNotificationFromCustomData();
   });
 
 }
