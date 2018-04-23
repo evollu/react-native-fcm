@@ -12,7 +12,8 @@ import {
   View,
   Clipboard,
   Platform,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from 'react-native';
 
 import { StackNavigator } from 'react-navigation';
@@ -140,14 +141,10 @@ class MainPage extends Component {
       body = {
         "to": token,
       	"data":{
-					"custom_notification": {
-						"title": "Simple FCM Client",
-						"body": "Click me to go to detail",
-            data: {
-              targetScreen: 'detail',
-              now: new Date().toISOString()
-            }
-        	}
+					"title": "Simple FCM Client",
+          "body": "Click me to go to detail",
+          targetScreen: 'detail',
+          now: new Date().toISOString()
     		},
     		"priority": 10
       }

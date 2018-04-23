@@ -3,13 +3,14 @@ import { Platform, AsyncStorage, AppState } from 'react-native';
 import firebase from 'react-native-firebase';
 
 function displayNotificationFromCustomData(message: RemoteMessage){
-  if(message.data && message.data.custom_notification){
+  if(message.data && message.data.title){
     let notification = new firebase.notifications.Notification();
-      notification = notification.setNotificationId(new Date().valueOf().toString())
-      .setTitle(message.title)
-      .setBody(message.body)
+      notification = notification
+      .setTitle(message.data.title)
+      .setBody(message.data.body)
       .setData(message.data)
       .setSound("bell.mp3")
+      notification.android.setPriority(firebase.notifications.Android.Priority.High)
       notification.android.setChannelId("test-channel")
     firebase.notifications().displayNotification(notification);
   }
@@ -17,7 +18,7 @@ function displayNotificationFromCustomData(message: RemoteMessage){
 
 export async function registerKilledListener(message: RemoteMessage){
   await AsyncStorage.setItem('lastNotification', JSON.stringify(message.data));
-  displayNotificationFromCustomData();
+  displayNotificationFromCustomData(message);
 }
 
 // these callback will be triggered only when app is foreground or background
@@ -43,7 +44,7 @@ export function registerAppListener(navigation){
   });
 
   this.messageListener = firebase.messaging().onMessage((message: RemoteMessage) => {
-    displayNotificationFromCustomData();
+    displayNotificationFromCustomData(message);
   });
 
 }
