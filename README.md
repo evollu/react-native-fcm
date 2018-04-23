@@ -21,6 +21,7 @@ If you have to upgrade, you can use sdk-26 branch and post feedback on [here](ht
 - Run `npm install react-native-fcm --save`
 - [Link libraries](https://facebook.github.io/react-native/docs/linking-libraries-ios.html)
   Note: the auto link doesn't work with xcworkspace so CocoaPods user needs to do manual linking
+- You many need [this package for huawei phone](https://github.com/pgengoux/react-native-huawei-protected-apps)
 
 ## Configure Firebase Console
 ### FCM config file
