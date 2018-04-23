@@ -167,9 +167,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         bigPicture.bigPicture(pictureResIdBitmap);
                     }
                 }
-                bigPicture.setBigContentTitle(title);
-                bigPicture.setSummaryText(body);
-                
+                // setBigContentTitle and setSummaryText overrides current title with body and subtext
+		// that cause to display duplicated body in subtext when picture has specified
                 notification.setStyle(bigPicture);
             }
             
