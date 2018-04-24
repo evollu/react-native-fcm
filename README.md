@@ -466,7 +466,7 @@ Yes there are `react-native-push-notification` and `react-native-system-notifica
 - The PushNotificationIOS by react native team is still missing features that recurring, so we are adding it here
 
 #### My Android build is failing
-Try update your SDK and google play service. 
+Try update your SDK and google play service.
 If you are having multiple plugins requiring different version of play-service sdk, skip conflicting group. The example project shows for how to colive with react-native-maps
 ```
     compile(project(':react-native-maps')) {
@@ -554,12 +554,18 @@ Issues and pull requests are welcome. Let's make this thing better!
 #### Credits
 Local notification implementation is inspired by react-native-push-notification by zo0r
 
+#### I get the notifications in the logs, but the native prompt does not show up
+Did you remember to ask the user permissions? ;)
+```js
+await FCM.requestPermissions({ badge: false, sound: true, alert: true })
+```
+
 ## Sending remote notification
 
 How to send a push notification from your server? You should `POST` to this endpoint:
 
     https://fcm.googleapis.com/fcm/send
-    
+
 You need to set the headers of `Content-Type` to `application/json` and `Authorization` to `key=******` where you replace `******` with the "Legacy server key" from here the Firebase dashbaord. Get this information by first going to:
 
 1. https://console.firebase.google.com/
@@ -614,4 +620,3 @@ fetch('https://fcm.googleapis.com/fcm/send', {
     })
 })
 ```
-
