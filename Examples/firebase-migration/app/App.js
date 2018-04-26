@@ -48,7 +48,7 @@ class MainPage extends Component {
           // Get information about the notification that was opened
           const notif: Notification = notificationOpen.notification;
           this.setState({
-            initNotif: notif
+            initNotif: notif.data
           })
           if(notif && notif.targetScreen === 'detail'){
             setTimeout(()=>{
@@ -75,15 +75,13 @@ class MainPage extends Component {
     firebase.messaging().subscribeToTopic('sometopic');
     firebase.messaging().unsubscribeFromTopic('sometopic');
 
-    AsyncStorage.getItem('lastNotification').then(data=>{
-      if(data){
-        // if notification arrives when app is killed, it should still be logged here
-        this.setState({
-          offlineNotif: JSON.parse(data)
-        });
-        AsyncStorage.removeItem('lastNotification');
-      }
-    })
+    var offline = await AsyncStorage.getItem('headless')
+    if(offline){
+      this.setState({
+        offlineNotif: offline
+      });
+      AsyncStorage.removeItem('headless');
+    }
   }
 
   componentWillUnmount(){
@@ -208,7 +206,7 @@ class MainPage extends Component {
           Notif when app was closed:
         </Text>
         <Text>
-          {JSON.stringify(this.state.offlineNotif)}
+          {this.state.offlineNotif}
         </Text>
 
         <Text style={styles.instructions}>

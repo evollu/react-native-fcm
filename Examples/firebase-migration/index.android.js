@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import {registerKilledListener} from './app/Listeners';
+import {registerHeadlessListener} from './app/Listeners';
 
 import {
   AppRegistry,
@@ -24,4 +24,4 @@ export default class SimpleFcmClient extends Component {
 
 AppRegistry.registerComponent('SimpleFcmClient', () => SimpleFcmClient);
 
-AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => registerKilledListener);
+AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => registerHeadlessListener);
