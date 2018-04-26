@@ -112,7 +112,7 @@ class MainPage extends Component {
     notification.android.setSmallIcon("ic_launcher")
     notification.android.setVibrate([300])
     notification.android.addAction(new firebase.notifications.Android.Action("view", "ic_launcher", "VIEW"))
-    notification.android.addAction(new firebase.notifications.Android.Action("dismiss", "ic_launcher", "DISMISS"))
+    notification.android.addAction(new firebase.notifications.Android.Action("reply", "ic_launcher", "REPLY").addRemoteInput(new firebase.notifications.Android.RemoteInput("input")) )
     notification.android.setChannelId("test-channel")
 
     firebase.notifications().displayNotification(notification)
