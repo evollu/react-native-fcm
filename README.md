@@ -537,7 +537,10 @@ It is up to you! FCM is just a bridging library that passes notification into ja
 
 #### I want to show notification when app is in foreground
 Use `show_in_foreground` attribute to tell app to show banner even if the app is in foreground.
+
 NOTE: this flag doesn't work for Android push notification, use `custom_notification` to achieve this.
+
+NOTE: foreground notification is not available on iOS 9 and below
 
 #### Do I need to handle APNS token registration?
 No. Method swizzling in Firebase Cloud Messaging handles this unless you turn that off. Then you are on your own to implement the handling. Check this link https://firebase.google.com/docs/cloud-messaging/ios/client
