@@ -26,6 +26,26 @@ export const NotificationType = {
   Local: 'local_notification'
 };
 
+export const NotificationCategoryOption = {
+  CustomDismissAction: 'UNNotificationCategoryOptionCustomDismissAction',
+  AllowInCarPlay: 'UNNotificationCategoryOptionAllowInCarPlay',
+  PreviewsShowTitle: 'UNNotificationCategoryOptionHiddenPreviewsShowTitle',
+  PreviewsShowSubtitle: 'UNNotificationCategoryOptionHiddenPreviewsShowSubtitle',
+  None: 'UNNotificationCategoryOptionNone'
+};
+
+export const NotificationActionOption = {
+  AuthenticationRequired: 'UNNotificationActionOptionAuthenticationRequired',
+  Destructive: 'UNNotificationActionOptionDestructive',
+  Foreground: 'UNNotificationActionOptionForeground',
+  None: 'UNNotificationActionOptionNone',
+};
+
+export const NotificationActionType = {
+  Default: 'UNNotificationActionTypeDefault',
+  TextInput: 'UNNotificationActionTypeTextInput',
+};
+
 const RNFIRMessaging = NativeModules.RNFIRMessaging;
 
 const FCM = {};
@@ -48,6 +68,14 @@ FCM.getFCMToken = () => {
   return RNFIRMessaging.getFCMToken();
 };
 
+FCM.getEntityFCMToken = () => {
+  return RNFIRMessaging.getEntityFCMToken();
+}
+
+FCM.deleteEntityFCMToken = () => {
+  return RNFIRMessaging.deleteEntityFCMToken();
+}
+
 FCM.deleteInstanceId = () =>{
   return RNFIRMessaging.deleteInstanceId();
 };
@@ -64,7 +92,7 @@ FCM.requestPermissions = () => {
 
 FCM.createNotificationChannel = (channel) => {
   if (Platform.OS === 'android') {
-    return RNFIRMessaging.createNotificationChannel();
+    return RNFIRMessaging.createNotificationChannel(channel);
   }
 }
 
@@ -157,7 +185,7 @@ FCM.on = (event, callback) => {
       try {
         await callback(data);
       } catch (err) {
-        console.error('Notification handler err', err);
+        console.error('Notification handler err:\n'+err.stack);
         throw err;
       }
       if (!data._finishCalled) {
@@ -180,4 +208,12 @@ FCM.send = (senderId, payload) => {
   RNFIRMessaging.send(senderId, payload);
 };
 
+FCM.setNotificationCategories = (categories) => {
+  if (Platform.OS === 'ios') {
+    RNFIRMessaging.setNotificationCategories(categories);
+  }
+}
+
 export default FCM;
+
+export {};

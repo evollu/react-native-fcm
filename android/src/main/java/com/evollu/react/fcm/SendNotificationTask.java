@@ -15,10 +15,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
+
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +41,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     private SharedPreferences sharedPreferences;
     private Boolean mIsForeground;
     
-    public SendNotificationTask(Context context, SharedPreferences sharedPreferences, Boolean mIsForeground, Bundle bundle){
+    SendNotificationTask(Context context, SharedPreferences sharedPreferences, Boolean mIsForeground, Bundle bundle){
         this.mContext = context;
         this.bundle = bundle;
         this.sharedPreferences = sharedPreferences;
@@ -70,9 +76,12 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             .setAutoCancel(bundle.getBoolean("auto_cancel", true))
             .setNumber((int)bundle.getDouble("number"))
             .setSubText(bundle.getString("sub_text"))
-            .setGroup(bundle.getString("group"))
             .setVibrate(new long[]{0, DEFAULT_VIBRATION})
             .setExtras(bundle.getBundle("data"));
+
+            if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                notification.setGroup(bundle.getString("group"));
+            }
             
             if (bundle.containsKey("ongoing") && bundle.getBoolean("ongoing")) {
                 notification.setOngoing(bundle.getBoolean("ongoing"));
@@ -207,11 +216,40 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                                                                         PendingIntent.FLAG_UPDATE_CURRENT);
                 
                 notification.setContentIntent(pendingIntent);
+
+                if (bundle.containsKey("android_actions")) {
+                    WritableArray actions = ReactNativeJson.convertJsonToArray(new JSONArray(bundle.getString("android_actions")));
+                    for (int a = 0; a < actions.size(); a++) {
+                        ReadableMap action = actions.getMap(a);
+                        String actionTitle = action.getString("title");
+                        String actionId = action.getString("id");
+                        Intent actionIntent = new Intent();
+                        actionIntent.setClassName(mContext, intentClassName);
+                        actionIntent.setAction("com.evollu.react.fcm." + actionId + "_ACTION");
+                        actionIntent.putExtras(bundle);
+                        actionIntent.putExtra("_actionIdentifier", actionId);
+                        actionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        PendingIntent pendingActionIntent = PendingIntent.getActivity(mContext, notificationID, actionIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        notification.addAction(0, actionTitle, pendingActionIntent);
+                    }
+                }
                 
                 Notification info = notification.build();
                 
                 NotificationManagerCompat.from(mContext).notify(notificationID, info);
             }
+
+            if(bundle.getBoolean("wake_screen", false)){
+                PowerManager pm = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
+                if(pm != null && !pm.isScreenOn())
+                {
+                    PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |PowerManager.ACQUIRE_CAUSES_WAKEUP |PowerManager.ON_AFTER_RELEASE,"FCMLock");
+                    wl.acquire(5000);
+                }
+            }
+
             //clear out one time scheduled notification once fired
             if(!bundle.containsKey("repeat_interval") && bundle.containsKey("fire_date")) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -224,7 +262,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         return null;
     }
     
-    public Bitmap getBitmapFromURL(String strURL) {
+    private Bitmap getBitmapFromURL(String strURL) {
         try {
             URL url = new URL(strURL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -238,11 +276,10 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         }
     }
     
-    public String getMainActivityClassName() {
+    protected String getMainActivityClassName() {
         String packageName = mContext.getPackageName();
         Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
-        String className = launchIntent.getComponent().getClassName();
-        return className;
+        return launchIntent != null ? launchIntent.getComponent().getClassName() : null;
     }
 }
 
