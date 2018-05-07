@@ -36,69 +36,69 @@ import static com.facebook.react.common.ReactConstants.TAG;
 
 public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     private static final long DEFAULT_VIBRATION = 300L;
-    
+
     private Context mContext;
     private Bundle bundle;
     private SharedPreferences sharedPreferences;
     private Boolean mIsForeground;
-    
+
     SendNotificationTask(Context context, SharedPreferences sharedPreferences, Boolean mIsForeground, Bundle bundle){
         this.mContext = context;
         this.bundle = bundle;
         this.sharedPreferences = sharedPreferences;
         this.mIsForeground = mIsForeground;
     }
-    
+
     protected Void doInBackground(Void... params) {
         try {
             String intentClassName = getMainActivityClassName();
             if (intentClassName == null) {
                 return null;
-            }           
-            
+            }
+
             String body = bundle.getString("body");
             if (body == null) {
                 return null;
             }
-			body = URLDecoder.decode( body, "UTF-8" );
-            
+            body = URLDecoder.decode( body, "UTF-8" );
+
             Resources res = mContext.getResources();
             String packageName = mContext.getPackageName();
-            
+
             String title = bundle.getString("title");
             if (title == null) {
                 ApplicationInfo appInfo = mContext.getApplicationInfo();
                 title = mContext.getPackageManager().getApplicationLabel(appInfo).toString();
             }
-			title = URLDecoder.decode( title, "UTF-8" );
-			
-			String ticker = bundle.getString("ticker");
-			if (ticker != null) ticker = URLDecoder.decode( ticker, "UTF-8" );
-			
-			String subText = bundle.getString("sub_text");
-			if (subText != null) subText = URLDecoder.decode( subText, "UTF-8" );
-            
+            title = URLDecoder.decode( title, "UTF-8" );
+
+            String ticker = bundle.getString("ticker");
+            if (ticker != null) ticker = URLDecoder.decode( ticker, "UTF-8" );
+
+            String subText = bundle.getString("sub_text");
+            if (subText != null) subText = URLDecoder.decode( subText, "UTF-8" );
+
             NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
-            .setContentTitle(title)
-            .setContentText(body)
-            .setTicker(ticker)
-            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-            .setAutoCancel(bundle.getBoolean("auto_cancel", true))
-            .setNumber((int)bundle.getDouble("number"))
-            .setSubText(subText)
-            .setVibrate(new long[]{0, DEFAULT_VIBRATION})
-            .setExtras(bundle.getBundle("data"));			
+                    .setContentTitle(title)
+                    .setContentText(body)
+                    .setTicker(ticker)
+                    .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+                    .setAutoCancel(bundle.getBoolean("auto_cancel", true))
+                    .setNumber((int)bundle.getDouble("number"))
+                    .setSubText(subText)
+                    .setVibrate(new long[]{0, DEFAULT_VIBRATION})
+                    .setExtras(bundle.getBundle("data"));
 
             if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-				String group = bundle.getString("group");
-				if (group != null) group = URLDecoder.decode( group, "UTF-8" );
+                String group = bundle.getString("group");
+                if (group != null) group = URLDecoder.decode( group, "UTF-8" );
                 notification.setGroup(group);
             }
-            
+
             if (bundle.containsKey("ongoing") && bundle.getBoolean("ongoing")) {
                 notification.setOngoing(bundle.getBoolean("ongoing"));
             }
-            
+
             //priority
             String priority = bundle.getString("priority", "");
             switch(priority) {
@@ -114,7 +114,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 default:
                     notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
             }
-            
+
             //icon
             String smallIcon = bundle.getString("icon", "ic_launcher");
             int smallIconResId = res.getIdentifier(smallIcon, "mipmap", packageName);
@@ -124,45 +124,43 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             if(smallIconResId != 0){
                 notification.setSmallIcon(smallIconResId);
             }
-            
+
             //large icon
             String largeIcon = bundle.getString("large_icon");
             if(largeIcon != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
-				largeIcon = URLDecoder.decode( largeIcon, "UTF-8" );
                 if (largeIcon.startsWith("http://") || largeIcon.startsWith("https://")) {
                     Bitmap bitmap = getBitmapFromURL(largeIcon);
                     notification.setLargeIcon(bitmap);
                 } else {
                     int largeIconResId = res.getIdentifier(largeIcon, "mipmap", packageName);
                     Bitmap largeIconBitmap = BitmapFactory.decodeResource(res, largeIconResId);
-                    
+
                     if (largeIconResId != 0) {
                         notification.setLargeIcon(largeIconBitmap);
                     }
                 }
             }
-            
+
             //big text
             String bigText = bundle.getString("big_text");
-            if(bigText != null){				
-				bigText = URLDecoder.decode( bigText, "UTF-8" );                
+            if(bigText != null){
+                bigText = URLDecoder.decode( bigText, "UTF-8" );
                 notification.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
             }
-            
+
             //picture
             String picture = bundle.getString("picture");
-			
+
             if(picture!=null){
-				picture = URLDecoder.decode( picture, "UTF-8" );
                 NotificationCompat.BigPictureStyle bigPicture = new NotificationCompat.BigPictureStyle();
-                
+
                 if (picture.startsWith("http://") || picture.startsWith("https://")) {
                     Bitmap bitmap = getBitmapFromURL(picture);
                     bigPicture.bigPicture(bitmap);
                 } else {
                     int pictureResId = res.getIdentifier(picture, "mipmap", packageName);
                     Bitmap pictureResIdBitmap = BitmapFactory.decodeResource(res, pictureResId);
-                    
+
                     if (pictureResId != 0) {
                         bigPicture.bigPicture(pictureResIdBitmap);
                     }
@@ -171,11 +169,10 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 		// that cause to display duplicated body in subtext when picture has specified
                 notification.setStyle(bigPicture);
             }
-            
+
             //sound
             String soundName = bundle.getString("sound");
             if (soundName != null) {
-				soundName = URLDecoder.decode( soundName, "UTF-8" );
                 if (soundName.equalsIgnoreCase("default")) {
                     notification.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
                 } else {
@@ -187,18 +184,17 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                     notification.setSound(Uri.parse("android.resource://" + packageName + "/" + soundResourceId));
                 }
             }
-            
+
             //color
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 notification.setCategory(NotificationCompat.CATEGORY_CALL);
-                
+
                 String color = bundle.getString("color");
                 if (color != null) {
-					color = URLDecoder.decode( color, "UTF-8" );
                     notification.setColor(Color.parseColor(color));
                 }
             }
-            
+
             //vibrate
             if(bundle.containsKey("vibrate")){
                 long vibrate = Math.round(bundle.getDouble("vibrate", DEFAULT_VIBRATION));
@@ -208,40 +204,40 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                     notification.setVibrate(null);
                 }
             }
-            
+
             //lights
             if (bundle.getBoolean("lights")) {
                 notification.setDefaults(NotificationCompat.DEFAULT_LIGHTS);
             }
-            
+
             if(bundle.containsKey("fire_date")) {
                 Log.d(TAG, "broadcast intent if it is a scheduled notification");
                 Intent i = new Intent("com.evollu.react.fcm.ReceiveLocalNotification");
                 i.putExtras(bundle);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(i);
-            }						
-            
+            }
+
             if(!mIsForeground || bundle.getBoolean("show_in_foreground")){
                 Intent intent = new Intent();
                 intent.setClassName(mContext, intentClassName);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtras(bundle);
-				
-				String clickAction = bundle.getString("click_action");
-				if (clickAction != null) clickAction = URLDecoder.decode( clickAction, "UTF-8" );
-				
+
+                String clickAction = bundle.getString("click_action");
+                if (clickAction != null) clickAction = URLDecoder.decode( clickAction, "UTF-8" );
+
                 intent.setAction(clickAction);
-                
+
                 int notificationID = bundle.containsKey("id") ? bundle.getString("id", "").hashCode() : (int) System.currentTimeMillis();
                 PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
-                                                                        PendingIntent.FLAG_UPDATE_CURRENT);
-                
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
                 notification.setContentIntent(pendingIntent);
 
                 if (bundle.containsKey("android_actions")) {
-					String androidActions = bundle.getString("android_actions");
-					androidActions = URLDecoder.decode( androidActions, "UTF-8" );
-					
+                    String androidActions = bundle.getString("android_actions");
+                    androidActions = URLDecoder.decode( androidActions, "UTF-8" );
+
                     WritableArray actions = ReactNativeJson.convertJsonToArray(new JSONArray(androidActions));
                     for (int a = 0; a < actions.size(); a++) {
                         ReadableMap action = actions.getMap(a);
@@ -259,9 +255,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         notification.addAction(0, actionTitle, pendingActionIntent);
                     }
                 }
-                
+
                 Notification info = notification.build();
-                
+
                 NotificationManagerCompat.from(mContext).notify(notificationID, info);
             }
 
@@ -285,7 +281,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         }
         return null;
     }
-    
+
     private Bitmap getBitmapFromURL(String strURL) {
         try {
             URL url = new URL(strURL);
@@ -299,7 +295,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             return null;
         }
     }
-    
+
     protected String getMainActivityClassName() {
         String packageName = mContext.getPackageName();
         Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
