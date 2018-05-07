@@ -10,7 +10,7 @@ Note that there are some advanced features still in progress
 ### To existing react-native-fcm users
 `react-native-firebase` now can do what `react-native-fcm` can so it is a waste of effort to build the same thing in parallel. 
 
-Since I'm getting busier these days and feel challenging to maintain this repo every day while `react-native-firebase` has a larger team/company backing it, existing users may consider migrating to `react-native-firebase`.
+Since I'm getting busier these days and start feeling challenging to maintain this repo every day while `react-native-firebase` has a larger team/company backing it, existing users may consider migrating to `react-native-firebase`.
 
 I've created [an example project](https://github.com/evollu/react-native-fcm/tree/firebase/Examples/firebase-migration) using react-native-firebase as a migration reference
 
