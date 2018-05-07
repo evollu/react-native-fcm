@@ -1,7 +1,20 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## NOTES:
-[react-native-firebase](https://github.com/invertase/react-native-firebase/releases/tag/v4.0.0) has introduced new firebase messaging and remote/local notification features. We are planning to combine our efforts to reduce duplicated work.
+[react-native-firebase](https://github.com/invertase/react-native-firebase/releases/tag/v4.0.0) has introduced new firebase messaging and remote/local notification features. It has good integration with other firebase features.  I would recommend new comers to check that.
+
+Note that there are some advanced features still in progress 
+- handle iOS remote notification when app is not running
+- custom iOS notification actions 
+
+### To existing react-native-fcm users
+`react-native-firebase` can cover what `react-native-fcm` does so it is kind of a waste of effort to build the same wheels in parallel. Since I'm getting busier these days and feel challenging to maintain this repo every day while `react-native-firebase` has a larger team/company backing it, existing users may consider migrating to `react-native-firebase`.
+
+I've created [an example project](https://github.com/evollu/react-native-fcm/tree/firebase/Examples/firebase-migration) using react-native-firebase as a migration reference
+
+`react-native-fcm` will still take PRs and bug fixes, but possibly no new feature developement any more.
+
+
 
 ### Versions
 - for iOS SDK < 4, use react-native-fcm@6.2.3 (v6.x is still compatible with Firebase SDK v4)
