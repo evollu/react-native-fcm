@@ -517,8 +517,12 @@ RCT_EXPORT_METHOD(unsubscribeFromTopic: (NSString*) topic)
     [[FIRMessaging messaging] unsubscribeFromTopic:topic];
 }
 
-// Receive data message on iOS 10 devices.
+// legacy support
 - (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
+    [self sendEventWithName:FCMNotificationReceived body:[remoteMessage appData]];
+}
+
+- (void)messaging:(FIRMessaging *)messaging didReceiveMessage:(FIRMessagingRemoteMessage *)remoteMessage {
     [self sendEventWithName:FCMNotificationReceived body:[remoteMessage appData]];
 }
 
