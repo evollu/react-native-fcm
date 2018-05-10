@@ -455,9 +455,14 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
     }];
 }
 
+// legacy support
 - (void)messaging:(nonnull FIRMessaging *)messaging didRefreshRegistrationToken:(nonnull NSString *)fcmToken {
-    refreshToken = fcmToken;
-    [self sendEventWithName:FCMTokenRefreshed body:fcmToken];
+  [self messaging:messaging didReceiveRegistrationToken:fcmToken];
+}
+
+- (void)messaging:(nonnull FIRMessaging *)messaging didReceiveRegistrationToken:(nonnull NSString *)fcmToken {
+  refreshToken = fcmToken;
+  [self sendEventWithName:FCMTokenRefreshed body:fcmToken];
 }
 
 RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
