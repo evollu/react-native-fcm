@@ -455,11 +455,6 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
     }];
 }
 
-// legacy support
-- (void)messaging:(nonnull FIRMessaging *)messaging didRefreshRegistrationToken:(nonnull NSString *)fcmToken {
-  [self messaging:messaging didReceiveRegistrationToken:fcmToken];
-}
-
 - (void)messaging:(nonnull FIRMessaging *)messaging didReceiveRegistrationToken:(nonnull NSString *)fcmToken {
   refreshToken = fcmToken;
   [self sendEventWithName:FCMTokenRefreshed body:fcmToken];
@@ -515,11 +510,6 @@ RCT_EXPORT_METHOD(subscribeToTopic: (NSString*) topic)
 RCT_EXPORT_METHOD(unsubscribeFromTopic: (NSString*) topic)
 {
     [[FIRMessaging messaging] unsubscribeFromTopic:topic];
-}
-
-// legacy support
-- (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
-    [self sendEventWithName:FCMNotificationReceived body:[remoteMessage appData]];
 }
 
 - (void)messaging:(FIRMessaging *)messaging didReceiveMessage:(FIRMessagingRemoteMessage *)remoteMessage {
