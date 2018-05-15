@@ -1,15 +1,33 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## NOTES:
-- current latest version: v10.x
+[react-native-firebase](https://github.com/invertase/react-native-firebase/releases/tag/v4.0.0) has introduced new firebase messaging and remote/local notification features. It has good integration with other firebase features.  I would recommend new comers to check that.
+
+Note that there are some advanced features still in progress 
+- handle iOS remote notification when app is not running
+- custom iOS notification actions 
+
+### To existing react-native-fcm users
+`react-native-firebase` now can do what `react-native-fcm` can so it is a waste of effort to build the same thing in parallel. 
+
+Since I'm getting busier these days and start feeling challenging to maintain this repo every day while `react-native-firebase` has a larger team/company backing it, existing users may consider migrating to `react-native-firebase`.
+
+I've created [an example project](https://github.com/evollu/react-native-fcm/tree/firebase/Examples/firebase-migration) using react-native-firebase as a migration reference
+
+`react-native-fcm` will still take PRs and bug fixes, but possibly no new feature developement any more.
+
+
+
+### Versions
 - for iOS SDK < 4, use react-native-fcm@6.2.3 (v6.x is still compatible with Firebase SDK v4)
 - for RN < 0.40.0, use react-native-fcm@2.5.6
 - for RN < 0.33.0, use react-native-fcm@1.1.0
 - for RN < 0.30.0, use react-native-fcm@1.0.15
-- local notification is not only available in V1
 
+### Example
 - An example working project is available at: https://github.com/evollu/react-native-fcm/tree/master/Examples/simple-fcm-client
 
+### Android 26
 - DO NOT change Android targetSdkVersion >= 26. The notification won't show up because of notification channel requirement.
 If you have to upgrade, you can use sdk-26 branch and post feedback on [here](https://github.com/evollu/react-native-fcm/pull/699)
 
@@ -18,6 +36,7 @@ If you have to upgrade, you can use sdk-26 branch and post feedback on [here](ht
 - Run `npm install react-native-fcm --save`
 - [Link libraries](https://facebook.github.io/react-native/docs/linking-libraries-ios.html)
   Note: the auto link doesn't work with xcworkspace so CocoaPods user needs to do manual linking
+- You many need [this package for huawei phone](https://github.com/pgengoux/react-native-huawei-protected-apps)
 
 ## Configure Firebase Console
 ### FCM config file
@@ -318,7 +337,7 @@ NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenti
 ### Build custom push notification for Android
 Firebase android misses important feature of android notification like `group`, `priority` and etc. As a work around you can send data message (no `notification` payload at all) and this repo will build a local notification for you. If you pass `custom_notification` in the payload, the repo will treat the content as a local notification config and shows immediately.
 
-NOTE: By using this work around, you will have to send different types of payload for iOS and Android devices because custom_notification isn't supported on iOS
+NOTE: By using this work around, you will have to send different types of payload for iOS and Android devices because **custom_notification isn't supported on iOS**
 
 WARNING: `custom_notification` **cannot** be used together with `notification` attribute. use `data` **ALONE**
 
@@ -341,6 +360,9 @@ Example of payload that is sent to FCM server:
   }
 }
 ```
+
+Example of payload that is sent through firebase console:
+<img width="753" alt="screen shot 2018-04-04 at 1 18 09 pm" src="https://user-images.githubusercontent.com/9213224/38323255-bbbfdd66-380a-11e8-95c2-bf32ced959b8.png">
 
 Check local notification guide below for configuration.
 
@@ -459,7 +481,7 @@ Yes there are `react-native-push-notification` and `react-native-system-notifica
 - The PushNotificationIOS by react native team is still missing features that recurring, so we are adding it here
 
 #### My Android build is failing
-Try update your SDK and google play service. 
+Try update your SDK and google play service.
 If you are having multiple plugins requiring different version of play-service sdk, skip conflicting group. The example project shows for how to colive with react-native-maps
 ```
     compile(project(':react-native-maps')) {
@@ -530,7 +552,10 @@ It is up to you! FCM is just a bridging library that passes notification into ja
 
 #### I want to show notification when app is in foreground
 Use `show_in_foreground` attribute to tell app to show banner even if the app is in foreground.
+
 NOTE: this flag doesn't work for Android push notification, use `custom_notification` to achieve this.
+
+NOTE: foreground notification is not available on iOS 9 and below
 
 #### Do I need to handle APNS token registration?
 No. Method swizzling in Firebase Cloud Messaging handles this unless you turn that off. Then you are on your own to implement the handling. Check this link https://firebase.google.com/docs/cloud-messaging/ios/client
@@ -547,12 +572,18 @@ Issues and pull requests are welcome. Let's make this thing better!
 #### Credits
 Local notification implementation is inspired by react-native-push-notification by zo0r
 
+#### I get the notifications in the logs, but the native prompt does not show up
+Did you remember to ask the user permissions? ;)
+```js
+await FCM.requestPermissions({ badge: false, sound: true, alert: true })
+```
+
 ## Sending remote notification
 
 How to send a push notification from your server? You should `POST` to this endpoint:
 
     https://fcm.googleapis.com/fcm/send
-    
+
 You need to set the headers of `Content-Type` to `application/json` and `Authorization` to `key=******` where you replace `******` with the "Legacy server key" from here the Firebase dashbaord. Get this information by first going to:
 
 1. https://console.firebase.google.com/
@@ -607,4 +638,3 @@ fetch('https://fcm.googleapis.com/fcm/send', {
     })
 })
 ```
-

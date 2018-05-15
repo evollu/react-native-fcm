@@ -133,6 +133,10 @@ android {
 dependencies {
     compile(project(':react-native-maps')) {
         exclude group: 'com.google.android.gms', module: 'play-services-base'
+        // This resolution make compiler ignoring play-service-base's version requirement in react-native-maps
+        // so that it only read from react-native-fcm
+        // you can also lock the version in this gradle file and ignore all module declaration
+        // or you can use ResolutionStragety
     }
     compile project(':react-native-fcm')
     compile fileTree(dir: "libs", include: ["*.jar"])
