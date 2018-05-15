@@ -84,7 +84,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                     .setTicker(ticker)
                     .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                     .setAutoCancel(bundle.getBoolean("auto_cancel", true))
-                    .setNumber((int)bundle.getDouble("number"))
+                    .setNumber(bundle.getInt("number", (int)bundle.getDouble("number")))
                     .setSubText(subText)
                     .setVibrate(new long[]{0, DEFAULT_VIBRATION})
                     .setExtras(bundle.getBundle("data"));
