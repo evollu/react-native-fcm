@@ -93,6 +93,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 String group = bundle.getString("group");
                 if (group != null) group = URLDecoder.decode( group, "UTF-8" );
                 notification.setGroup(group);
+		if (bundle.containsKey("groupSummary") && bundle.getBoolean("groupSummary")) {
+                    notification.setGroupSummary(true);
+                }
             }
 
             if (bundle.containsKey("ongoing") && bundle.getBoolean("ongoing")) {
