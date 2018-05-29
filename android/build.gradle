@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion project.hasProperty('buildToolsVetargetSdkVersionrsion') ? project.buildToolsVersion : DEFAULT_TARGET_SDK_VERSION
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? project.targetSdkVersion : DEFAULT_TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
     }
