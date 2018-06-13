@@ -90,17 +90,68 @@ https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-clien
     ...
 ```
 
+- Edit `{YOUR_MAIN_PROJECT}/build.gradle`:
+```diff
+buildscript {
+    repositories {
+        jcenter()
++        maven {
++            url 'https://maven.google.com/'
++            name 'Google'
++        }
+    }
+    dependencies {
++        classpath 'com.android.tools.build:gradle:3.1.1'
++        classpath 'com.google.gms:google-services:3.1.2'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/../node_modules/react-native/android"
+        }
++        maven {
++            url 'https://maven.google.com/'
++            name 'Google'
++        }
+    }
+}
+```
+
 - Edit `{YOUR_MAIN_PROJECT}/app/build.gradle`:
 ```diff
++ compileSdkVersion 27
++    buildToolsVersion "27.0.3"
+
+    defaultConfig {
+        applicationId "com.google.firebase.quickstart.fcm"
+        minSdkVersion 16
++        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+    }
+
  dependencies {
 +    compile project(':react-native-fcm')
-+    compile 'com.google.firebase:firebase-core:10.0.1' //this decides your firebase SDK version
-+    compile 'com.google.firebase:firebase-messaging:10.0.1'
      compile fileTree(dir: "libs", include: ["*.jar"])
-     compile "com.android.support:appcompat-v7:23.0.1"
      compile "com.facebook.react:react-native:+"  // From node_modules
  }
+ 
+ //bottom
+ + apply plugin: "com.google.gms.google-services"
 ```
+If you are using other firebase libraries, check this for solving dependency conflicts https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/android/app/build.gradle#L133
+
 - Edit `android/settings.gradle`
 ```diff
   ...
@@ -120,6 +171,24 @@ public class MainActivity extends ReactActivity {
 +        setIntent(intent);
 +    }
 }
+```
+
+- Make sure in `MainApplication.java` you have
+```diff
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+            new MapsPackage(),
++           new FIRMessagingPackage()
+      );
+    }
+
++ @Override
++  public void onCreate() { // <-- Check this block exists
++    super.onCreate();
++    SoLoader.init(this, /* native exopackage */ false); // <-- Check this line exists within the block
++  }
 ```
 
 ### Config for notification and `click_action` in Android
