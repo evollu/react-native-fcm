@@ -73,6 +73,7 @@ https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-clien
     android:theme="@style/AppTheme">
 
 +    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/>
++    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="my_default_channel"/>
 
 +   <service android:name="com.evollu.react.fcm.MessagingService" android:enabled="true" android:exported="true">
 +     <intent-filter>
@@ -322,12 +323,6 @@ Edit AndroidManifest.xml
 +              <category android:name="android.intent.category.DEFAULT" />
 +          </intent-filter>
 +      </receiver>
-+       <meta-data
-+            android:name="com.google.firebase.messaging.default_notification_icon"
-+            android:resource="@mipmap/ic_notif" /> <!-- your default notificaiton icon file -->
-+        <meta-data
-+            android:name="com.google.firebase.messaging.default_notification_channel_id"
-+            android:value="test-channel"/> <!-- your default notificaiton channel -->
   </application>
 ```
 NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenting local notifications. `com.evollu.react.fcm.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
