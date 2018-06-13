@@ -19,6 +19,7 @@ I've created [an example project](https://github.com/evollu/react-native-fcm/tre
 
 
 ### Versions
+- after v16.0.0, Android target SDK has be to >= 26 and build tool has to be >= 26.0.x
 - for iOS SDK < 4, use react-native-fcm@6.2.3 (v6.x is still compatible with Firebase SDK v4)
 - for RN < 0.40.0, use react-native-fcm@2.5.6
 - for RN < 0.33.0, use react-native-fcm@1.1.0
@@ -26,10 +27,6 @@ I've created [an example project](https://github.com/evollu/react-native-fcm/tre
 
 ### Example
 - An example working project is available at: https://github.com/evollu/react-native-fcm/tree/master/Examples/simple-fcm-client
-
-### Android 26
-- DO NOT change Android targetSdkVersion >= 26. The notification won't show up because of notification channel requirement.
-If you have to upgrade, you can use sdk-26 branch and post feedback on [here](https://github.com/evollu/react-native-fcm/pull/699)
 
 ## Installation
 
@@ -325,6 +322,12 @@ Edit AndroidManifest.xml
 +              <category android:name="android.intent.category.DEFAULT" />
 +          </intent-filter>
 +      </receiver>
++       <meta-data
++            android:name="com.google.firebase.messaging.default_notification_icon"
++            android:resource="@mipmap/ic_notif" /> <!-- your default notificaiton icon file -->
++        <meta-data
++            android:name="com.google.firebase.messaging.default_notification_channel_id"
++            android:value="test-channel"/> <!-- your default notificaiton channel -->
   </application>
 ```
 NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenting local notifications. `com.evollu.react.fcm.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
