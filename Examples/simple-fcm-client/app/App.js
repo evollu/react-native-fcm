@@ -35,6 +35,12 @@ class MainPage extends Component {
   }
 
   async componentDidMount() {
+    FCM.createNotificationChannel({
+      id: 'default',
+      name: 'Default',
+      description: 'used for example',
+      priority: 'high'
+    })
     registerAppListener(this.props.navigation);
     FCM.getInitialNotification().then(notif => {
       this.setState({
@@ -75,6 +81,7 @@ class MainPage extends Component {
 
   showLocalNotification() {
     FCM.presentLocalNotification({
+      channel: 'default',
       id: new Date().valueOf().toString(), // (optional for instant notification)
       title: "Test Notification with action", // as FCM payload
       body: "Force touch to reply", // as FCM payload (required)
