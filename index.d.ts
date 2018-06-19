@@ -89,6 +89,8 @@ declare module "react-native-fcm" {
         ticker?: string;
         auto_cancel?: boolean;
         group?: string;
+        groupSummary?: boolean;
+        groupAlertBehavior?: string;
         picture?: string;
         ongoing?: boolean;
         lights?: boolean;
