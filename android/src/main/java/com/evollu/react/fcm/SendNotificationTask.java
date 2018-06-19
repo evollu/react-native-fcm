@@ -95,7 +95,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
                 notification.setGroup(group);
 
-                String groupAlertBehavior = bundle.getString("groupAlertBehavior", "all");
+                String groupAlertBehavior = bundle.getString("groupAlertBehavior", "not-set");
                 switch(groupAlertBehavior) {
                     case "children":
                         notification.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
@@ -107,7 +107,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         notification.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL);
                         break;
                     default:
-                        notification.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL);
+                        break; // Leave default behavior to Android defaults.
                 }
 
                 if (bundle.containsKey("groupSummary") && bundle.getBoolean("groupSummary")) {
