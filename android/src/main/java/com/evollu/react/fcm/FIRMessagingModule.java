@@ -124,6 +124,15 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
+    public void deleteNotificationChannel(String id, Promise promise) {
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		    NotificationManager mngr = (NotificationManager) getReactApplicationContext().getSystemService(NOTIFICATION_SERVICE);
+		    mngr.deleteNotificationChannel(id);
+	    }
+	    promise.resolve(null);
+    }
+
+    @ReactMethod
     public void getFCMToken(Promise promise) {
         try {
             Log.d(TAG, "Firebase token: " + FirebaseInstanceId.getInstance().getToken());
