@@ -289,6 +289,7 @@ cd ios && pod init
 Edit the newly created `Podfile`:
 ```diff
   # Pods for YOURAPP
++ pod 'Firebase'
 + pod 'Firebase/Messaging'
 ```
 
@@ -297,7 +298,10 @@ Install the `Firebase/Messaging` pod:
 pod install
 ```
 NOTE: you don't need to enable `use_frameworks!`. if you have to have `use_frameworks!` make sure you don't have `inherit! :search_paths`
+
 NOTE: there is a working example in `master` branch
+
+NOTE: If you don't put `pod 'Firebase'` into `Podfile`, compilation will fail with error of missing Firebase library.
 
 ### Non Cocoapod approach
 
@@ -360,6 +364,25 @@ Edit `AppDelegate.m`:
 +   [RNFIRMessaging didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 + }
 ```
+
+**Add the path of header files into XCode:**
+
+1. Open XCode.
+2. Press `CMD+1` or click the XCode project.
+3. Go to **Build Settings**, selecting **All** and **Combined**.
+4. Search **Header Search Path** in the searchg tab.
+5. Make sure there is a line of `$(SRCROOT)/../node_modules/react-native-fcm/ios`. If no, just add it.
+
+**Add GoogleService-Info.plist:**
+
+Make sure the file is not just moved into the folder. You need to `Right Click` the project folder in XCode and `Add File to <Project Name>`. Select **Copy if needed** in the `Options` page while selecting the file.
+
+**Shared Library Settings:**
+
+- Make sure you see `Pods.xcodeproj` under **Library** folder if you are using Pod install method.
+- Make sure you see `RNFIRMessaging.xcodeproj` under **Library** folder.
+- If you don't see any of these files, please add them by `Right Click` the **Library** folder and `Add File to <Project Name>` to add them back. `Pods.xcodeproj` should be under `ios/Pods/`, and `RNFIRMessaging.xcodeproj` should be under `node_modules/react-native-fcm/ios`.
+- Make sure you see `libRNFIRMessaging.a` under **Link Binary With Libraries** under **Build Phases** tab. If no, drag the file under `RNFIRMessaging.xcodeproj` under **Library** folder into there.
 
 ### Add Capabilities
 - Select your project **Capabilities** and enable:
