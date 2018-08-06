@@ -298,7 +298,9 @@ Install the `Firebase/Messaging` pod:
 pod install
 ```
 NOTE: you don't need to enable `use_frameworks!`. if you have to have `use_frameworks!` make sure you don't have `inherit! :search_paths`
+
 NOTE: there is a working example in `master` branch
+
 NOTE: If you don't put `pod 'Firebase'` into `Podfile`, compilation will fail with error of missing Firebase library.
 
 ### Non Cocoapod approach
