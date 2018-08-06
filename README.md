@@ -289,7 +289,7 @@ cd ios && pod init
 Edit the newly created `Podfile`:
 ```diff
   # Pods for YOURAPP
-  pod 'Firebase'
++ pod 'Firebase'
 + pod 'Firebase/Messaging'
 ```
 
