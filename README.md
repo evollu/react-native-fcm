@@ -39,38 +39,74 @@ I've created [an example project](https://github.com/evollu/react-native-fcm/tre
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can:
-- for **Android**: download `google-services.json` file and place it in `android/app` directory
+- for **Android**: download `google-services.json` file and place it in `android/app` directory.
 - for **iOS**: download `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
 
 Make sure you have certificates setup by following
 https://firebase.google.com/docs/cloud-messaging/ios/certs
 
+---
+
 ## Android Configuration
 
 - As `react-native link` sometimes has glitches, make sure you have this line added
 
-https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/android/app/src/main/java/com/google/firebase/quickstart/fcm/MainApplication.java#L28
+### Edit `android/build.gradle`:
 
-- Edit `android/build.gradle`:
-```diff
-  dependencies {
-    classpath 'com.android.tools.build:gradle:2.0.0'
-+   classpath 'com.google.gms:google-services:3.0.0'
+**NOTE:** The followed line may not be up-to-dated. Please refer to https://firebase.google.com/docs/android/setup
+
+```
+buildscript {
+    repositories {
+        // ...
+        google() // Google's Maven repository
+    }
+    // ...
+    dependencies {
+        // ...
+        classpath 'com.google.gms:google-services:4.0.2' // google-services plugin
+    }
+}
+
+allprojects {
+    // ...
+    repositories {
+        // ...
+        google() // Google's Maven repository
+    }
+}
 ```
 
-- Edit `android/app/build.gradle`. Add at the bottom of the file:
-```diff
-  apply plugin: "com.android.application"
-  ...
-+ apply plugin: 'com.google.gms.google-services'
+### Edit `android/app/build.gradle`:
+
+**NOTE:** The version should match the version specified in `react-native-fcm`. Please refer to `node_modules/react-native-fcm/android/src/build.gradle`.
+
+**NOTE:** Please refer to https://firebase.google.com/docs/android/setup
+
+```
+dependencies {
+    // ...
+    compile project(':react-native-fcm')
+
+    // ...
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+}
+
+// ADD THIS AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'
 ```
 
-- Edit `android/app/src/main/AndroidManifest.xml`:
+### Edit `android/app/src/main/AndroidManifest.xml`:
+
+**NOTE:** The resource `@mipmap/ic_launcher` is referring to `android/app/src/res/mipmap-<resolution>` folder. Feel free to change the filename if you have a customised icon for notification.
 
 ```diff
   <application
     ...
     android:theme="@style/AppTheme">
++    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_launcher" />
++    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="my_default_channel" />
 
 +    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/>
 +    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="my_default_channel"/>
@@ -90,42 +126,12 @@ https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-clien
     ...
 ```
 
-- Edit `{YOUR_MAIN_PROJECT}/build.gradle`:
-```diff
-buildscript {
-    repositories {
-        jcenter()
-+        maven {
-+            url 'https://maven.google.com/'
-+            name 'Google'
-+        }
-    }
-    dependencies {
-+        classpath 'com.android.tools.build:gradle:3.1.1'
-+        classpath 'com.google.gms:google-services:3.1.2'
+### Edit `android/app/build.gradle`:
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+**NOTE:** after v16.0.0, Android target SDK has be to >= 26 and build tool has to be >= 26.0.x
 
-allprojects {
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
-        }
-+        maven {
-+            url 'https://maven.google.com/'
-+            name 'Google'
-+        }
-    }
-}
-```
+**NOTE:** Make sure the version matches this library.
 
-- Edit `{YOUR_MAIN_PROJECT}/app/build.gradle`:
 ```diff
 + compileSdkVersion 27
 +    buildToolsVersion "27.0.3"
@@ -152,7 +158,7 @@ allprojects {
 ```
 If you are using other firebase libraries, check this for solving dependency conflicts https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/android/app/build.gradle#L133
 
-- Edit `android/settings.gradle`
+### Edit `android/settings.gradle`
 ```diff
   ...
 + include ':react-native-fcm'
@@ -173,7 +179,10 @@ public class MainActivity extends ReactActivity {
 }
 ```
 
-- Make sure in `MainApplication.java` you have
+### Make sure in `MainApplication.java` you have the code below:
+
+**NOTE:** The packages listed inside should appear once only. `react-native link` sometimes can mess up this part, please remove duplicated packeges.
+
 ```diff
     @Override
     protected List<ReactPackage> getPackages() {
