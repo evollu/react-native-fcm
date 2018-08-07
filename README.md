@@ -79,8 +79,6 @@ allprojects {
 
 ### Edit `android/app/build.gradle`:
 
-**NOTE:** The version should match the version specified in `react-native-fcm`. Please refer to `node_modules/react-native-fcm/android/src/build.gradle`.
-
 **NOTE:** Please refer to https://firebase.google.com/docs/android/setup
 
 ```
