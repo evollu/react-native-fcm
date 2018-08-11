@@ -87,8 +87,10 @@ dependencies {
     compile project(':react-native-fcm')
 
     // ...
-    implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+    
+    // Automatically selecting the latest available version
+    implementation 'com.google.firebase:firebase-core'
+    implementation 'com.google.firebase:firebase-messaging'
 }
 
 // ADD THIS AT THE BOTTOM
@@ -97,14 +99,12 @@ apply plugin: 'com.google.gms.google-services'
 
 ### Edit `android/app/src/main/AndroidManifest.xml`:
 
-**NOTE:** The resource `@mipmap/ic_launcher` is referring to `android/app/src/res/mipmap-<resolution>` folder. Feel free to change the filename if you have a customised icon for notification.
+**NOTE:** The resource `@mipmap/ic_notif` is referring to `android/app/src/res/mipmap-<resolution>/` folder. Feel free to change the filename if you have a customised icon for notification.
 
 ```diff
   <application
     ...
     android:theme="@style/AppTheme">
-+    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_launcher" />
-+    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="my_default_channel" />
 
 +    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/>
 +    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="my_default_channel"/>
