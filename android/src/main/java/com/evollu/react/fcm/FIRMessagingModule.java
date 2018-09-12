@@ -212,24 +212,26 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 
     @ReactMethod
     public void subscribeToTopic(String topic){
-	try {
-            FirebaseMessaging.getInstance().subscribeToTopic(topic);
-            promise.resolve(null);
-        } catch (IOException e) {
-            e.printStackTrace();
-            promise.reject(null,e.getMessage());
-        }
+	    FirebaseMessaging.getInstance().subscribeToTopic(topic);
+// 	try {
+            
+//             promise.resolve(null);
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//             promise.reject(null,e.getMessage());
+//         }
     }
 
     @ReactMethod
     public void unsubscribeFromTopic(String topic){
-	try {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
-            promise.resolve(null);
-        } catch (IOException e) {
-            e.printStackTrace();
-            promise.reject(null,e.getMessage());
-        }
+	FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+// 	try {
+            
+//             promise.resolve(null);
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//             promise.reject(null,e.getMessage());
+//         }
     }
 
     @ReactMethod
