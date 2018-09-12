@@ -76,14 +76,22 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
             String baseUrl = getNotificationDetailsBaseUrl();
             String id = bundle.getString("notification_id");
-            String url = baseUrl + NOTIFICATION_DETAILS_ENDPOINT + id;
+            String url = baseUrl + NOTIFICATION_DETAILS_ENDPOINT + id + "/discussion";
 
             JsonObjectRequest request = new JsonObjectRequest(url, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                dispatchBuiltNotification(intentClassName, response.toString(2));
+                                String title = null;
+                                JSONObject author = response.getJSONObject("lastCommentAuthor");
+                                if(author != null) {
+                                    title = author.optString("firstName", "" ) + " " + author.optString("lastName", "");
+                                }
+
+                                String body = response.optString("lastCommentText", "");
+
+                                dispatchBuiltNotification(intentClassName, title, body);
                             } catch (Exception e) {
                                 Log.e(TAG, "failed to send local notification", e);
                             }
@@ -96,9 +104,10 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         if (body == null) {
                             throw new Exception(error.getMessage());
                         }
-                        body = error.getMessage();
 
-                        dispatchBuiltNotification(intentClassName, body);
+                        String title = bundle.getString("title");
+
+                        dispatchBuiltNotification(intentClassName, title, body);
                     } catch (Exception e) {
                         Log.e(TAG, "failed to send local notification", e);
                     }
@@ -125,11 +134,10 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-    private void dispatchBuiltNotification(String intentClassName, String body) throws UnsupportedEncodingException, JSONException {
+    private void dispatchBuiltNotification(String intentClassName, String title, String body) throws UnsupportedEncodingException, JSONException {
         Resources res = mContext.getResources();
         String packageName = mContext.getPackageName();
 
-        String title = bundle.getString("title");
         if (title == null) {
             ApplicationInfo appInfo = mContext.getApplicationInfo();
             title = mContext.getPackageManager().getApplicationLabel(appInfo).toString();
