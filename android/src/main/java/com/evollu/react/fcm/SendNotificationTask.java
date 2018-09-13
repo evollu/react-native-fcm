@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -83,13 +84,15 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                String title = null;
+                                String title = response.optString("subject", "Notification"); 
+
+                                String body = "";
                                 JSONObject author = response.getJSONObject("lastCommentAuthor");
                                 if(author != null) {
-                                    title = author.optString("firstName", "" ) + " " + author.optString("lastName", "");
+                                    body = prefixBodyWithAuthorName(author);
                                 }
 
-                                String body = response.optString("lastCommentText", "");
+                                body = body + response.optString("lastCommentText", "");
 
                                 dispatchBuiltNotification(intentClassName, title, body);
                             } catch (Exception e) {
@@ -132,6 +135,17 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             Log.e(TAG, "failed to send local notification", e);
         }
         return null;
+    }
+
+    @NonNull
+    private String prefixBodyWithAuthorName(JSONObject author) {
+        String authorNamePrefix = "";
+        String firstName = author.optString("firstName", "");
+        if(firstName.length() > 0) {
+            authorNamePrefix = firstName.substring(0, 1) + ". ";
+        }
+        authorNamePrefix = authorNamePrefix + author.optString("lastName", "") + ": ";
+        return authorNamePrefix;
     }
 
     private void dispatchBuiltNotification(String intentClassName, String title, String body) throws UnsupportedEncodingException, JSONException {
