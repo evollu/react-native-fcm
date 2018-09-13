@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "16.0.0-alpha.12",
     "react-native": "^0.55.4",
-    "react-native-fcm": "^15.0.1",
+    "react-native-fcm": "^16.2.3",
     "react-native-maps": "^0.20.1",
     "react-navigation": "^1.2.1"
   },
