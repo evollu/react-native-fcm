@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: "com.google.gms.google-services"
 
 import com.android.build.OutputFile
 
@@ -149,3 +148,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
   from configurations.compile
   into 'libs'
 }
+
+apply plugin: "com.google.gms.google-services"

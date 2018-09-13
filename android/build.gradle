@@ -1,9 +1,11 @@
 apply plugin: 'com.android.library'
 
-def DEFAULT_COMPILE_SDK_VERSION             = 26
-def DEFAULT_BUILD_TOOLS_VERSION             = "25.0.2"
-def DEFAULT_TARGET_SDK_VERSION              = 26
-def DEFAULT_GOOGLE_PLAY_SERVICES_VERSION    = "12.+"
+def DEFAULT_COMPILE_SDK_VERSION             = 27
+def DEFAULT_BUILD_TOOLS_VERSION             = "27.0.3"
+def DEFAULT_TARGET_SDK_VERSION              = 27
+def DEFAULT_GOOGLE_PLAY_SERVICES_VERSION    = "+"
+def DEFAULT_FIREBASE_CORE_VERSION           = "+"
+def DEFAULT_FIREBASE_MESSAGING_VERSION      = "+"
 
 android {
     compileSdkVersion project.hasProperty('compileSdkVersion') ? project.compileSdkVersion : DEFAULT_COMPILE_SDK_VERSION
@@ -11,7 +13,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion project.hasProperty('buildToolsVetargetSdkVersionrsion') ? project.buildToolsVersion : DEFAULT_TARGET_SDK_VERSION
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? project.targetSdkVersion : DEFAULT_TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
     }
@@ -23,12 +25,14 @@ repositories {
 
 dependencies {
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : DEFAULT_GOOGLE_PLAY_SERVICES_VERSION
+    def firebaseCoreVersion = project.hasProperty('firebaseCoreVersion') ? project.firebaseCoreVersion : DEFAULT_FIREBASE_CORE_VERSION
+    def firebaseMessagingVersion = project.hasProperty('firebaseMessagingVersion') ? project.firebaseMessagingVersion : DEFAULT_FIREBASE_MESSAGING_VERSION
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.facebook.react:react-native:+'
-    compile "com.google.firebase:firebase-core:$googlePlayServicesVersion"
-    compile "com.google.firebase:firebase-messaging:$googlePlayServicesVersion"
+    compile "com.google.firebase:firebase-core:$firebaseCoreVersion"
+    compile "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
     compile 'me.leolin:ShortcutBadger:1.1.17@aar'
-    compile "com.android.support:support-core-utils:26.1.0"
+    compile "com.android.support:support-core-utils:27.1.1"
+    compile 'com.android.volley:volley:1.1.1'
 }
-

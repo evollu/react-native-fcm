@@ -19,6 +19,7 @@ I've created [an example project](https://github.com/evollu/react-native-fcm/tre
 
 
 ### Versions
+- after v16.0.0, Android target SDK has be to >= 26 and build tool has to be >= 26.0.x
 - for iOS SDK < 4, use react-native-fcm@6.2.3 (v6.x is still compatible with Firebase SDK v4)
 - for RN < 0.40.0, use react-native-fcm@2.5.6
 - for RN < 0.33.0, use react-native-fcm@1.1.0
@@ -26,10 +27,6 @@ I've created [an example project](https://github.com/evollu/react-native-fcm/tre
 
 ### Example
 - An example working project is available at: https://github.com/evollu/react-native-fcm/tree/master/Examples/simple-fcm-client
-
-### Android 26
-- DO NOT change Android targetSdkVersion >= 26. The notification won't show up because of notification channel requirement.
-If you have to upgrade, you can use sdk-26 branch and post feedback on [here](https://github.com/evollu/react-native-fcm/pull/699)
 
 ## Installation
 
@@ -42,33 +39,67 @@ If you have to upgrade, you can use sdk-26 branch and post feedback on [here](ht
 ### FCM config file
 
 In [firebase console](https://console.firebase.google.com/), you can:
-- for **Android**: download `google-services.json` file and place it in `android/app` directory
+- for **Android**: download `google-services.json` file and place it in `android/app` directory.
 - for **iOS**: download `GoogleService-Info.plist` file and place it in `/ios/your-project-name` directory (next to your `Info.plist`)
 
 Make sure you have certificates setup by following
 https://firebase.google.com/docs/cloud-messaging/ios/certs
 
+---
+
 ## Android Configuration
 
 - As `react-native link` sometimes has glitches, make sure you have this line added
 
-https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/android/app/src/main/java/com/google/firebase/quickstart/fcm/MainApplication.java#L28
+### Edit `android/build.gradle`:
 
-- Edit `android/build.gradle`:
-```diff
-  dependencies {
-    classpath 'com.android.tools.build:gradle:2.0.0'
-+   classpath 'com.google.gms:google-services:3.0.0'
+**NOTE:** The followed line may not be up-to-dated. Please refer to https://firebase.google.com/docs/android/setup
+
+```
+buildscript {
+    repositories {
+        // ...
+        google() // Google's Maven repository
+    }
+    // ...
+    dependencies {
+        // ...
+        classpath 'com.google.gms:google-services:4.0.2' // google-services plugin
+    }
+}
+
+allprojects {
+    // ...
+    repositories {
+        // ...
+        google() // Google's Maven repository
+    }
+}
 ```
 
-- Edit `android/app/build.gradle`. Add at the bottom of the file:
-```diff
-  apply plugin: "com.android.application"
-  ...
-+ apply plugin: 'com.google.gms.google-services'
+### Edit `android/app/build.gradle`:
+
+**NOTE:** Please refer to https://firebase.google.com/docs/android/setup
+
+```
+dependencies {
+    // ...
+    compile project(':react-native-fcm')
+
+    // ...
+    
+    // Automatically selecting the latest available version
+    implementation 'com.google.firebase:firebase-core'
+    implementation 'com.google.firebase:firebase-messaging'
+}
+
+// ADD THIS AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'
 ```
 
-- Edit `android/app/src/main/AndroidManifest.xml`:
+### Edit `android/app/src/main/AndroidManifest.xml`:
+
+**NOTE:** The resource `@mipmap/ic_notif` is referring to `android/app/src/res/mipmap-<resolution>/` folder. Feel free to change the filename if you have a customised icon for notification.
 
 ```diff
   <application
@@ -76,6 +107,7 @@ https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-clien
     android:theme="@style/AppTheme">
 
 +    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/>
++    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="my_default_channel"/>
 
 +   <service android:name="com.evollu.react.fcm.MessagingService" android:enabled="true" android:exported="true">
 +     <intent-filter>
@@ -92,18 +124,39 @@ https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-clien
     ...
 ```
 
-- Edit `{YOUR_MAIN_PROJECT}/app/build.gradle`:
+### Edit `android/app/build.gradle`:
+
+**NOTE:** after v16.0.0, Android target SDK has be to >= 26 and build tool has to be >= 26.0.x
+
+**NOTE:** Make sure the version matches this library.
+
 ```diff
++ compileSdkVersion 27
++    buildToolsVersion "27.0.3"
+
+    defaultConfig {
+        applicationId "com.google.firebase.quickstart.fcm"
+        minSdkVersion 16
++        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+    }
+
  dependencies {
 +    compile project(':react-native-fcm')
-+    compile 'com.google.firebase:firebase-core:10.0.1' //this decides your firebase SDK version
-+    compile 'com.google.firebase:firebase-messaging:10.0.1'
      compile fileTree(dir: "libs", include: ["*.jar"])
-     compile "com.android.support:appcompat-v7:23.0.1"
      compile "com.facebook.react:react-native:+"  // From node_modules
  }
+ 
+ //bottom
+ + apply plugin: "com.google.gms.google-services"
 ```
-- Edit `android/settings.gradle`
+If you are using other firebase libraries, check this for solving dependency conflicts https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/android/app/build.gradle#L133
+
+### Edit `android/settings.gradle`
 ```diff
   ...
 + include ':react-native-fcm'
@@ -122,6 +175,27 @@ public class MainActivity extends ReactActivity {
 +        setIntent(intent);
 +    }
 }
+```
+
+### Make sure in `MainApplication.java` you have the code below:
+
+**NOTE:** The packages listed inside should appear once only. `react-native link` sometimes can mess up this part, please remove duplicated packeges.
+
+```diff
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+            new MapsPackage(),
++           new FIRMessagingPackage()
+      );
+    }
+
++ @Override
++  public void onCreate() { // <-- Check this block exists
++    super.onCreate();
++    SoLoader.init(this, /* native exopackage */ false); // <-- Check this line exists within the block
++  }
 ```
 
 ### Config for notification and `click_action` in Android
@@ -222,6 +296,7 @@ cd ios && pod init
 Edit the newly created `Podfile`:
 ```diff
   # Pods for YOURAPP
++ pod 'Firebase'
 + pod 'Firebase/Messaging'
 ```
 
@@ -230,7 +305,10 @@ Install the `Firebase/Messaging` pod:
 pod install
 ```
 NOTE: you don't need to enable `use_frameworks!`. if you have to have `use_frameworks!` make sure you don't have `inherit! :search_paths`
+
 NOTE: there is a working example in `master` branch
+
+NOTE: If you don't put `pod 'Firebase'` into `Podfile`, compilation will fail with error of missing Firebase library.
 
 ### Non Cocoapod approach
 
@@ -293,6 +371,25 @@ Edit `AppDelegate.m`:
 +   [RNFIRMessaging didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 + }
 ```
+
+**Add the path of header files into XCode:**
+
+1. Open XCode.
+2. Press `CMD+1` or click the XCode project.
+3. Go to **Build Settings**, selecting **All** and **Combined**.
+4. Search **Header Search Path** in the searchg tab.
+5. Make sure there is a line of `$(SRCROOT)/../node_modules/react-native-fcm/ios`. If no, just add it.
+
+**Add GoogleService-Info.plist:**
+
+Make sure the file is not just moved into the folder. You need to `Right Click` the project folder in XCode and `Add File to <Project Name>`. Select **Copy if needed** in the `Options` page while selecting the file.
+
+**Shared Library Settings:**
+
+- Make sure you see `Pods.xcodeproj` under **Library** folder if you are using Pod install method.
+- Make sure you see `RNFIRMessaging.xcodeproj` under **Library** folder.
+- If you don't see any of these files, please add them by `Right Click` the **Library** folder and `Add File to <Project Name>` to add them back. `Pods.xcodeproj` should be under `ios/Pods/`, and `RNFIRMessaging.xcodeproj` should be under `node_modules/react-native-fcm/ios`.
+- Make sure you see `libRNFIRMessaging.a` under **Link Binary With Libraries** under **Build Phases** tab. If no, drag the file under `RNFIRMessaging.xcodeproj` under **Library** folder into there.
 
 ### Add Capabilities
 - Select your project **Capabilities** and enable:
