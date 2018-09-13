@@ -173,7 +173,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();
             promise.resolve(null);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(null,e.getMessage());
         }
@@ -215,7 +215,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 	    try {
             FirebaseMessaging.getInstance().subscribeToTopic(topic);
             promise.resolve(null);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(null,e.getMessage());
         }
@@ -226,7 +226,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
 	    try {
             FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
             promise.resolve(null);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(null,e.getMessage());
         }
