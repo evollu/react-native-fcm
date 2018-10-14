@@ -738,13 +738,15 @@ fetch('https://fcm.googleapis.com/fcm/send', {
 
 ## Channels
 
-Right now for Android Orion 8 or API 26 is important to use channels. To make it working first of all add default meta data to `AndroidManifest`:
+Right now for Android Orion 8 or API 26 is important to use channels. Firebase will create a default channel for you or you can custom your default channel for Firebase notifications by adding default meta data to `AndroidManifest`:
 
 ```
 <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="@string/default_notification_channel_id"/>
 ```
+more reading on [official docs](https://firebase.google.com/docs/cloud-messaging/android/client)
 
-Now you should `createNotificationChannel` on init app. Its creates if not exists yet.
+However it is essential to create a notification channel if you need to show local notification or use `custom_notification`.
+First you should `createNotificationChannel` on init app. Its creates if not exists yet.
 
 ```
 FCM.createNotificationChannel({
@@ -767,7 +769,7 @@ customNotification = {
    icon: 'ic_launcher',
    show_in_foreground: true,
    vibrate: 500,
-    channel: 'car_status',
+   channel: 'car_status', <====
    action: 'android.intent.action.MAIN',
 };
 ```
