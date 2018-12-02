@@ -135,8 +135,10 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     @ReactMethod
     public void getFCMToken(Promise promise) {
         try {
-            Log.d(TAG, "Firebase token: " + FirebaseInstanceId.getInstance().getToken());
-            promise.resolve(FirebaseInstanceId.getInstance().getToken());
+            String senderId = FirebaseApp.getInstance().getOptions().getGcmSenderId();
+            String token = FirebaseInstanceId.getInstance().getToken(senderId, "FCM");
+            Log.d(TAG, "Firebase token: " + token);
+            promise.resolve(token);
         } catch (Throwable e) {
             e.printStackTrace();
             promise.reject(null,e.getMessage());
