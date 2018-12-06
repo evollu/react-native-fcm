@@ -202,7 +202,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         }
 
         //icon
-        String smallIcon = bundle.getString("icon", "ic_launcher");
+        String smallIcon = bundle.getString("icon", "ic_notification");
         int smallIconResId = res.getIdentifier(smallIcon, "mipmap", packageName);
         if(smallIconResId == 0){
             smallIconResId = res.getIdentifier(smallIcon, "drawable", packageName);
