@@ -460,6 +460,11 @@ RCT_EXPORT_METHOD(deleteInstanceId:(RCTPromiseResolveBlock)resolve rejecter:(RCT
   [self sendEventWithName:FCMTokenRefreshed body:fcmToken];
 }
 
+- (void)messaging:(nonnull FIRMessaging *)messaging didRefreshRegistrationToken:(nonnull NSString *)fcmToken {
+  refreshToken = fcmToken;
+  [self sendEventWithName:FCMTokenRefreshed body:fcmToken];
+}
+
 RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     if (RCTRunningInAppExtension()) {
