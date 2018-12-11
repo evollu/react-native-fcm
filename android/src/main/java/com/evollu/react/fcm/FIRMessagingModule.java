@@ -136,7 +136,8 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                     + "://"
                     + getReactApplicationContext().getPackageName()
                     + "/raw/"
-                    + sound);
+                    + sound
+                );
                 channel.setSound(soundUri, attributes);
             }
   
