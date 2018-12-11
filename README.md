@@ -754,6 +754,9 @@ FCM.createNotificationChannel({
     name: 'Car status',
     description: 'Notifies when changes car status',
     priority: 'max',
+    // set custom sound when the creating channel for Oreo and later
+    // place sound file in /android/app/src/main/res/raw
+    sound: 'bell'
 });
 ```
 
