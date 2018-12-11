@@ -165,6 +165,7 @@ declare module "react-native-fcm" {
       name: string;
       description?: string;
       priority?: string;
+      sound?: string;
     });
   }
 
