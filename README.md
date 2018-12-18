@@ -49,7 +49,7 @@ https://firebase.google.com/docs/cloud-messaging/ios/certs
 
 ## Android Configuration
 
-- As `react-native link` sometimes has glitches, make sure you have this line added
+- As `react-native link react-native-fcm` sometimes has glitches, make sure you have this line added
 
 ### Edit `android/build.gradle`:
 
