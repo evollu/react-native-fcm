@@ -24,12 +24,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.modules.storage.AsyncLocalStorageUtil;
@@ -46,7 +44,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.facebook.react.common.ReactConstants.TAG;
 
@@ -84,7 +84,11 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                String title = response.optString("subject", "Notification"); 
+                                String title = response.optString("subject", "");
+
+                                if(title.isEmpty()) {
+                                    title = Optional.ofNullable(getNotificationEmptyTitle()).orElse(getLocalizedDefaultTitle());
+                                }
 
                                 String body = "";
                                 JSONObject author = response.getJSONObject("lastCommentAuthor");
@@ -362,6 +366,25 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             editor.remove(bundle.getString("id"));
             editor.apply();
         }
+    }
+
+    private String getLocalizedDefaultTitle() {
+        String language = Locale.getDefault().getLanguage();
+
+        if (language.startsWith("fr")) {
+            return "(Aucun sujet)";
+        }
+
+        return "(No subject)";
+    }
+
+    private String getNotificationEmptyTitle() {
+        SQLiteDatabase readableDatabase;
+        readableDatabase = ReactDatabaseSupplier.getInstance(mContext).getReadableDatabase();
+        if (readableDatabase != null) {
+            return AsyncLocalStorageUtil.getItemImpl(readableDatabase, "pushNotificationEmptyTitle");
+        }
+        return null;
     }
 
     private String getNotificationDetailsToken() {
