@@ -24,10 +24,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.modules.storage.AsyncLocalStorageUtil;
@@ -75,70 +77,90 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 return null;
             }
 
-            String baseUrl = getNotificationDetailsBaseUrl();
-            String id = bundle.getString("notification_id");
-            String url = baseUrl + NOTIFICATION_DETAILS_ENDPOINT + id + "/discussion";
+            boolean isMessageNotification = bundle.getBoolean("is_messaging_notification");
 
-            JsonObjectRequest request = new JsonObjectRequest(url, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                String title = response.optString("subject", "");
-
-                                if(title.isEmpty()) {
-                                    title = Optional.ofNullable(getNotificationEmptyTitle()).orElse(getLocalizedDefaultTitle());
-                                }
-
-                                String body = "";
-                                JSONObject author = response.getJSONObject("lastCommentAuthor");
-                                if(author != null) {
-                                    body = prefixBodyWithAuthorName(author);
-                                }
-
-                                body = body + response.optString("lastCommentText", "");
-
-                                dispatchBuiltNotification(intentClassName, title, body);
-                            } catch (Exception e) {
-                                Log.e(TAG, "failed to send local notification", e);
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    try {
-                        String body = bundle.getString("body");
-                        if (body == null) {
-                            throw new Exception(error.getMessage());
-                        }
-
-                        String title = bundle.getString("title");
-
-                        dispatchBuiltNotification(intentClassName, title, body);
-                    } catch (Exception e) {
-                        Log.e(TAG, "failed to send local notification", e);
-                    }
+            if(isMessageNotification) {
+                fetchMessageNotification(intentClassName);
+            } else {
+                String body = bundle.getString("body");
+                if (body == null) {
+                    throw new Exception("");
                 }
 
-            }) {
+                String title = bundle.getString("title");
 
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> headers = new HashMap<>();
-                    String token = getNotificationDetailsToken();
-                    String auth = "Bearer " + token;
-                    headers.put("Content-Type", "application/json");
-                    headers.put("Authorization", auth);
-                    return headers;
-                }
-            };
-
-            mRequestQueue.add(request);
-
+                dispatchBuiltNotification(intentClassName, title, body);
+            }
         } catch (Exception e) {
             Log.e(TAG, "failed to send local notification", e);
         }
         return null;
+    }
+
+    private void fetchMessageNotification(final String intentClassName) {
+        String baseUrl = getNotificationDetailsBaseUrl();
+        String id = bundle.getString("notification_id");
+        String url = baseUrl + NOTIFICATION_DETAILS_ENDPOINT + id + "/discussion";
+
+        JsonObjectRequest request = new JsonObjectRequest(url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String title = response.optString("subject", "");
+
+                            if(title.isEmpty()) {
+                                title = Optional.ofNullable(getNotificationEmptyTitle()).orElse(getLocalizedDefaultTitle());
+                            }
+
+
+                            String body = "";
+                            JSONObject author = response.getJSONObject("lastCommentAuthor");
+                            if(author != null) {
+                                body = prefixBodyWithAuthorName(author);
+                            }
+
+                            body = body + response.optString("lastCommentText", "");
+
+                            bundle.putInt("message_id", response.getInt("discussionId"));
+
+                            dispatchBuiltNotification(intentClassName, title, body);
+                        } catch (Exception e) {
+                            Log.e(TAG, "failed to send local notification", e);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    String body = bundle.getString("body");
+                    if (body == null) {
+                        throw new Exception(error.getMessage());
+                    }
+
+                    String title = bundle.getString("title");
+
+                    dispatchBuiltNotification(intentClassName, title, body);
+                } catch (Exception e) {
+                    Log.e(TAG, "failed to send local notification", e);
+                }
+            }
+
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                String token = getNotificationDetailsToken();
+                String auth = "Bearer " + token;
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", auth);
+                return headers;
+            }
+        };
+
+        mRequestQueue.add(request);
+
     }
 
     @NonNull
@@ -177,7 +199,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 .setNumber(bundle.getInt("number", (int)bundle.getDouble("number")))
                 .setSubText(subText)
                 .setVibrate(new long[]{0, DEFAULT_VIBRATION})
-                .setExtras(bundle.getBundle("data"));
+                .setExtras(bundle);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             String group = bundle.getString("group");
