@@ -1,6 +1,8 @@
 package com.evollu.react.fcm;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.facebook.react.common.ReactConstants.TAG;
 
 public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
@@ -78,7 +81,20 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             String subText = bundle.getString("sub_text");
             if (subText != null) subText = URLDecoder.decode( subText, "UTF-8" );
 
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, bundle.getString("channel"))
+            String defaultChannelId = "default";
+
+            String channelId = bundle.getString("channel", defaultChannelId);
+
+            NotificationManager mngr = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
+            if (mngr != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (mngr.getNotificationChannel(channelId) == null) {
+                    channelId = defaultChannelId;
+                    NotificationChannel channel = new NotificationChannel(channelId, "Default", NotificationManager.IMPORTANCE_DEFAULT);
+                    mngr.createNotificationChannel(channel);
+                }
+            }
+
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, channelId)
                     .setContentTitle(title)
                     .setContentText(body)
                     .setTicker(ticker)
@@ -186,7 +202,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                     }
                 }
                 // setBigContentTitle and setSummaryText overrides current title with body and subtext
-		// that cause to display duplicated body in subtext when picture has specified
+                // that cause to display duplicated body in subtext when picture has specified
                 notification.setStyle(bigPicture);
             }
 
