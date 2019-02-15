@@ -13,6 +13,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,10 +27,12 @@ public class FIRLocalMessagingHelper {
     private static boolean mIsForeground = false; //this is a hack
 
     private Context mContext;
+    private RequestQueue mRequestQueue;
     private SharedPreferences sharedPreferences = null;
 
     public FIRLocalMessagingHelper(Application context) {
         mContext = context;
+        mRequestQueue = Volley.newRequestQueue(context);
         sharedPreferences = (SharedPreferences) mContext.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
     }
 
@@ -43,7 +48,7 @@ public class FIRLocalMessagingHelper {
     }
 
     public void sendNotification(Bundle bundle) {
-        new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle).execute();
+        new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle, mRequestQueue).execute();
     }
 
     public void sendNotificationScheduled(Bundle bundle) {
