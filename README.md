@@ -1,11 +1,9 @@
 [![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## NOTES:
-[react-native-firebase](https://github.com/invertase/react-native-firebase/releases/tag/v4.0.0) has introduced new firebase messaging and remote/local notification features. It has good integration with other firebase features.  I would recommend new comers to check that.
+## Deprecated
+I'm not longer able to maintain this repo.
 
-Note that there are some advanced features still in progress 
-- handle iOS remote notification when app is not running
-- custom iOS notification actions 
+[react-native-firebase](https://github.com/invertase/react-native-firebase/releases/tag/v4.0.0) has introduced new firebase messaging and remote/local notification features. It has good integration with other firebase features.  I would recommend new comers to check that.
 
 ### To existing react-native-fcm users
 `react-native-firebase` now can do what `react-native-fcm` can so it is a waste of effort to build the same thing in parallel. 
