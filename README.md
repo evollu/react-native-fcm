@@ -2,8 +2,7 @@
 
 ## Deprecated
 I'm not longer able to maintain this repo.
-
-[react-native-firebase](https://github.com/invertase/react-native-firebase/releases/tag/v4.0.0) has introduced new firebase messaging and remote/local notification features. It has good integration with other firebase features.  I would recommend new comers to check that.
+check [react-native-firebase](https://rnfirebase.io) instead
 
 ### To existing react-native-fcm users
 `react-native-firebase` now can do what `react-native-fcm` can so it is a waste of effort to build the same thing in parallel. 
