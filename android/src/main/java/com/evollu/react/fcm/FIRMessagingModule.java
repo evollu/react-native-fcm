@@ -6,6 +6,9 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.content.ContentResolver;
+import android.media.AudioAttributes;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
@@ -87,29 +90,34 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             NotificationManager mngr = (NotificationManager) getReactApplicationContext().getSystemService(NOTIFICATION_SERVICE);
             String id = details.getString("id");
             String name = details.getString("name");
-            String priority = details.getString("priority");
             int importance;
-            switch(priority) {
-                case "min":
-                    importance = NotificationManager.IMPORTANCE_MIN;
-                    break;
-                case "low":
-                    importance = NotificationManager.IMPORTANCE_LOW;
-                    break;
-                case "high":
-                    importance = NotificationManager.IMPORTANCE_HIGH;
-                    break;
-                case "max":
-                    importance = NotificationManager.IMPORTANCE_MAX;
-                    break;
-                default:
-                    importance = NotificationManager.IMPORTANCE_DEFAULT;
+            if (details.hasKey("priority")) {
+                String priority = details.getString("priority");
+                switch (priority) {
+                    case "min":
+                        importance = NotificationManager.IMPORTANCE_MIN;
+                        break;
+                    case "low":
+                        importance = NotificationManager.IMPORTANCE_LOW;
+                        break;
+                    case "high":
+                        importance = NotificationManager.IMPORTANCE_HIGH;
+                        break;
+                    case "max":
+                        importance = NotificationManager.IMPORTANCE_MAX;
+                        break;
+                    default:
+                        importance = NotificationManager.IMPORTANCE_DEFAULT;
+                }
+            }
+            else {
+                importance = NotificationManager.IMPORTANCE_DEFAULT;
             }
             if (mngr.getNotificationChannel(id) != null) {
                 promise.resolve(null);
                 return;
             }
-            //
+            
             NotificationChannel channel = new NotificationChannel(
                     id,
                     name,
@@ -118,6 +126,21 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             if(details.hasKey("description")){
                 channel.setDescription(details.getString("description"));
             }
+            if (details.hasKey("sound")) {
+                String sound = details.getString("sound");
+                AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .build();
+
+                Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                    + "://"
+                    + getReactApplicationContext().getPackageName()
+                    + "/raw/"
+                    + sound
+                );
+                channel.setSound(soundUri, attributes);
+            }
+  
             mngr.createNotificationChannel(channel);
         }
         promise.resolve(null);
