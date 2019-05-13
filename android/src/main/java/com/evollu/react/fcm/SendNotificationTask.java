@@ -54,7 +54,7 @@ import static com.facebook.react.common.ReactConstants.TAG;
 
 public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     private static final long DEFAULT_VIBRATION = 300L;
-    private static final String CHAT_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/messaging/notifications/"
+    private static final String CHAT_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/messaging/notifications/";
     private static final String COM_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/notifications/";
 
     private Context mContext;
@@ -112,6 +112,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         try {
                             String title = response.getString("title");
                             String body = response.getString("body");
+                            String body = response.getString("sound");
 
                             dispatchBuiltNotification(intentClassName, title, body);
                         } catch (Exception e) {
