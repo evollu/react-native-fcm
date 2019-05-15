@@ -53,9 +53,9 @@ import java.util.Optional;
 import static com.facebook.react.common.ReactConstants.TAG;
 
 public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
-    private static final long DEFAULT_VIBRATION = 300L;
+    private static final long DEFAULT_VIBRATION = 300;
     private static final String CHAT_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/messaging/notifications/";
-    private static final String COM_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/notifications/";
+    private static final String NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/notifications/";
 
     private Context mContext;
     private Bundle bundle;
@@ -77,6 +77,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             if (intentClassName == null) {
                 return null;
             }
+
             boolean isChatNotification = bundle.getBoolean("is_chat_notification");
             boolean isComNotification = bundle.getBoolean("is_com_notification");
 
@@ -112,7 +113,6 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                         try {
                             String title = response.getString("title");
                             String body = response.getString("body");
-                            String body = response.getString("sound");
 
                             dispatchBuiltNotification(intentClassName, title, body);
                         } catch (Exception e) {
@@ -156,7 +156,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     private void fetchComNotification(final String intentClassName) {
         String baseUrl = getNotificationDetailsBaseUrl();
         String id = bundle.getString("notification_id");
-        String url = baseUrl + COM_NOTIFICATION_DETAILS_ENDPOINT + id + "/discussion";
+        String url = baseUrl + NOTIFICATION_DETAILS_ENDPOINT + id + "/discussion";
 
         JsonObjectRequest request = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
@@ -360,22 +360,22 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             String color = bundle.getString("color");
             if (color != null) {
                 notification.setColor(Color.parseColor(color));
+
+                //lights
+                if (bundle.getBoolean("lights")) {
+                    notification.setLights(Color.parseColor(color), 1, 1);
+                }
             }
         }
 
         //vibrate
         if(bundle.containsKey("vibrate")){
-            long vibrate = Math.round(bundle.getDouble("vibrate", DEFAULT_VIBRATION));
-            if(vibrate > 0){
-                notification.setVibrate(new long[]{0, vibrate});
+            long[] vibrations = bundle.getLongArray("vibrate"); 
+            if(vibrations[0] > 0){
+                notification.setVibrate(vibrations);
             }else{
                 notification.setVibrate(null);
             }
-        }
-
-        //lights
-        if (bundle.getBoolean("lights")) {
-            notification.setDefaults(NotificationCompat.DEFAULT_LIGHTS);
         }
 
         if(bundle.containsKey("fire_date")) {
