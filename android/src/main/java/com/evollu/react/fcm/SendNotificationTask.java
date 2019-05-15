@@ -369,12 +369,11 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         }
 
         //vibrate
-        if(bundle.containsKey("vibrate")){
-            long[] vibrations = bundle.getLongArray("vibrate"); 
-            if(vibrations[0] > 0){
-                notification.setVibrate(vibrations);
+        if(bundle.containsKey("urgent")){ 
+            if(bundle.getBoolean("urgent")){
+                notification.setVibrate(new long[]{0,250,500,250});
             }else{
-                notification.setVibrate(null);
+                notification.setVibrate(new long[]{0,750,250,750,250,750});
             }
         }
 
