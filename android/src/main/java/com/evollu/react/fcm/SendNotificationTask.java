@@ -53,7 +53,8 @@ import java.util.Optional;
 import static com.facebook.react.common.ReactConstants.TAG;
 
 public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
-    private static final long DEFAULT_VIBRATION = 300L;
+    private static final long DEFAULT_VIBRATION = 300;
+    private static final String CHAT_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/messaging/notifications/";
     private static final String NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/notifications/";
 
     private Context mContext;
@@ -77,10 +78,13 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 return null;
             }
 
-            boolean isMessageNotification = bundle.getBoolean("is_messaging_notification");
+            boolean isChatNotification = bundle.getBoolean("is_chat_notification");
+            boolean isComNotification = bundle.getBoolean("is_com_notification");
 
-            if(isMessageNotification) {
-                fetchMessageNotification(intentClassName);
+            if(isChatNotification){
+                fetchChatNotification(intentClassName);
+            } else if(isComNotification) {
+                fetchComNotification(intentClassName);
             } else {
                 String body = bundle.getString("body");
                 if (body == null) {
@@ -97,7 +101,59 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-    private void fetchMessageNotification(final String intentClassName) {
+    private void fetchChatNotification(final String intentClassName) {
+        String baseUrl = getNotificationDetailsBaseUrl();
+        String id = bundle.getString("notification_id");
+        String url = baseUrl + CHAT_NOTIFICATION_DETAILS_ENDPOINT + id;
+
+        JsonObjectRequest request = new JsonObjectRequest(url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String title = response.getString("title");
+                            String body = response.getString("body");
+
+                            dispatchBuiltNotification(intentClassName, title, body);
+                        } catch (Exception e) {
+                            Log.e(TAG, "failed to send local notification", e);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    String body = bundle.getString("body");
+                    if (body == null) {
+                        throw new Exception(error.getMessage());
+                    }
+
+                    String title = bundle.getString("title");
+
+                    dispatchBuiltNotification(intentClassName, title, body);
+                } catch (Exception e) {
+                    Log.e(TAG, "failed to send local notification", e);
+                }
+            }
+
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                String token = getNotificationDetailsToken();
+                String auth = "Bearer " + token;
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", auth);
+                return headers;
+            }
+        };
+
+        mRequestQueue.add(request);
+
+    }
+
+    private void fetchComNotification(final String intentClassName) {
         String baseUrl = getNotificationDetailsBaseUrl();
         String id = bundle.getString("notification_id");
         String url = baseUrl + NOTIFICATION_DETAILS_ENDPOINT + id + "/discussion";
@@ -304,22 +360,21 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             String color = bundle.getString("color");
             if (color != null) {
                 notification.setColor(Color.parseColor(color));
+
+                //lights
+                if (bundle.getBoolean("lights")) {
+                    notification.setLights(Color.parseColor(color), 1, 1);
+                }
             }
         }
 
         //vibrate
-        if(bundle.containsKey("vibrate")){
-            long vibrate = Math.round(bundle.getDouble("vibrate", DEFAULT_VIBRATION));
-            if(vibrate > 0){
-                notification.setVibrate(new long[]{0, vibrate});
+        if(bundle.containsKey("urgent")){ 
+            if(bundle.getBoolean("urgent")){
+                notification.setVibrate(new long[]{0,250,500,250});
             }else{
-                notification.setVibrate(null);
+                notification.setVibrate(new long[]{0,750,250,750,250,750});
             }
-        }
-
-        //lights
-        if (bundle.getBoolean("lights")) {
-            notification.setDefaults(NotificationCompat.DEFAULT_LIGHTS);
         }
 
         if(bundle.containsKey("fire_date")) {
