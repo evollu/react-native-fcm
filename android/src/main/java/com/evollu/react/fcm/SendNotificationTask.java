@@ -1,7 +1,10 @@
 package com.evollu.react.fcm;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -246,6 +250,52 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         String subText = bundle.getString("sub_text");
         if (subText != null) subText = URLDecoder.decode( subText, "UTF-8" );
 
+        //sound
+        String soundName = bundle.getString("sound");
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        if (soundName != null) {
+            if (soundName.equalsIgnoreCase("default")) {
+                soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            } else {
+                int soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                if (soundResourceId == 0) {
+                    soundName = soundName.substring(0, soundName.lastIndexOf('.'));
+                    soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                }
+                soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + soundResourceId);
+            }
+        }
+
+        long[] vibrationPattern = new long[]{100,1000};
+        //vibrate
+        if(bundle.containsKey("urgent")){
+            if(bundle.getBoolean("urgent")){
+                vibrationPattern = new long[]{100,750,250,750,250,750};
+            }else{
+                vibrationPattern = new long[]{100,1000};
+            }
+        }
+
+        NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel mChannel;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel("default", "Notifications PetalMD", NotificationManager.IMPORTANCE_HIGH);
+            mChannel.enableLights(true);
+            mChannel.enableVibration(true);
+            mChannel.setLightColor(Color.WHITE);
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .build();
+            mChannel.setSound(soundUri, audioAttributes);
+            mChannel.setVibrationPattern(vibrationPattern);
+
+            if (mNotificationManager != null) {
+                mNotificationManager.createNotificationChannel( mChannel );
+            }
+        }
+
         NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, bundle.getString("channel"))
                 .setContentTitle(title)
                 .setContentText(body)
@@ -254,7 +304,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 .setAutoCancel(bundle.getBoolean("auto_cancel", true))
                 .setNumber(bundle.getInt("number", (int)bundle.getDouble("number")))
                 .setSubText(subText)
-                .setVibrate(new long[]{0, DEFAULT_VIBRATION})
+                .setSound(soundUri)
+                .setLights(Color.WHITE, 300, 500)
+                .setVibrate(vibrationPattern)
                 .setExtras(bundle);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -338,42 +390,12 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             notification.setStyle(bigPicture);
         }
 
-        //sound
-        String soundName = bundle.getString("sound");
-        if (soundName != null) {
-            if (soundName.equalsIgnoreCase("default")) {
-                notification.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-            } else {
-                int soundResourceId = res.getIdentifier(soundName, "raw", packageName);
-                if (soundResourceId == 0) {
-                    soundName = soundName.substring(0, soundName.lastIndexOf('.'));
-                    soundResourceId = res.getIdentifier(soundName, "raw", packageName);
-                }
-                notification.setSound(Uri.parse("android.resource://" + packageName + "/" + soundResourceId));
-            }
-        }
-
         //color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notification.setCategory(NotificationCompat.CATEGORY_CALL);
-
             String color = bundle.getString("color");
             if (color != null) {
                 notification.setColor(Color.parseColor(color));
-
-                //lights
-                if (bundle.getBoolean("lights")) {
-                    notification.setLights(Color.parseColor(color), 1, 1);
-                }
-            }
-        }
-
-        //vibrate
-        if(bundle.containsKey("urgent")){ 
-            if(bundle.getBoolean("urgent")){
-                notification.setVibrate(new long[]{0,250,500,250});
-            }else{
-                notification.setVibrate(new long[]{0,750,250,750,250,750});
             }
         }
 
@@ -423,9 +445,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 }
             }
 
-            Notification info = notification.build();
-
-            NotificationManagerCompat.from(mContext).notify(notificationID, info);
+            mNotificationManager.notify(notificationID, notification.build());
         }
 
         if(bundle.getBoolean("wake_screen", false)){
