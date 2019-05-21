@@ -315,7 +315,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 .setNumber(bundle.getInt("number", (int)bundle.getDouble("number")))
                 .setSubText(subText)
                 .setSound(soundUri)
-                .setLights(lightsColor, 200, 200)
+                .setLights(lightsColor, 500, 250)
                 .setVibrate(vibrationPattern)
                 .setExtras(bundle);
 
