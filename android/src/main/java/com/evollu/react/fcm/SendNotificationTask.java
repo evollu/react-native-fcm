@@ -78,6 +78,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         this.sharedPreferences = sharedPreferences;
         this.mIsForeground = mIsForeground;
         this.mRequestQueue = requestQueue;
+        this.mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
     }
 
@@ -287,6 +288,14 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             }
         }
 
+        int lightsColor = Color.WHITE;
+        //lights
+        if(bundle.containsKey("urgent")){
+            if(bundle.getBoolean("urgent")){
+                lightsColor = 0xFFFFAA00;
+            }
+        }
+
         /*  IMPORTANT
 
             Les settings Lights, Sound et Vibrate de l'objet NotificationCompat.Builder sont utiles seulement
@@ -306,7 +315,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 .setNumber(bundle.getInt("number", (int)bundle.getDouble("number")))
                 .setSubText(subText)
                 .setSound(soundUri)
-                .setLights(Color.WHITE, 300, 500)
+                .setLights(lightsColor, 200, 200)
                 .setVibrate(vibrationPattern)
                 .setExtras(bundle);
 
