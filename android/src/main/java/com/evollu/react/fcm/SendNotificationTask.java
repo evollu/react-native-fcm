@@ -2,6 +2,7 @@ package com.evollu.react.fcm;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
@@ -61,6 +62,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     private static final String CHAT_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/messaging/notifications/";
     private static final String NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/notifications/";
 
+    private static long[] NORMAL_VIBRATION_PATTERN = new long[]{100,1000};
+    private static long[] SPECIAL_VIBRATION_PATTERN = new long[]{100,750,250,750,250,750};
+
     private Context mContext;
     private Bundle bundle;
     private SharedPreferences sharedPreferences;
@@ -74,27 +78,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         this.sharedPreferences = sharedPreferences;
         this.mIsForeground = mIsForeground;
         this.mRequestQueue = requestQueue;
-        this.mNotificationManager = (NotificationManager) this.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        /* Creation des channels, utilises par les telephones android a partir de la version OREO (8.0) */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mChannel;
-            mChannel = new NotificationChannel("default", "Notifications PetalMD", NotificationManager.IMPORTANCE_HIGH);
-            mChannel.enableLights(true);
-            mChannel.enableVibration(true);
-            mChannel.setLightColor(Color.WHITE);
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                    .build();
-            mChannel.setSound(soundUri, audioAttributes);
-            mChannel.setVibrationPattern(vibrationPattern);
-
-            if (mNotificationManager != null) {
-                mNotificationManager.createNotificationChannel( mChannel );
-            }
-        }
-        /* Fin de la creation des channels de notification */
     }
 
     protected Void doInBackground(Void... params) {
@@ -289,13 +273,11 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             }
         }
 
-        long[] vibrationPattern = new long[]{100,1000};
+        long[] vibrationPattern = NORMAL_VIBRATION_PATTERN;
         //vibrate
         if(bundle.containsKey("urgent")){
             if(bundle.getBoolean("urgent")){
-                vibrationPattern = new long[]{100,750,250,750,250,750};
-            }else{
-                vibrationPattern = new long[]{100,1000};
+                vibrationPattern = SPECIAL_VIBRATION_PATTERN;
             }
         }
 
@@ -312,6 +294,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
             Pour les telephones ayant une version Android OREO ou plus récent, ses paramêtres sont définits dans
             les channels de notification et l'instance NotificationCompat.Builder doit contenir le ID Channel correspondant.
+
+            La generation des channels de notification se trouve dans MainApplication.java
          */
         NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, bundle.getString("channel"))
                 .setContentTitle(title)
