@@ -262,15 +262,20 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         if (soundName != null) {
-            if (soundName.equalsIgnoreCase("default")) {
-                soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            } else {
-                int soundResourceId = res.getIdentifier(soundName, "raw", packageName);
-                if (soundResourceId == 0) {
-                    soundName = soundName.substring(0, soundName.lastIndexOf('.'));
-                    soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+            try{
+                if (!soundName.equalsIgnoreCase("default")) {
+                    int soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+
+                    if (soundResourceId == 0) {
+                            soundName = soundName.substring(0, soundName.lastIndexOf('.'));
+                            soundResourceId = res.getIdentifier(soundName, "raw", packageName);
+                    }
+
+                    soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + soundResourceId);
                 }
-                soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + soundResourceId);
+            } 
+            catch ( Exception e ){
+
             }
         }
 
