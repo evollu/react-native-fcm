@@ -105,11 +105,6 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                 default:
                     importance = NotificationManager.IMPORTANCE_DEFAULT;
             }
-            if (mngr.getNotificationChannel(id) != null) {
-                promise.resolve(null);
-                return;
-            }
-            //
             NotificationChannel channel = new NotificationChannel(
                     id,
                     name,
