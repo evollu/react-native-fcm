@@ -28,11 +28,11 @@ dependencies {
     def firebaseCoreVersion = project.hasProperty('firebaseCoreVersion') ? project.firebaseCoreVersion : DEFAULT_FIREBASE_CORE_VERSION
     def firebaseMessagingVersion = project.hasProperty('firebaseMessagingVersion') ? project.firebaseMessagingVersion : DEFAULT_FIREBASE_MESSAGING_VERSION
 
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.facebook.react:react-native:+'
-    compile "com.google.firebase:firebase-core:$firebaseCoreVersion"
-    compile "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
-    compile 'me.leolin:ShortcutBadger:1.1.17@aar'
-    compile "com.android.support:support-core-utils:27.1.1"
-    compile 'com.android.volley:volley:1.1.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.facebook.react:react-native:+'
+    implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
+    implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
+    implementation 'me.leolin:ShortcutBadger:1.1.17@aar'
+    implementation "com.android.support:support-core-utils:27.1.1"
+    implementation 'com.android.volley:volley:1.1.1'
 }
