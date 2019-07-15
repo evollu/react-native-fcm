@@ -60,6 +60,7 @@ import static com.facebook.react.common.ReactConstants.TAG;
 public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     private static final long DEFAULT_VIBRATION = 300;
     private static final String CHAT_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/messaging/notifications/";
+    private static final String COMM_NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/communication/notifications/";
     private static final String NOTIFICATION_DETAILS_ENDPOINT = "/api/v2/notifications/";
 
     private static long[] NORMAL_VIBRATION_PATTERN = new long[]{100,1000};
@@ -167,29 +168,15 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     private void fetchComNotification(final String intentClassName) {
         String baseUrl = getNotificationDetailsBaseUrl();
         String id = bundle.getString("notification_id");
-        String url = baseUrl + NOTIFICATION_DETAILS_ENDPOINT + id + "/discussion";
+        String url = baseUrl + COMM_NOTIFICATION_DETAILS_ENDPOINT + id;
 
         JsonObjectRequest request = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            String title = response.optString("subject", "");
-
-                            if(title.isEmpty()) {
-                                title = Optional.ofNullable(getNotificationEmptyTitle()).orElse(getLocalizedDefaultTitle());
-                            }
-
-
-                            String body = "";
-                            JSONObject author = response.getJSONObject("lastCommentAuthor");
-                            if(author != null) {
-                                body = prefixBodyWithAuthorName(author);
-                            }
-
-                            body = body + response.optString("lastCommentText", "");
-
-                            bundle.putInt("message_id", response.getInt("discussionId"));
+                            String title = response.getString("title");
+                            String body = response.getString("body");
 
                             dispatchBuiltNotification(intentClassName, title, body);
                         } catch (Exception e) {
@@ -227,6 +214,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         };
 
         mRequestQueue.add(request);
+
 
     }
 
