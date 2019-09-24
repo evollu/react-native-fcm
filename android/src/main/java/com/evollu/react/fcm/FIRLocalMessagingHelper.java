@@ -122,7 +122,7 @@ public class FIRLocalMessagingHelper {
         editor.clear();
         editor.apply();
     }
-
+    
     public void removeDeliveredNotification(String notificationId){
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId.hashCode());
@@ -139,6 +139,24 @@ public class FIRLocalMessagingHelper {
         getAlarmManager().cancel(pendingIntent);
     }
 
+    public void getAllDeliveredNotifications(){
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        ArrayList<StatusBarNotification> notifications = notificationManager.getActiveNotifications();
+
+        ArrayList<Bundle> array = new ArrayList<Bundle>();
+        java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
+        for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
+            try {
+                JSONObject json = new JSONObject((String)entry.getValue());
+                Bundle bundle = BundleJSONConverter.convertToBundle(json);
+                array.add(bundle);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return array;
+    }
+    
     public ArrayList<Bundle> getScheduledLocalNotifications(){
         ArrayList<Bundle> array = new ArrayList<Bundle>();
         java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
