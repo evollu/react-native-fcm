@@ -233,6 +233,16 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
+    public void getDeliveredNotifications(Promise promise){
+        ArrayList<Bundle> bundles = mFIRLocalMessagingHelper.getDeliveredNotifications();
+        WritableArray array = Arguments.createArray();
+        for(Bundle bundle:bundles){
+            array.pushMap(Arguments.fromBundle(bundle));
+        }
+        promise.resolve(array);
+    }
+	
+    @ReactMethod
     public void getScheduledLocalNotifications(Promise promise){
         ArrayList<Bundle> bundles = mFIRLocalMessagingHelper.getScheduledLocalNotifications();
         WritableArray array = Arguments.createArray();
