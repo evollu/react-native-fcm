@@ -5,6 +5,7 @@ package com.evollu.react.fcm;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.NotificationManager;
+import android.service.notification.StatusBarNotification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -144,6 +145,18 @@ public class FIRLocalMessagingHelper {
         getAlarmManager().cancel(pendingIntent);
     }
 
+    public ArrayList<Bundle> getDeliveredNotifications() {
+        ArrayList<Bundle> array = new ArrayList<Bundle>();
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            for (StatusBarNotification notif : notificationManager.getActiveNotifications()) {
+                Bundle bundle = notif.getNotification().extras;
+                array.add(bundle);
+            }
+        }
+        return array;
+    }
+    
     public ArrayList<Bundle> getScheduledLocalNotifications(){
         ArrayList<Bundle> array = new ArrayList<Bundle>();
         java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
