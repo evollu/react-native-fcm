@@ -5,6 +5,7 @@ package com.evollu.react.fcm;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.NotificationManager;
+import android.service.notification.StatusBarNotification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
