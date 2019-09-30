@@ -4,6 +4,7 @@ package com.evollu.react.fcm;
 
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.service.notification.StatusBarNotification;
 import android.app.PendingIntent;
@@ -13,6 +14,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,10 +29,12 @@ public class FIRLocalMessagingHelper {
     private static boolean mIsForeground = false; //this is a hack
 
     private Context mContext;
+    private RequestQueue mRequestQueue;
     private SharedPreferences sharedPreferences = null;
 
     public FIRLocalMessagingHelper(Application context) {
         mContext = context;
+        mRequestQueue = Volley.newRequestQueue(context);
         sharedPreferences = (SharedPreferences) mContext.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
     }
 
@@ -44,7 +50,7 @@ public class FIRLocalMessagingHelper {
     }
 
     public void sendNotification(Bundle bundle) {
-        new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle).execute();
+        new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle, mRequestQueue).execute();
     }
 
     public void sendNotificationScheduled(Bundle bundle) {
@@ -59,11 +65,11 @@ public class FIRLocalMessagingHelper {
             return;
         }
 
-        Long fireDate = bundle.getLong("fire_date", -1);
-        if (fireDate == -1) {
-            fireDate = (long) bundle.getDouble("fire_date", -1);
+        long fireDate = Math.round(bundle.getDouble("fire_date"));
+        if(fireDate == 0){
+            fireDate = Math.round(bundle.getLong("fire_date"));
         }
-        if (fireDate == -1) {
+        if (fireDate == 0) {
             Log.e(TAG, "failed to schedule notification because fire date is missing");
             return;
         }
@@ -123,7 +129,7 @@ public class FIRLocalMessagingHelper {
         editor.clear();
         editor.apply();
     }
-    
+
     public void removeDeliveredNotification(String notificationId){
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId.hashCode());
@@ -140,19 +146,14 @@ public class FIRLocalMessagingHelper {
         getAlarmManager().cancel(pendingIntent);
     }
 
-    public void getAllDeliveredNotifications(){
-        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        ArrayList<StatusBarNotification> notifications = notificationManager.getActiveNotifications();
-
+    public ArrayList<Bundle> getDeliveredNotifications() {
         ArrayList<Bundle> array = new ArrayList<Bundle>();
-        java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
-        for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
-            try {
-                JSONObject json = new JSONObject((String)entry.getValue());
-                Bundle bundle = BundleJSONConverter.convertToBundle(json);
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            StatusBarNotification[] notifications = notificationManager.getActiveNotifications();
+            for (StatusBarNotification notification : notifications) {
+                Bundle bundle = notification.getNotification().extras;
                 array.add(bundle);
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }
         return array;
