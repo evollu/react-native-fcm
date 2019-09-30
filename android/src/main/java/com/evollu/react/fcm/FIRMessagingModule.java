@@ -227,6 +227,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         for(Bundle bundle:bundles) {
             try {
                 WritableMap params;
+                bundle.remove("android.appInfo");
                 params = Arguments.fromBundle(bundle);
                 array.pushMap(params);
             } catch (Exception e) {

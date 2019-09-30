@@ -35,6 +35,7 @@ class MainPage extends Component {
   }
 
   async componentDidMount() {
+    //FCM.createNotificationChannel is mandatory for Android targeting >=8. Otherwise you won't see any notification
     FCM.createNotificationChannel({
       id: 'default',
       name: 'Default',

@@ -105,7 +105,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
                 String title = bundle.getString("title");
 
-                dispatchBuiltNotification(intentClassName, title, body);
+                dispatchBuiltNotification(intentClassName, title, body, Notification.CATEGORY_EVENT);
             }
         } catch (Exception e) {
             Log.e(TAG, "failed to send local notification", e);
@@ -126,7 +126,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                             String title = response.getString("title");
                             String body = response.getString("body");
 
-                            dispatchBuiltNotification(intentClassName, title, body);
+                            dispatchBuiltNotification(intentClassName, title, body, Notification.CATEGORY_MESSAGE);
                         } catch (Exception e) {
                             Log.e(TAG, "failed to send local notification", e);
                         }
@@ -142,7 +142,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
                     String title = bundle.getString("title");
 
-                    dispatchBuiltNotification(intentClassName, title, body);
+                    dispatchBuiltNotification(intentClassName, title, body, Notification.CATEGORY_MESSAGE);
                 } catch (Exception e) {
                     Log.e(TAG, "failed to send local notification", e);
                 }
@@ -178,7 +178,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                             String title = response.getString("title");
                             String body = response.getString("body");
 
-                            dispatchBuiltNotification(intentClassName, title, body);
+                            dispatchBuiltNotification(intentClassName, title, body, Notification.CATEGORY_EMAIL);
                         } catch (Exception e) {
                             Log.e(TAG, "failed to send local notification", e);
                         }
@@ -194,7 +194,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
                     String title = bundle.getString("title");
 
-                    dispatchBuiltNotification(intentClassName, title, body);
+                    dispatchBuiltNotification(intentClassName, title, body, Notification.CATEGORY_EMAIL);
                 } catch (Exception e) {
                     Log.e(TAG, "failed to send local notification", e);
                 }
@@ -229,7 +229,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         return authorNamePrefix;
     }
 
-    private void dispatchBuiltNotification(String intentClassName, String title, String body) throws UnsupportedEncodingException, JSONException {
+    private void dispatchBuiltNotification(String intentClassName, String title, String body, String category) throws UnsupportedEncodingException, JSONException {
         Resources res = mContext.getResources();
         String packageName = mContext.getPackageName();
 
@@ -310,6 +310,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 .setSound(soundUri)
                 .setLights(lightsColor, 500, 250)
                 .setVibrate(vibrationPattern)
+                .setCategory(category)
                 .setExtras(bundle);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -395,7 +396,6 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
         //color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notification.setCategory(NotificationCompat.CATEGORY_CALL);
             String color = bundle.getString("color");
             if (color != null) {
                 notification.setColor(Color.parseColor(color));
@@ -420,7 +420,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
             intent.setAction(clickAction);
 
-            int notificationID = bundle.containsKey("id") ? bundle.getString("id", "").hashCode() : (int) System.currentTimeMillis();
+            int notificationID = bundle.containsKey("notification_id") ? bundle.getString("notification_id", "").hashCode() : (int) System.currentTimeMillis();
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
