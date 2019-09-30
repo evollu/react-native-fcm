@@ -116,6 +116,10 @@ FCM.scheduleLocalNotification = function(details) {
   RNFIRMessaging.scheduleLocalNotification(details);
 };
 
+FCM.getDeliveredNotifications = function() {
+  return RNFIRMessaging.getDeliveredNotifications();
+};
+
 FCM.getScheduledLocalNotifications = function() {
   return RNFIRMessaging.getScheduledLocalNotifications();
 };
