@@ -102,13 +102,13 @@ FCM.deleteNotificationChannel = (channel) => {
   }
 }
 
-FCM.presentLocalNotification = (details) => {
+FCM.presentLocalNotification = ({...details}) => {
   details.id = details.id || new Date().getTime().toString();
   details.local_notification = true;
   RNFIRMessaging.presentLocalNotification(details);
 };
 
-FCM.scheduleLocalNotification = function(details) {
+FCM.scheduleLocalNotification = function({...details}) {
   if (!details.id) {
     throw new Error('id is required for scheduled notification');
   }
