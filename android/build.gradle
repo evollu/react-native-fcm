@@ -34,5 +34,5 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
     implementation 'me.leolin:ShortcutBadger:1.1.17@aar'
     implementation "com.android.support:support-core-utils:27.1.1"
-    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.android.volley:volley:1.2.1'
 }

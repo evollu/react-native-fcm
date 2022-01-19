@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.requires_arc  = true
   s.homepage      = "https://github.com/evollu/react-native-fcm"
   s.source        = { :git => 'https://github.com/evollu/react-native-fcm.git' }
-  s.platform      = :ios, '10.0'
+  s.platform      = :ios, '11.0'
   s.source_files  = "ios/*.{h,m}"
   s.public_header_files = ['ios/RNFIRMessaging.h']
   s.static_framework = true
